@@ -59,13 +59,24 @@ class User extends Authenticatable
         return $this->hasMany(Kehadiran::class, 'pelatih_id');
     }
 
+    // Relasi ke Nilai Anggota
+    public function nilaiAnggota()
+    {
+        return $this->hasMany(NilaiAnggota::class, 'anggota_id');
+    }
+
+    // Relasi ke Nilai Anggota (sebagai pelatih)
+    public function nilaiPelatih()
+    {
+        return $this->hasMany(NilaiAnggota::class, 'pelatih_id');
+    }
+
     // Relasi ke Dokumentasi
     public function dokumentasis()
     {
         return $this->hasMany(Dokumentasi::class, 'diunggah_oleh');
     }
 
-    // Cek role
     public function isAdmin()
     {
         return $this->role === 'admin';

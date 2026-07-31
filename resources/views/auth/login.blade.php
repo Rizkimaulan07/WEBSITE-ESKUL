@@ -21,7 +21,7 @@
 
 <!-- Error Message -->
 @if ($errors->any())
-    <div class="alert-custom shake">
+    <div class="alert-custom" style="background: rgba(239, 68, 68, 0.08); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.1);">
         <i class="bi bi-exclamation-circle-fill alert-icon"></i>
         @foreach ($errors->all() as $error)
             <div>{{ $error }}</div>
@@ -98,7 +98,7 @@
     <p class="mt-2">
         <small class="text-muted">Demo: <strong>admin@mail.com</strong> / <strong>password</strong></small>
     </p>
-    <div class="mt-2 d-flex justify-content-center gap-2">
+    <div class="mt-2 d-flex justify-content-center gap-2 flex-wrap">
         <span class="badge bg-light text-dark px-3 py-2">
             <i class="bi bi-arrow-right me-1"></i> Login sebagai:
         </span>
@@ -112,7 +112,7 @@
             Anggota
         </button>
     </div>
-    <p class="mt-3" style="font-size: 11px; color: #d1d5db;">
+    <p class="mt-3" style="font-size: 11px; color: rgba(255,255,255,0.2);">
         &copy; {{ date('Y') }} Sistem Ekskul v3.0
     </p>
 </div>
@@ -135,6 +135,15 @@
         const btn = document.getElementById('loginBtn');
         btn.classList.add('loading');
         btn.disabled = true;
+    });
+
+    // Auto fill demo credentials
+    document.addEventListener('DOMContentLoaded', function() {
+        // If no errors, keep the default demo credentials
+        @if(!$errors->any())
+            document.getElementById('email').value = 'admin@mail.com';
+            document.getElementById('password').value = 'password';
+        @endif
     });
 </script>
 @endpush

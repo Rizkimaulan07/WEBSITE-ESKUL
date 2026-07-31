@@ -2,62 +2,53 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Ekstrakurikuler;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Buat 1 ekskul
-        $ekskul = Ekstrakurikuler::create([
-            'nama_ekskul' => 'Paskibra SMA 1',
-            'deskripsi' => 'Ekstrakurikuler Paskibra untuk melatih kedisiplinan dan kepemimpinan',
-            'pembina' => 'Bpk. Andi',
-            'hari_latihan' => 'Sabtu',
-            'jam_mulai' => '07:00',
-            'jam_selesai' => '09:00',
-            'tempat_latihan' => 'Lapangan Upacara',
-            'slug' => 'paskibra-sma-1'
-        ]);
+        // Kosongkan tabel users terlebih dahulu
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        User::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Admin
-        $admin = User::create([
+        User::create([
             'name' => 'Admin Utama',
             'email' => 'admin@mail.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
-            'no_hp' => '08123456789'
+            'kelas' => null,
+            'no_hp' => '081234567890'
         ]);
 
         // Pelatih
-        $pelatih = User::create([
-            'name' => 'Pelatih Paskibra',
+        User::create([
+            'name' => 'Pelatih Utama',
             'email' => 'pelatih@mail.com',
             'password' => Hash::make('password'),
             'role' => 'pelatih',
-            'ekskul_id' => $ekskul->id,
-            'no_hp' => '08123456780'
+            'kelas' => null,
+            'no_hp' => '081234567891'
         ]);
 
-        // Anggota (5 orang)
-        for ($i = 1; $i <= 5; $i++) {
-            $user = User::create([
-                'name' => 'Anggota ' . $i,
-                'email' => 'anggota' . $i . '@mail.com',
-                'password' => Hash::make('password'),
-                'role' => 'anggota',
-                'kelas' => 'XI - ' . chr(64 + $i),
-                'no_hp' => '081234567' . (70 + $i)
-            ]);
+        // Anggota
+        User::create([
+            'name' => 'Anggota Utama',
+            'email' => 'anggota@mail.com',
+            'password' => Hash::make('password'),
+            'role' => 'anggota',
+            'kelas' => 'XI-A',
+            'no_hp' => '081234567892'
+        ]);
 
-            // Tambahkan ke pivot table
-            $user->ekskuls()->attach($ekskul->id, [
-                'jabatan' => 'anggota',
-                'tahun_masuk' => 2024
-            ]);
-        }
+        $this->command->info('✅ User berhasil dibuat!');
+        $this->command->info('Admin: admin@mail.com / password');
+        $this->command->info('Pelatih: pelatih@mail.com / password');
+        $this->command->info('Anggota: anggota@mail.com / password');
     }
 }

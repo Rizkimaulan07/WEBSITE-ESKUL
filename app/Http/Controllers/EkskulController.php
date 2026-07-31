@@ -11,7 +11,6 @@ class EkskulController extends Controller
 {
     public function index()
     {
-        // Gunakan withCount dengan relasi yang benar
         $ekskuls = Ekstrakurikuler::withCount(['users' => function($query) {
             $query->where('role', 'anggota');
         }])->orderBy('created_at', 'desc')->paginate(10);
@@ -27,7 +26,7 @@ class EkskulController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_ekskul' => 'required|string|max:255|unique:ekstrakurikulers',
+            'nama_ekskul' => 'required|string|max:255|unique:ekstrakurikulers,nama_ekskul',
             'deskripsi' => 'required|string',
             'pembina' => 'required|string|max:255',
             'hari_latihan' => 'required|string',
@@ -49,7 +48,7 @@ class EkskulController extends Controller
 
         Ekstrakurikuler::create($data);
 
-        return redirect()->route('ekskul.index')
+        return redirect()->route('admin.ekskul.index')
                          ->with('success', '🎉 Ekskul berhasil ditambahkan!');
     }
 
@@ -87,7 +86,7 @@ class EkskulController extends Controller
 
         $ekskul->update($data);
 
-        return redirect()->route('ekskul.index')
+        return redirect()->route('admin.ekskul.index')
                          ->with('success', '✅ Ekskul berhasil diupdate!');
     }
 
@@ -98,7 +97,8 @@ class EkskulController extends Controller
         }
         
         $ekskul->delete();
-        return redirect()->route('ekskul.index')
+        
+        return redirect()->route('admin.ekskul.index')
                          ->with('success', '🗑️ Ekskul berhasil dihapus!');
     }
 

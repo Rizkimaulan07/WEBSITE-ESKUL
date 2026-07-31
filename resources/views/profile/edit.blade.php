@@ -1,247 +1,382 @@
-{{-- resources/views/profile/edit.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Edit Profile')
+@section('title', 'Profile')
+@section('subtitle', 'Edit profile Anda')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="card-modern" data-aos="fade-up">
-            <div class="card-header">
-                <i class="bi bi-person-circle me-2"></i> Edit Profile
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card-modern">
+            <!-- Header -->
+            <div class="card-header-modern">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="header-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Edit Profile</h5>
+                        <p class="text-muted small mb-0">Ubah informasi profile Anda</p>
+                    </div>
+                </div>
+                @php
+                    $user = Auth::user();
+                @endphp
+                @if($user->role == 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="btn-back">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
+                    </a>
+                @elseif($user->role == 'pelatih')
+                    <a href="{{ route('pelatih.dashboard') }}" class="btn-back">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
+                    </a>
+                @elseif($user->role == 'anggota')
+                    <a href="{{ route('anggota.dashboard') }}" class="btn-back">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
+                    </a>
+                @else
+                    <a href="{{ route('dashboard') }}" class="btn-back">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
+                    </a>
+                @endif
             </div>
-            <div class="card-body">
+
+            <!-- Body -->
+            <div class="card-body-modern">
                 <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                     @csrf
-                    @method('PATCH')
+                    @method('patch')
 
-                    <!-- Avatar/Photo -->
-                    <div class="text-center mb-4">
-                        <div class="position-relative d-inline-block">
-                            <div class="avatar-wrapper rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto"
-                                 style="width: 120px; height: 120px; font-size: 48px; font-weight: 700; border: 4px solid var(--primary);">
-                                {{ substr(Auth::user()->name, 0, 1) }}
-                            </div>
-                            <div class="position-absolute bottom-0 end-0 bg-primary rounded-circle p-2" 
-                                 style="width: 36px; height: 36px; border: 3px solid var(--bg-card); cursor: pointer;">
-                                <i class="bi bi-camera text-white" style="font-size: 16px;"></i>
+                    <div class="row g-4">
+                        <!-- Name -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-user text-primary me-2"></i>Nama Lengkap
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control @error('name') is-invalid @enderror" 
+                                       name="name" 
+                                       value="{{ old('name', $user->name) }}" 
+                                       required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
-                        <h5 class="mt-3 fw-bold">{{ Auth::user()->name }}</h5>
-                        <span class="badge bg-primary">{{ ucfirst(Auth::user()->role) }}</span>
-                    </div>
 
-                    <!-- Name -->
-                    <div class="form-group">
-                        <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
-                        <input type="text" 
-                               class="form-control @error('name') is-invalid @enderror" 
-                               id="name" 
-                               name="name" 
-                               value="{{ old('name', Auth::user()->name) }}" 
-                               required>
-                        <i class="bi bi-person input-icon"></i>
-                        @error('name')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- Email -->
-                    <div class="form-group">
-                        <label for="email">Email <span class="text-danger">*</span></label>
-                        <input type="email" 
-                               class="form-control @error('email') is-invalid @enderror" 
-                               id="email" 
-                               name="email" 
-                               value="{{ old('email', Auth::user()->email) }}" 
-                               required>
-                        <i class="bi bi-envelope input-icon"></i>
-                        @error('email')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- No HP -->
-                    <div class="form-group">
-                        <label for="no_hp">No HP</label>
-                        <input type="text" 
-                               class="form-control @error('no_hp') is-invalid @enderror" 
-                               id="no_hp" 
-                               name="no_hp" 
-                               value="{{ old('no_hp', Auth::user()->no_hp) }}" 
-                               placeholder="Contoh: 08123456789">
-                        <i class="bi bi-phone input-icon"></i>
-                        @error('no_hp')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- Kelas (khusus anggota) -->
-                    @if(Auth::user()->role == 'anggota')
-                    <div class="form-group">
-                        <label for="kelas">Kelas</label>
-                        <input type="text" 
-                               class="form-control @error('kelas') is-invalid @enderror" 
-                               id="kelas" 
-                               name="kelas" 
-                               value="{{ old('kelas', Auth::user()->kelas) }}" 
-                               placeholder="Contoh: XI - A">
-                        <i class="bi bi-mortarboard input-icon"></i>
-                        @error('kelas')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    @endif
-
-                    <!-- Ekskul (khusus pelatih) -->
-                    @if(Auth::user()->role == 'pelatih' && Auth::user()->ekskul)
-                    <div class="form-group">
-                        <label>Ekstrakurikuler</label>
-                        <div class="form-control" style="background: var(--bg-primary); cursor: default;">
-                            <i class="bi bi-building me-2"></i>
-                            {{ Auth::user()->ekskul->nama_ekskul }}
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="email" 
+                                       class="form-control @error('email') is-invalid @enderror" 
+                                       name="email" 
+                                       value="{{ old('email', $user->email) }}" 
+                                       required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    @endif
 
-                    <hr>
+                        <!-- Kelas (untuk anggota) -->
+                        @if($user->role == 'anggota')
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-graduation-cap text-primary me-2"></i>Kelas
+                                </label>
+                                <input type="text" 
+                                       class="form-control @error('kelas') is-invalid @enderror" 
+                                       name="kelas" 
+                                       value="{{ old('kelas', $user->kelas) }}">
+                                @error('kelas')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        @endif
 
-                    <!-- Password -->
-                    <h6 class="fw-bold mb-3"><i class="bi bi-lock me-2"></i> Ubah Password (Opsional)</h6>
-                    
-                    <div class="form-group">
-                        <label for="current_password">Password Saat Ini</label>
-                        <input type="password" 
-                               class="form-control @error('current_password') is-invalid @enderror" 
-                               id="current_password" 
-                               name="current_password" 
-                               placeholder="Masukkan password saat ini">
-                        <i class="bi bi-lock input-icon"></i>
-                        <button type="button" class="toggle-password" onclick="togglePassword('current_password', this)">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        @error('current_password')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                        <!-- No HP -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-phone text-primary me-2"></i>No HP
+                                </label>
+                                <input type="text" 
+                                       class="form-control @error('no_hp') is-invalid @enderror" 
+                                       name="no_hp" 
+                                       value="{{ old('no_hp', $user->no_hp) }}">
+                                @error('no_hp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="password">Password Baru</label>
-                        <input type="password" 
-                               class="form-control @error('password') is-invalid @enderror" 
-                               id="password" 
-                               name="password" 
-                               placeholder="Minimal 8 karakter">
-                        <i class="bi bi-key input-icon"></i>
-                        <button type="button" class="toggle-password" onclick="togglePassword('password', this)">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        @error('password')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-lock text-primary me-2"></i>Password Baru
+                                </label>
+                                <input type="password" 
+                                       class="form-control @error('password') is-invalid @enderror" 
+                                       name="password" 
+                                       placeholder="Kosongkan jika tidak ingin mengubah">
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="password_confirmation">Konfirmasi Password Baru</label>
-                        <input type="password" 
-                               class="form-control" 
-                               id="password_confirmation" 
-                               name="password_confirmation" 
-                               placeholder="Ketik ulang password baru">
-                        <i class="bi bi-check-circle input-icon"></i>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-check-circle text-primary me-2"></i>Konfirmasi Password
+                                </label>
+                                <input type="password" 
+                                       class="form-control @error('password_confirmation') is-invalid @enderror" 
+                                       name="password_confirmation" 
+                                       placeholder="Konfirmasi password baru">
+                                @error('password_confirmation')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-                    <div class="d-flex gap-2 mt-3">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save me-1"></i> Simpan Perubahan
-                        </button>
-                        <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-1"></i> Kembali
-                        </a>
+                        <!-- Tombol Aksi -->
+                        <div class="col-12">
+                            <hr class="form-divider">
+                            <div class="d-flex gap-3 justify-content-end">
+                                @php
+                                    $user = Auth::user();
+                                @endphp
+                                @if($user->role == 'admin')
+                                    <a href="{{ route('admin.dashboard') }}" class="btn-cancel">
+                                        <i class="fas fa-times me-2"></i>Batal
+                                    </a>
+                                @elseif($user->role == 'pelatih')
+                                    <a href="{{ route('pelatih.dashboard') }}" class="btn-cancel">
+                                        <i class="fas fa-times me-2"></i>Batal
+                                    </a>
+                                @elseif($user->role == 'anggota')
+                                    <a href="{{ route('anggota.dashboard') }}" class="btn-cancel">
+                                        <i class="fas fa-times me-2"></i>Batal
+                                    </a>
+                                @else
+                                    <a href="{{ route('dashboard') }}" class="btn-cancel">
+                                        <i class="fas fa-times me-2"></i>Batal
+                                    </a>
+                                @endif
+                                <button type="submit" class="btn-submit">
+                                    <i class="fas fa-save me-2"></i>Simpan Perubahan
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </form>
-
-                <!-- Delete Account -->
-                <hr>
-                <div class="mt-3">
-                    <h6 class="text-danger fw-bold"><i class="bi bi-exclamation-triangle me-2"></i> Hapus Akun</h6>
-                    <p class="text-muted small">Setelah akun dihapus, semua data akan hilang permanen.</p>
-                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-                        <i class="bi bi-trash me-1"></i> Hapus Akun
-                    </button>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Account Modal -->
-<div class="modal fade" id="deleteAccountModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content" style="background: var(--bg-card);">
-            <div class="modal-header border-0">
-                <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle me-2"></i> Hapus Akun</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p class="text-muted">Apakah Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.</p>
-                <form method="POST" action="{{ route('profile.destroy') }}" id="deleteAccountForm">
-                    @csrf
-                    @method('DELETE')
-                    <div class="form-group">
-                        <label for="delete_password">Masukkan Password untuk Konfirmasi</label>
-                        <input type="password" 
-                               class="form-control" 
-                               id="delete_password" 
-                               name="password" 
-                               placeholder="Masukkan password Anda"
-                               required>
-                        <i class="bi bi-lock input-icon"></i>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" form="deleteAccountForm" class="btn btn-danger">
-                    <i class="bi bi-trash me-1"></i> Hapus Akun
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@push('scripts')
-<script>
-    function togglePassword(inputId, btn) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-        input.setAttribute('type', type);
-        const icon = btn.querySelector('i');
-        if (icon) {
-            icon.classList.toggle('bi-eye');
-            icon.classList.toggle('bi-eye-slash');
-        }
+<style>
+    /* ===== CARD MODERN ===== */
+    .card-modern {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,0.02);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    // SweetAlert for delete account
-    document.getElementById('deleteAccountForm')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        Swal.fire({
-            title: 'Yakin hapus akun?',
-            text: "Semua data akan hilang permanen!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.submit();
-            }
-        });
-    });
-</script>
-@endpush
+    .card-modern:hover {
+        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+    }
+
+    /* ===== HEADER ===== */
+    .card-header-modern {
+        padding: 20px 28px;
+        border-bottom: 1px solid rgba(0,0,0,0.02);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        background: rgba(248, 250, 252, 0.3);
+    }
+
+    .header-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-back {
+        padding: 8px 20px;
+        border: 1px solid rgba(0,0,0,0.04);
+        border-radius: 10px;
+        background: transparent;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-back:hover {
+        background: #f8fafc;
+        transform: translateY(-2px);
+        color: #0f172a;
+        text-decoration: none;
+    }
+
+    /* ===== BODY ===== */
+    .card-body-modern {
+        padding: 28px 32px;
+    }
+
+    /* ===== FORM GROUP ===== */
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 16px;
+        border: 1px solid rgba(0,0,0,0.04);
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: 'Inter', sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.04);
+    }
+
+    .form-control.is-invalid {
+        border-color: #ef4444;
+    }
+
+    .form-control.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.04);
+    }
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+    .invalid-feedback {
+        display: block;
+        font-size: 12px;
+        color: #ef4444;
+        margin-top: 4px;
+    }
+
+    /* ===== DIVIDER ===== */
+    .form-divider {
+        border: none;
+        border-top: 1px solid rgba(0,0,0,0.02);
+        margin: 8px 0 16px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-cancel {
+        padding: 10px 32px;
+        border: 1px solid rgba(0,0,0,0.04);
+        border-radius: 10px;
+        background: transparent;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-cancel:hover {
+        background: #f8fafc;
+        transform: translateY(-2px);
+        color: #0f172a;
+        text-decoration: none;
+    }
+
+    .btn-submit {
+        padding: 10px 40px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .card-header-modern {
+            padding: 16px 18px;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .card-body-modern {
+            padding: 18px;
+        }
+
+        .btn-back {
+            justify-content: center;
+        }
+
+        .btn-cancel,
+        .btn-submit {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .d-flex.gap-3 {
+            flex-direction: column;
+        }
+    }
+</style>
 @endsection

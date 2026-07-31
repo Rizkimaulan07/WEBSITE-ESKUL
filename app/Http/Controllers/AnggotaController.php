@@ -6,112 +6,134 @@ use App\Models\User;
 use App\Models\Ekstrakurikuler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class AnggotaController extends Controller
 {
     public function index()
     {
-        $anggota = User::where('role', 'anggota')->with('ekskuls')->get();
-        $ekskuls = Ekstrakurikuler::all();
-        return view('admin.anggota.index', compact('anggota', 'ekskuls'));
+        // Gunakan relasi many-to-many 'ekskuls' untuk anggota
+        $anggotas = User::where('role', 'anggota')
+                        ->with('ekskuls') // many-to-many
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(10);
+        
+        $ekskuls = Ekstrakurikuler::where('status', 'aktif')->get();
+        
+        return view('admin.anggota.index', compact('anggotas', 'ekskuls'));
     }
 
     public function create()
     {
-        $ekskuls = Ekstrakurikuler::all();
+        $ekskuls = Ekstrakurikuler::where('status', 'aktif')->get();
         return view('admin.anggota.create', compact('ekskuls'));
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
             'kelas' => 'required|string|max:50',
             'no_hp' => 'required|string|max:15',
-            'ekskul_id' => 'required|exists:ekstrakurikulers,id',
-            'jabatan' => 'nullable|string'
+            'ekskul_id' => 'nullable|exists:ekstrakurikulers,id',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                             ->withErrors($validator)
-                             ->withInput();
+        $data = $request->all();
+        $data['password'] = Hash::make($request->password);
+        $data['role'] = 'anggota';
+
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $namaAvatar = time() . '_' . $request->name . '.' . $avatar->getClientOriginalExtension();
+            $avatar->storeAs('public/avatar', $namaAvatar);
+            $data['avatar'] = 'avatar/' . $namaAvatar;
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'anggota',
-            'kelas' => $request->kelas,
-            'no_hp' => $request->no_hp
-        ]);
+        $user = User::create($data);
 
-        // Tambahkan ke ekskul
-        $user->ekskuls()->attach($request->ekskul_id, [
-            'jabatan' => $request->jabatan ?? 'anggota',
-            'tahun_masuk' => date('Y')
-        ]);
+        // Gunakan relasi many-to-many 'ekskuls'
+        if ($request->filled('ekskul_id')) {
+            $user->ekskuls()->attach($request->ekskul_id);
+        }
 
         return redirect()->route('anggota.index')
-                         ->with('success', '👤 Anggota berhasil ditambahkan!');
+                         ->with('success', '🎉 Anggota berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
-        $anggota = User::where('role', 'anggota')->with('ekskuls')->findOrFail($id);
-        $ekskuls = Ekstrakurikuler::all();
+        $anggota = User::with('ekskuls')->findOrFail($id);
+        $ekskuls = Ekstrakurikuler::where('status', 'aktif')->get();
         return view('admin.anggota.edit', compact('anggota', 'ekskuls'));
     }
 
     public function update(Request $request, $id)
     {
-        $anggota = User::where('role', 'anggota')->findOrFail($id);
+        $anggota = User::findOrFail($id);
         
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $anggota->id,
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($anggota->id)],
             'kelas' => 'required|string|max:50',
             'no_hp' => 'required|string|max:15',
-            'ekskul_id' => 'required|exists:ekstrakurikulers,id',
-            'jabatan' => 'nullable|string',
-            'password' => 'nullable|min:8'
+            'ekskul_id' => 'nullable|exists:ekstrakurikulers,id',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                             ->withErrors($validator)
-                             ->withInput();
+        $data = $request->all();
+
+        if ($request->filled('password')) {
+            $request->validate(['password' => 'required|string|min:8|confirmed']);
+            $data['password'] = Hash::make($request->password);
+        } else {
+            unset($data['password']);
         }
 
-        $data = $request->except(['password', 'ekskul_id', 'jabatan']);
-        
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+        if ($request->hasFile('avatar')) {
+            if ($anggota->avatar && Storage::exists('public/' . $anggota->avatar)) {
+                Storage::delete('public/' . $anggota->avatar);
+            }
+            
+            $avatar = $request->file('avatar');
+            $namaAvatar = time() . '_' . $request->name . '.' . $avatar->getClientOriginalExtension();
+            $avatar->storeAs('public/avatar', $namaAvatar);
+            $data['avatar'] = 'avatar/' . $namaAvatar;
         }
 
         $anggota->update($data);
 
-        // Update ekskul
-        $anggota->ekskuls()->sync([
-            $request->ekskul_id => [
-                'jabatan' => $request->jabatan ?? 'anggota',
-                'tahun_masuk' => date('Y')
-            ]
-        ]);
+        // Gunakan relasi many-to-many 'ekskuls'
+        if ($request->filled('ekskul_id')) {
+            $anggota->ekskuls()->sync([$request->ekskul_id]);
+        } else {
+            $anggota->ekskuls()->detach();
+        }
 
         return redirect()->route('anggota.index')
-                         ->with('success', '✏️ Anggota berhasil diupdate!');
+                         ->with('success', '✅ Anggota berhasil diupdate!');
     }
 
     public function destroy($id)
     {
-        $anggota = User::where('role', 'anggota')->findOrFail($id);
+        $anggota = User::findOrFail($id);
+        
+        if ($anggota->avatar && Storage::exists('public/' . $anggota->avatar)) {
+            Storage::delete('public/' . $anggota->avatar);
+        }
+        
         $anggota->delete();
+        
         return redirect()->route('anggota.index')
                          ->with('success', '🗑️ Anggota berhasil dihapus!');
+    }
+
+    public function show($id)
+    {
+        $anggota = User::with('ekskuls')->findOrFail($id);
+        return view('admin.anggota.show', compact('anggota'));
     }
 }
