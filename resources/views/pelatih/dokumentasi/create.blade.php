@@ -1,283 +1,328 @@
 @extends('layouts.app')
 
 @section('title', 'Tambah Dokumentasi')
-@section('subtitle', 'Upload dokumentasi kegiatan ekstrakurikuler')
+@section('subtitle', 'Tambah dokumentasi kegiatan')
 
 @section('content')
-<div class="card-modern">
-    <div class="card-header-modern">
-        <h6><i class="fas fa-upload me-2" style="color: #6366f1;"></i>Tambah Dokumentasi</h6>
-        <a href="{{ route('pelatih.dokumentasi') }}" class="btn-secondary-custom">
-            <i class="fas fa-arrow-left me-2"></i> Kembali
-        </a>
-    </div>
-    <div class="card-body-modern">
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        <form action="{{ route('pelatih.dokumentasi.store') }}" 
-              method="POST" 
-              enctype="multipart/form-data">
-            @csrf
-            
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="mb-3">
-                        <label for="judul" class="form-label fw-semibold">Judul Dokumentasi</label>
-                        <input type="text" 
-                               name="judul" 
-                               id="judul" 
-                               class="form-control @error('judul') is-invalid @enderror" 
-                               placeholder="Masukkan judul dokumentasi"
-                               value="{{ old('judul') }}"
-                               required>
-                        @error('judul')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <!-- Header Card -->
+            <div class="card-header border-0 py-4 px-5" 
+                 style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #312e81 60%, #4f46e5 100%);">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                        <i class="fas fa-camera fa-2x text-white"></i>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="deskripsi" class="form-label fw-semibold">Deskripsi</label>
-                        <textarea name="deskripsi" 
-                                  id="deskripsi" 
-                                  class="form-control @error('deskripsi') is-invalid @enderror" 
-                                  rows="4"
-                                  placeholder="Masukkan deskripsi dokumentasi">{{ old('deskripsi') }}</textarea>
-                        @error('deskripsi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label fw-semibold">Tanggal Kegiatan</label>
-                        <input type="date" 
-                               name="tanggal" 
-                               id="tanggal" 
-                               class="form-control @error('tanggal') is-invalid @enderror"
-                               value="{{ old('tanggal', date('Y-m-d')) }}">
-                        @error('tanggal')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <div>
+                        <h4 class="text-white fw-bold mb-0">Tambah Dokumentasi</h4>
+                        <p class="text-white-50 mb-0 small">Tambahkan dokumentasi kegiatan ekstrakurikuler</p>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="foto" class="form-label fw-semibold">Upload Foto</label>
-                        <div class="upload-area" id="uploadArea">
-                            <input type="file" 
-                                   name="foto" 
-                                   id="foto" 
-                                   class="form-control @error('foto') is-invalid @enderror"
-                                   accept="image/*"
-                                   style="display: none;">
-                            <div class="upload-preview text-center py-4" id="uploadPreview">
-                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-2"></i>
-                                <p class="text-muted mb-0">Klik atau drag & drop untuk upload</p>
-                                <small class="text-muted">Format: JPG, PNG, GIF (Max 2MB)</small>
+            <div class="card-body p-5">
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
+                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
                             </div>
-                            <div class="upload-result text-center py-3" id="uploadResult" style="display: none;">
-                                <img id="imagePreview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
-                                <button type="button" class="btn btn-sm btn-danger mt-2" id="removeImage">
-                                    <i class="fas fa-times"></i> Hapus
+                            <div>
+                                <strong>Gagal!</strong> {{ session('error') }}
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
+                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                            </div>
+                            <div>
+                                <strong>Gagal!</strong> Silakan periksa data berikut:
+                                <ul class="mb-0 mt-1">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <form action="{{ route('pelatih.dokumentasi.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="row g-4">
+                        <!-- Judul -->
+                        <div class="col-12">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-heading text-primary me-2"></i>Judul Dokumentasi
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-modern @error('judul') is-invalid @enderror" 
+                                       name="judul" value="{{ old('judul') }}" 
+                                       placeholder="Contoh: Kegiatan Latihan Paskibra" required>
+                                @error('judul')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Deskripsi -->
+                        <div class="col-12">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-align-left text-primary me-2"></i>Deskripsi
+                                </label>
+                                <textarea class="form-control form-control-modern @error('deskripsi') is-invalid @enderror" 
+                                          name="deskripsi" rows="4" 
+                                          placeholder="Tuliskan deskripsi kegiatan...">{{ old('deskripsi') }}</textarea>
+                                @error('deskripsi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Upload Foto -->
+                        <div class="col-12">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-image text-primary me-2"></i>Foto
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="upload-zone border-2 border-dashed rounded-4 p-5 text-center" 
+                                     style="border-color: #e5e7eb; background: #fafbfc; cursor: pointer; transition: all 0.3s ease;"
+                                     onclick="document.getElementById('foto').click()"
+                                     ondragover="event.preventDefault(); this.style.borderColor='#4f46e5'; this.style.background='rgba(79,70,229,0.05)';"
+                                     ondrop="event.preventDefault(); this.style.borderColor='#e5e7eb'; this.style.background='#fafbfc';">
+                                    <div id="uploadPreview">
+                                        <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                                        <p class="text-muted mb-0">
+                                            <strong class="text-primary">Klik untuk upload</strong> atau drag and drop
+                                        </p>
+                                        <small class="text-muted">Format: jpeg, png, jpg, webp | Maks: 2MB</small>
+                                    </div>
+                                    <div id="uploadNewPreview" style="display: none;">
+                                        <img id="fotoPreview" src="#" alt="Preview" class="img-fluid rounded-3" style="max-height: 200px;">
+                                        <br>
+                                        <small class="text-muted">Klik untuk mengganti</small>
+                                    </div>
+                                </div>
+                                <input type="file" class="d-none @error('foto') is-invalid @enderror" 
+                                       id="foto" name="foto" accept="image/*"
+                                       onchange="previewFoto(event)" required>
+                                @error('foto')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="col-12">
+                            <div class="divider-custom">
+                                <span><i class="fas fa-image text-primary"></i></span>
+                            </div>
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="col-12">
+                            <div class="d-flex gap-3 justify-content-end">
+                                <a href="{{ route('pelatih.dokumentasi') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2">
+                                    <i class="fas fa-arrow-left me-2"></i>Kembali
+                                </a>
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 btn-gradient">
+                                    <i class="fas fa-save me-2"></i>Simpan Dokumentasi
                                 </button>
                             </div>
-                            @error('foto')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn-primary-custom">
-                    <i class="fas fa-save me-2"></i> Simpan Dokumentasi
-                </button>
-                <a href="{{ route('pelatih.dokumentasi') }}" class="btn-secondary-custom ms-2">
-                    <i class="fas fa-times me-2"></i> Batal
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <style>
-    .card-modern {
-        background: #ffffff;
-        border-radius: 14px;
-        border: 1px solid rgba(0,0,0,0.02);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        overflow: hidden;
+    /* ===== FORM GROUP MODERN ===== */
+    .form-group-modern {
+        margin-bottom: 0;
     }
 
-    .card-header-modern {
-        padding: 16px 24px;
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        background: rgba(248, 250, 252, 0.3);
-    }
-
-    .card-header-modern h6 {
+    .form-group-modern label {
+        font-size: 13px;
+        color: #1e293b;
         font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    .form-control-modern {
+        padding: 12px 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.3s ease;
         font-size: 14px;
-        color: #0f172a;
-        margin: 0;
-    }
-
-    .card-body-modern {
-        padding: 24px;
-    }
-
-    .btn-primary-custom {
-        padding: 10px 24px;
-        border: none;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-primary-custom:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
-        color: #fff;
-        text-decoration: none;
-    }
-
-    .btn-secondary-custom {
-        padding: 10px 24px;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        background: #fff;
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-secondary-custom:hover {
-        background: #f8fafc;
-        color: #0f172a;
-        text-decoration: none;
-    }
-
-    .upload-area {
-        border: 2px dashed #e2e8f0;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
         background: #fafbfc;
-    }
-
-    .upload-area:hover {
-        border-color: #6366f1;
-        background: #f8f9ff;
-    }
-
-    .upload-area.dragover {
-        border-color: #6366f1;
-        background: #f8f9ff;
-    }
-
-    .form-control:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-
-    .form-label {
-        font-size: 13px;
         color: #0f172a;
     }
 
-    @media (max-width: 768px) {
-        .card-header-modern {
-            flex-direction: column;
-            align-items: stretch;
-        }
+    .form-control-modern:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+        background: #ffffff;
+    }
 
-        .btn-primary-custom,
-        .btn-secondary-custom {
-            width: 100%;
-            justify-content: center;
+    .form-control-modern.is-invalid {
+        border-color: #ef4444;
+        background: #fef2f2;
+    }
+
+    .form-control-modern.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
+    }
+
+    textarea.form-control-modern {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    /* ===== UPLOAD ZONE ===== */
+    .upload-zone {
+        transition: all 0.3s ease;
+        min-height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-zone:hover {
+        border-color: #4f46e5 !important;
+        background: rgba(79, 70, 229, 0.03) !important;
+        transform: scale(1.01);
+    }
+
+    /* ===== DIVIDER ===== */
+    .divider-custom {
+        text-align: center;
+        position: relative;
+        margin: 8px 0;
+    }
+
+    .divider-custom::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+    }
+
+    .divider-custom span {
+        background: #ffffff;
+        padding: 0 16px;
+        position: relative;
+        color: #6366f1;
+        font-size: 16px;
+    }
+
+    /* ===== BUTTON GRADIENT ===== */
+    .btn-gradient {
+        background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4f46e5 100%) !important;
+        border: none !important;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35) !important;
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        background: #f8fafc;
+        border-color: #94a3b8;
+    }
+
+    /* ===== ALERT ===== */
+    .alert {
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+    }
+
+    .text-primary {
+        color: #4f46e5 !important;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px !important;
         }
+        .card-header {
+            padding: 16px 20px !important;
+        }
+        .btn {
+            width: 100%;
+        }
+        .d-flex.gap-3 {
+            flex-direction: column;
+        }
+        .d-flex.gap-3.justify-content-end {
+            flex-direction: column-reverse;
+        }
+        .upload-zone {
+            min-height: 140px;
+            padding: 20px !important;
+        }
+    }
+
+    /* ===== ANIMATION ===== */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        animation: fadeInUp 0.6s ease;
     }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('foto');
-    const uploadPreview = document.getElementById('uploadPreview');
-    const uploadResult = document.getElementById('uploadResult');
-    const imagePreview = document.getElementById('imagePreview');
-    const removeImage = document.getElementById('removeImage');
-
-    uploadArea.addEventListener('click', function(e) {
-        if (!e.target.closest('#removeImage')) {
-            fileInput.click();
-        }
-    });
-
-    fileInput.addEventListener('change', function(e) {
-        if (this.files && this.files[0]) {
+    function previewFoto(event) {
+        const input = event.target;
+        const preview = document.getElementById('fotoPreview');
+        const previewContainer = document.getElementById('uploadPreview');
+        const previewNewContainer = document.getElementById('uploadNewPreview');
+        
+        if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                uploadPreview.style.display = 'none';
-                uploadResult.style.display = 'block';
+                preview.src = e.target.result;
+                previewContainer.style.display = 'none';
+                previewNewContainer.style.display = 'block';
             }
-            reader.readAsDataURL(this.files[0]);
+            reader.readAsDataURL(input.files[0]);
         }
-    });
-
-    removeImage.addEventListener('click', function(e) {
-        e.stopPropagation();
-        fileInput.value = '';
-        uploadPreview.style.display = 'block';
-        uploadResult.style.display = 'none';
-        imagePreview.src = '#';
-    });
-
-    uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            fileInput.dispatchEvent(new Event('change'));
-        }
-    });
-});
+    }
 </script>
 @endsection

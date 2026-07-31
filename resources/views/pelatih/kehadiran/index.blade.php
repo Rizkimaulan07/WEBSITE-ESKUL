@@ -75,10 +75,10 @@
     </div>
 </div>
 
-<!-- Info Ekskul -->
+<!-- Info Ekskul & Button Kembali -->
 <div class="card-modern mb-4">
     <div class="card-body-modern">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <h6 class="fw-bold mb-0">
                     <i class="fas fa-trophy text-primary me-2"></i>
@@ -86,11 +86,14 @@
                 </h6>
                 <small class="text-muted">Input kehadiran untuk hari ini</small>
             </div>
-            <div>
+            <div class="d-flex gap-2">
                 <span class="badge-soft">
                     <i class="far fa-calendar-alt me-1"></i>
                     {{ now()->translatedFormat('l, d F Y') }}
                 </span>
+                <a href="{{ route('pelatih.dashboard') }}" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i>Kembali ke Dashboard
+                </a>
             </div>
         </div>
     </div>
@@ -185,7 +188,8 @@
                                                name="anggota_ids[]" value="{{ $a->id }}"
                                                id="hadir_{{ $a->id }}"
                                                {{ $isChecked ? 'checked' : '' }}
-                                               onchange="toggleStatus(this, {{ $a->id }})">
+                                               data-id="{{ $a->id }}"
+                                               onchange="toggleStatus(this)">
                                         <label class="form-check-label" for="hadir_{{ $a->id }}">
                                             <span class="badge-custom active">✔ Hadir</span>
                                         </label>
@@ -220,8 +224,8 @@
             </div>
 
             <div class="d-flex justify-content-end gap-3 mt-4">
-                <a href="{{ route('pelatih.nilai') }}" class="btn-cancel">
-                    <i class="fas fa-times me-2"></i> Batal
+                <a href="{{ route('pelatih.dashboard') }}" class="btn-cancel">
+                    <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
                 </a>
                 <button type="submit" class="btn-submit">
                     <i class="fas fa-save me-2"></i> Simpan Kehadiran
@@ -232,413 +236,100 @@
 </div>
 
 <style>
-    /* ===== BADGE CUSTOM ===== */
-    .badge-custom {
-        padding: 2px 12px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 500;
-    }
-
-    .badge-custom.active {
-        background: rgba(16, 185, 129, 0.08);
-        color: #10b981;
-    }
-
-    /* ===== BADGE SOFT ===== */
-    .badge-soft {
-        background: rgba(99, 102, 241, 0.05);
-        color: #6366f1;
-        padding: 2px 14px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 500;
-    }
-
-    /* ===== STAT CARDS ===== */
-    .stat-card {
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 22px 24px;
-        border: 1px solid rgba(0,0,0,0.02);
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    .stat-card .stat-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        flex-shrink: 0;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .stat-card:hover .stat-icon {
-        transform: scale(1.05) rotate(-2deg);
-    }
-
+    .badge-custom { padding: 2px 12px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+    .badge-custom.active { background: rgba(16, 185, 129, 0.08); color: #10b981; }
+    .badge-soft { background: rgba(99, 102, 241, 0.05); color: #6366f1; padding: 2px 14px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+    
+    .stat-card { background: #ffffff; border-radius: 14px; padding: 22px 24px; border: 1px solid rgba(0,0,0,0.02); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 1px 3px rgba(0,0,0,0.02); position: relative; overflow: hidden; }
+    .stat-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08); }
+    .stat-card .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .stat-card:hover .stat-icon { transform: scale(1.05) rotate(-2deg); }
     .stat-card .stat-icon.blue { background: rgba(99, 102, 241, 0.06); color: #6366f1; }
     .stat-card .stat-icon.gold { background: rgba(245, 158, 11, 0.06); color: #f59e0b; }
     .stat-card .stat-icon.green { background: rgba(16, 185, 129, 0.06); color: #10b981; }
-
-    .stat-card .stat-body {
-        flex: 1;
-    }
-
-    .stat-card .stat-label {
-        font-size: 12px;
-        color: #94a3b8;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .stat-card .stat-number {
-        font-size: 28px;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 2px 0;
-        letter-spacing: -0.5px;
-    }
-
-    .stat-change {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 2px 12px;
-        border-radius: 12px;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .stat-change.up {
-        background: rgba(16, 185, 129, 0.06);
-        color: #10b981;
-    }
-
-    .stat-progress {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: rgba(0,0,0,0.03);
-    }
-
-    .stat-progress .progress-bar {
-        height: 100%;
-        border-radius: 0;
-        transition: width 0.6s ease;
-    }
-
+    .stat-card .stat-body { flex: 1; }
+    .stat-card .stat-label { font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-number { font-size: 28px; font-weight: 700; color: #0f172a; margin: 2px 0; letter-spacing: -0.5px; }
+    .stat-change { font-size: 11px; font-weight: 600; padding: 2px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; }
+    .stat-change.up { background: rgba(16, 185, 129, 0.06); color: #10b981; }
+    .stat-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.03); }
+    .stat-progress .progress-bar { height: 100%; border-radius: 0; transition: width 0.6s ease; }
     .stat-card.blue .progress-bar { background: linear-gradient(90deg, #6366f1, #818cf8); }
     .stat-card.gold .progress-bar { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
     .stat-card.green .progress-bar { background: linear-gradient(90deg, #10b981, #34d399); }
+    .stat-meta { margin-top: 8px; }
+    
+    .card-modern { background: #ffffff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden; }
+    .card-body-modern { padding: 20px 24px; }
+    .card-header-modern { padding: 16px 24px; border-bottom: 1px solid rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: rgba(248, 250, 252, 0.3); }
+    .card-header-modern h6 { font-weight: 600; font-size: 14px; color: #0f172a; margin: 0; }
+    
+    .table-modern { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table-modern thead th { background: rgba(248, 250, 252, 0.3); color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.02); text-align: left; }
+    .table-modern tbody td { padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; }
+    .table-modern tbody tr:hover { background: rgba(99, 102, 241, 0.012); }
+    
+    .number-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: rgba(99, 102, 241, 0.04); color: #6366f1; font-weight: 600; font-size: 12px; }
+    .avatar-circle { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 13px; flex-shrink: 0; box-shadow: 0 2px 12px rgba(99, 102, 241, 0.15); }
+    
+    .btn-check-all { padding: 8px 18px; border: none; border-radius: 8px; background: rgba(16, 185, 129, 0.06); color: #10b981; font-size: 12px; font-weight: 500; transition: all 0.3s ease; cursor: pointer; }
+    .btn-check-all:hover { background: rgba(16, 185, 129, 0.12); transform: translateY(-2px); }
+    .btn-uncheck-all { padding: 8px 18px; border: none; border-radius: 8px; background: rgba(239, 68, 68, 0.06); color: #ef4444; font-size: 12px; font-weight: 500; transition: all 0.3s ease; cursor: pointer; }
+    .btn-uncheck-all:hover { background: rgba(239, 68, 68, 0.12); transform: translateY(-2px); }
+    
+    .btn-cancel { padding: 10px 32px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; }
+    .btn-cancel:hover { background: #f8fafc; transform: translateY(-2px); color: #0f172a; text-decoration: none; }
+    .btn-submit { padding: 10px 40px; border: none; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; font-size: 14px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; cursor: pointer; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35); }
+    
+    .form-check-input { width: 18px; height: 18px; cursor: pointer; border-radius: 4px; border: 2px solid #d1d5db; transition: all 0.2s ease; }
+    .form-check-input:checked { background-color: #10b981; border-color: #10b981; }
+    .form-check-input:focus { box-shadow: none; }
+    .form-check-label { cursor: pointer; font-size: 13px; }
+    
+    .status-select { padding: 4px 8px; border: 1px solid rgba(0,0,0,0.04); border-radius: 6px; font-size: 12px; background: #f8fafc; transition: all 0.3s ease; }
+    .status-select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.04); }
+    .status-select:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .form-control-sm { padding: 6px 12px; border: 1px solid rgba(0,0,0,0.04); border-radius: 6px; font-size: 12px; background: #f8fafc; transition: all 0.3s ease; width: 100%; }
+    .form-control-sm:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.04); background: #ffffff; }
+    
+    .alert { border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; }
+    .alert .btn-close { padding: 12px; }
 
-    .stat-meta {
-        margin-top: 8px;
-    }
-
-    /* ===== CARD MODERN ===== */
-    .card-modern {
-        background: #ffffff;
-        border-radius: 14px;
-        border: 1px solid rgba(0,0,0,0.02);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .card-modern:hover {
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
-    }
-
-    .card-body-modern {
-        padding: 20px 24px;
-    }
-
-    .card-header-modern {
-        padding: 16px 24px;
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        background: rgba(248, 250, 252, 0.3);
-    }
-
-    .card-header-modern h6 {
-        font-weight: 600;
-        font-size: 14px;
-        color: #0f172a;
-        margin: 0;
-    }
-
-    /* ===== TABLE MODERN ===== */
-    .table-modern {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
-
-    .table-modern thead th {
-        background: rgba(248, 250, 252, 0.3);
-        color: #64748b;
-        font-weight: 600;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 12px 16px;
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        text-align: left;
-    }
-
-    .table-modern tbody td {
-        padding: 12px 16px;
-        border-bottom: 1px solid rgba(0,0,0,0.015);
-        vertical-align: middle;
-    }
-
-    .table-modern tbody tr:hover {
-        background: rgba(99, 102, 241, 0.012);
-    }
-
-    /* ===== NUMBER BADGE ===== */
-    .number-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        background: rgba(99, 102, 241, 0.04);
-        color: #6366f1;
-        font-weight: 600;
-        font-size: 12px;
-    }
-
-    /* ===== AVATAR CIRCLE ===== */
-    .avatar-circle {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-weight: 600;
-        font-size: 13px;
-        flex-shrink: 0;
-        box-shadow: 0 2px 12px rgba(99, 102, 241, 0.15);
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn-check-all {
-        padding: 8px 18px;
-        border: none;
-        border-radius: 8px;
-        background: rgba(16, 185, 129, 0.06);
-        color: #10b981;
-        font-size: 12px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .btn-check-all:hover {
-        background: rgba(16, 185, 129, 0.12);
-        transform: translateY(-2px);
-    }
-
-    .btn-uncheck-all {
-        padding: 8px 18px;
-        border: none;
-        border-radius: 8px;
-        background: rgba(239, 68, 68, 0.06);
-        color: #ef4444;
-        font-size: 12px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .btn-uncheck-all:hover {
-        background: rgba(239, 68, 68, 0.12);
-        transform: translateY(-2px);
-    }
-
-    .btn-cancel {
-        padding: 10px 32px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        background: transparent;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-cancel:hover {
-        background: #f8fafc;
-        transform: translateY(-2px);
-        color: #0f172a;
-        text-decoration: none;
-    }
-
-    .btn-submit {
-        padding: 10px 40px;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
-    }
-
-    /* ===== FORM ===== */
-    .form-check-input {
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-        border-radius: 4px;
-        border: 2px solid #d1d5db;
-        transition: all 0.2s ease;
-    }
-
-    .form-check-input:checked {
-        background-color: #10b981;
-        border-color: #10b981;
-    }
-
-    .form-check-input:focus {
-        box-shadow: none;
-    }
-
-    .form-check-label {
-        cursor: pointer;
-        font-size: 13px;
-    }
-
-    .status-select {
-        padding: 4px 8px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 6px;
-        font-size: 12px;
-        font-family: 'Inter', sans-serif;
-        background: #f8fafc;
-        transition: all 0.3s ease;
-    }
-
-    .status-select:focus {
-        outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.04);
-    }
-
-    .status-select:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .form-control-sm {
-        padding: 6px 12px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 6px;
-        font-size: 12px;
-        font-family: 'Inter', sans-serif;
-        background: #f8fafc;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-
-    .form-control-sm:focus {
-        outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.04);
-        background: #ffffff;
-    }
-
-    /* ===== ALERT ===== */
-    .alert {
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin-bottom: 20px;
-    }
-
-    .alert .btn-close {
-        padding: 12px;
-    }
-
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
-        .stat-card {
-            padding: 16px 18px;
-        }
-        .stat-card .stat-number {
-            font-size: 22px;
-        }
-        .card-header-modern {
-            flex-direction: column;
-            align-items: stretch;
-            padding: 14px 16px;
-        }
-        .card-body-modern {
-            padding: 14px 16px;
-        }
-        .table-modern {
-            font-size: 12px;
-        }
+        .stat-card { padding: 16px 18px; }
+        .stat-card .stat-number { font-size: 22px; }
+        .card-header-modern { flex-direction: column; align-items: stretch; padding: 14px 16px; }
+        .card-body-modern { padding: 14px 16px; }
+        .table-modern { font-size: 12px; }
+        .btn-cancel, .btn-submit { width: 100%; justify-content: center; }
+        .d-flex.justify-content-end { flex-direction: column; }
     }
 </style>
 
 <script>
     function checkAll() {
-        document.querySelectorAll('input[name="anggota_ids[]"]').forEach(checkbox => {
-            checkbox.checked = true;
-            const id = checkbox.value;
-            toggleStatus(checkbox, id);
-        });
+        var checkboxes = document.querySelectorAll('input[name="anggota_ids[]"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = true;
+            toggleStatus(checkboxes[i]);
+        }
         updateHadirCount();
     }
 
     function uncheckAll() {
-        document.querySelectorAll('input[name="anggota_ids[]"]').forEach(checkbox => {
-            checkbox.checked = false;
-            const id = checkbox.value;
-            toggleStatus(checkbox, id);
-        });
+        var checkboxes = document.querySelectorAll('input[name="anggota_ids[]"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+            toggleStatus(checkboxes[i]);
+        }
         updateHadirCount();
     }
 
-    function toggleStatus(checkbox, id) {
-        const statusSelect = document.getElementById('status_' + id);
+    function toggleStatus(checkbox) {
+        var id = checkbox.getAttribute('data-id');
+        var statusSelect = document.getElementById('status_' + id);
         if (checkbox.checked) {
             statusSelect.disabled = true;
             statusSelect.value = 'izin';
@@ -650,19 +341,18 @@
     }
 
     function updateHadirCount() {
-        const count = document.querySelectorAll('input[name="anggota_ids[]"]:checked').length;
-        const hadirElement = document.getElementById('hadirCount');
+        var count = document.querySelectorAll('input[name="anggota_ids[]"]:checked').length;
+        var hadirElement = document.getElementById('hadirCount');
         if (hadirElement) {
             hadirElement.textContent = count;
         }
     }
 
-    // Inisialisasi status saat load
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('input[name="anggota_ids[]"]').forEach(checkbox => {
-            const id = checkbox.value;
-            toggleStatus(checkbox, id);
-        });
+        var checkboxes = document.querySelectorAll('input[name="anggota_ids[]"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+            toggleStatus(checkboxes[i]);
+        }
         updateHadirCount();
     });
 </script>

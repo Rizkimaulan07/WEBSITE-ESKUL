@@ -7,23 +7,39 @@ use App\Models\Dokumentasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class DokumentasiController extends Controller
 {
     public function index()
     {
-        $pelatih = Auth::user();
-        $dokumentasis = Dokumentasi::where('ekskul_id', $pelatih->ekskul_id)
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
-        
-        return view('pelatih.dokumentasi.index', compact('dokumentasis'));
+        $user = Auth::user();
+        $ekskul = $user->ekskul;
+
+        // Jika tidak ada ekskul, tampilkan halaman kosong
+        if (!$ekskul) {
+            $dokumentasi = collect([]);
+            return view('pelatih.dokumentasi', compact('dokumentasi'))
+                   ->with('error', 'Anda belum memiliki ekskul! Silakan hubungi admin.');
+        }
+
+        // Gunakan paginate() bukan get()
+        $dokumentasi = Dokumentasi::where('ekskul_id', $ekskul->id)
+                                  ->orderBy('created_at', 'desc')
+                                  ->paginate(12);
+
+        return view('pelatih.dokumentasi', compact('dokumentasi'));
     }
 
     public function create()
     {
-        return view('pelatih.dokumentasi.create');
+        $user = Auth::user();
+        
+        if (!$user->ekskul) {
+            return redirect()->route('pelatih.dashboard')
+                             ->with('error', 'Anda belum memiliki ekskul! Silakan hubungi admin.');
+        }
+
+        return view('pelatih.dokumentasi_create');
     }
 
     public function store(Request $request)
@@ -31,50 +47,48 @@ class DokumentasiController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'tanggal' => 'nullable|date',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ], [
-            'judul.required' => 'Judul dokumentasi wajib diisi',
-            'foto.image' => 'File harus berupa gambar',
-            'foto.max' => 'Ukuran gambar maksimal 2MB',
-            'foto.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau svg'
+            'foto' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
-        $dokumentasi = new Dokumentasi();
-        $dokumentasi->judul = $request->judul;
-        $dokumentasi->deskripsi = $request->deskripsi;
-        $dokumentasi->tanggal = $request->tanggal ?? now();
-        $dokumentasi->ekskul_id = Auth::user()->ekskul_id;
-        $dokumentasi->user_id = Auth::id();
+        $user = Auth::user();
+        $ekskul = $user->ekskul;
+
+        if (!$ekskul) {
+            return redirect()->back()->with('error', 'Anda belum memiliki ekskul!');
+        }
+
+        $data = [
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tanggal' => now(),
+            'ekskul_id' => $ekskul->id,
+            'user_id' => $user->id
+        ];
 
         if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('dokumentasi', $filename, 'public');
-            $dokumentasi->foto = $path;
+            $foto = $request->file('foto');
+            $namaFoto = time() . '_' . str_replace(' ', '_', $request->judul) . '.' . $foto->getClientOriginalExtension();
+            $foto->storeAs('public/dokumentasi', $namaFoto);
+            $data['foto'] = 'dokumentasi/' . $namaFoto;
         }
 
-        $dokumentasi->save();
+        Dokumentasi::create($data);
 
-        // PERBAIKAN: Gunakan route pelatih.dokumentasi (tanpa .index)
         return redirect()->route('pelatih.dokumentasi')
-                         ->with('success', 'Dokumentasi berhasil ditambahkan!');
+                         ->with('success', '✅ Dokumentasi berhasil ditambahkan!');
     }
 
-    public function destroy(Dokumentasi $dokumentasi)
+    public function destroy($id)
     {
-        if ($dokumentasi->ekskul_id != Auth::user()->ekskul_id) {
-            abort(403, 'Anda tidak memiliki akses untuk menghapus dokumentasi ini');
+        $dokumentasi = Dokumentasi::findOrFail($id);
+        
+        if ($dokumentasi->foto && Storage::exists('public/' . $dokumentasi->foto)) {
+            Storage::delete('public/' . $dokumentasi->foto);
         }
-
-        if ($dokumentasi->foto && Storage::disk('public')->exists($dokumentasi->foto)) {
-            Storage::disk('public')->delete($dokumentasi->foto);
-        }
-
+        
         $dokumentasi->delete();
 
-        // PERBAIKAN: Gunakan route pelatih.dokumentasi (tanpa .index)
         return redirect()->route('pelatih.dokumentasi')
-                         ->with('success', 'Dokumentasi berhasil dihapus!');
+                         ->with('success', '🗑️ Dokumentasi berhasil dihapus!');
     }
 }

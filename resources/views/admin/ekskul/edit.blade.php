@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Anggota')
-@section('subtitle', 'Ubah data anggota')
+@section('title', 'Edit Ekstrakurikuler')
+@section('subtitle', 'Ubah data ekstrakurikuler')
 
 @section('content')
 <div class="row justify-content-center">
@@ -12,15 +12,15 @@
                  style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #312e81 60%, #4f46e5 100%);">
                 <div class="d-flex align-items-center gap-4">
                     <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                        <i class="fas fa-user-edit fa-2x text-white"></i>
+                        <i class="fas fa-edit fa-2x text-white"></i>
                     </div>
                     <div>
-                        <h4 class="text-white fw-bold mb-0">Edit Anggota</h4>
-                        <p class="text-white-50 mb-0 small">Ubah data anggota ekstrakurikuler</p>
+                        <h4 class="text-white fw-bold mb-0">Edit Ekstrakurikuler</h4>
+                        <p class="text-white-50 mb-0 small">Ubah data ekstrakurikuler</p>
                     </div>
                     <div class="ms-auto">
                         <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-4 py-2">
-                            <i class="fas fa-id-card me-2"></i>ID: #{{ str_pad($anggota->id, 4, '0', STR_PAD_LEFT) }}
+                            <i class="fas fa-trophy me-2"></i>{{ $ekskul->nama_ekskul }}
                         </span>
                     </div>
                 </div>
@@ -60,48 +60,49 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.anggota.update', $anggota->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.ekskul.update', $ekskul->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="row g-4">
-                        <!-- Profile Image Upload -->
+                        <!-- Logo Upload -->
                         <div class="col-12">
                             <div class="text-center">
                                 <div class="position-relative d-inline-block">
-                                    @if($anggota->avatar)
-                                        <img src="{{ asset('storage/' . $anggota->avatar) }}" 
+                                    @if($ekskul->logo)
+                                        <img src="{{ asset('storage/' . $ekskul->logo) }}" 
                                              class="rounded-circle border border-4 border-white shadow-lg" 
                                              style="width: 120px; height: 120px; object-fit: cover;"
-                                             id="avatarPreview">
+                                             id="logoPreview">
                                     @else
-                                        <div class="avatar-upload-placeholder rounded-circle d-inline-flex align-items-center justify-content-center"
+                                        <div class="logo-upload-placeholder rounded-circle d-inline-flex align-items-center justify-content-center"
                                              style="width: 120px; height: 120px; background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); border: 4px solid white; box-shadow: 0 8px 30px rgba(99,102,241,0.2);">
-                                            <i class="fas fa-user fa-4x text-white opacity-75"></i>
+                                            <i class="fas fa-image fa-4x text-white opacity-75"></i>
                                         </div>
                                     @endif
-                                    <label for="avatar" class="btn-upload-avatar">
+                                    <label for="logo" class="btn-upload-logo">
                                         <i class="fas fa-camera"></i>
                                     </label>
-                                    <input type="file" class="d-none" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(event)">
+                                    <input type="file" class="d-none" id="logo" name="logo" accept="image/*" onchange="previewLogo(event)">
                                 </div>
                                 <p class="text-muted small mt-2">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Klik ikon kamera untuk mengubah foto
+                                    Klik ikon kamera untuk mengubah logo
                                 </p>
                             </div>
                         </div>
 
-                        <!-- Nama & Email -->
+                        <!-- Nama Ekskul & Pembina -->
                         <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-user text-primary me-2"></i>Nama Lengkap
+                                    <i class="fas fa-tag text-primary me-2"></i>Nama Ekskul
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control form-control-modern @error('name') is-invalid @enderror" 
-                                       name="name" value="{{ old('name', $anggota->name) }}" placeholder="Masukkan nama lengkap" required>
-                                @error('name')
+                                <input type="text" class="form-control form-control-modern @error('nama_ekskul') is-invalid @enderror" 
+                                       name="nama_ekskul" value="{{ old('nama_ekskul', $ekskul->nama_ekskul) }}" 
+                                       placeholder="Contoh: Paskibra, Pramuka" required>
+                                @error('nama_ekskul')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -109,73 +110,96 @@
                         <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                    <i class="fas fa-user-tie text-primary me-2"></i>Pembina
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input type="email" class="form-control form-control-modern @error('email') is-invalid @enderror" 
-                                       name="email" value="{{ old('email', $anggota->email) }}" placeholder="Masukkan email" required>
-                                @error('email')
+                                <input type="text" class="form-control form-control-modern @error('pembina') is-invalid @enderror" 
+                                       name="pembina" value="{{ old('pembina', $ekskul->pembina) }}" 
+                                       placeholder="Contoh: Bpk. Andi Susanto, S.Pd" required>
+                                @error('pembina')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Kelas & No HP -->
-                        <div class="col-md-6">
+                        <!-- Deskripsi -->
+                        <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-graduation-cap text-primary me-2"></i>Kelas
+                                    <i class="fas fa-align-left text-primary me-2"></i>Deskripsi
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select class="form-select form-select-modern @error('kelas') is-invalid @enderror" 
-                                        name="kelas" required>
-                                    <option value="">Pilih Kelas</option>
-                                    <option value="X-A" {{ old('kelas', $anggota->kelas) == 'X-A' ? 'selected' : '' }}>X-A</option>
-                                    <option value="X-B" {{ old('kelas', $anggota->kelas) == 'X-B' ? 'selected' : '' }}>X-B</option>
-                                    <option value="X-C" {{ old('kelas', $anggota->kelas) == 'X-C' ? 'selected' : '' }}>X-C</option>
-                                    <option value="XI-A" {{ old('kelas', $anggota->kelas) == 'XI-A' ? 'selected' : '' }}>XI-A</option>
-                                    <option value="XI-B" {{ old('kelas', $anggota->kelas) == 'XI-B' ? 'selected' : '' }}>XI-B</option>
-                                    <option value="XI-C" {{ old('kelas', $anggota->kelas) == 'XI-C' ? 'selected' : '' }}>XI-C</option>
-                                    <option value="XII-A" {{ old('kelas', $anggota->kelas) == 'XII-A' ? 'selected' : '' }}>XII-A</option>
-                                    <option value="XII-B" {{ old('kelas', $anggota->kelas) == 'XII-B' ? 'selected' : '' }}>XII-B</option>
-                                    <option value="XII-C" {{ old('kelas', $anggota->kelas) == 'XII-C' ? 'selected' : '' }}>XII-C</option>
+                                <textarea class="form-control form-control-modern @error('deskripsi') is-invalid @enderror" 
+                                          name="deskripsi" rows="4" 
+                                          placeholder="Tuliskan deskripsi lengkap tentang ekstrakurikuler ini..." 
+                                          required>{{ old('deskripsi', $ekskul->deskripsi) }}</textarea>
+                                @error('deskripsi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Hari, Jam, Tempat -->
+                        <div class="col-md-4">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-calendar-day text-primary me-2"></i>Hari Latihan
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select form-select-modern @error('hari_latihan') is-invalid @enderror" 
+                                        name="hari_latihan" required>
+                                    <option value="">Pilih Hari</option>
+                                    <option value="Senin" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Senin' ? 'selected' : '' }}>Senin</option>
+                                    <option value="Selasa" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Selasa' ? 'selected' : '' }}>Selasa</option>
+                                    <option value="Rabu" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Rabu' ? 'selected' : '' }}>Rabu</option>
+                                    <option value="Kamis" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Kamis' ? 'selected' : '' }}>Kamis</option>
+                                    <option value="Jumat" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Jumat' ? 'selected' : '' }}>Jumat</option>
+                                    <option value="Sabtu" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Sabtu' ? 'selected' : '' }}>Sabtu</option>
+                                    <option value="Minggu" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Minggu' ? 'selected' : '' }}>Minggu</option>
                                 </select>
-                                @error('kelas')
+                                @error('hari_latihan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-phone text-primary me-2"></i>No HP
+                                    <i class="fas fa-clock text-primary me-2"></i>Jam Mulai
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control form-control-modern @error('no_hp') is-invalid @enderror" 
-                                       name="no_hp" value="{{ old('no_hp', $anggota->no_hp) }}" placeholder="Masukkan no HP" required>
-                                @error('no_hp')
+                                <input type="time" class="form-control form-control-modern @error('jam_mulai') is-invalid @enderror" 
+                                       name="jam_mulai" value="{{ old('jam_mulai', $ekskul->jam_mulai) }}" required>
+                                @error('jam_mulai')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-clock text-primary me-2"></i>Jam Selesai
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="time" class="form-control form-control-modern @error('jam_selesai') is-invalid @enderror" 
+                                       name="jam_selesai" value="{{ old('jam_selesai', $ekskul->jam_selesai) }}" required>
+                                @error('jam_selesai')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Password -->
+                        <!-- Tempat & Status -->
                         <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-lock text-primary me-2"></i>Password Baru
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>Tempat Latihan
+                                    <span class="text-danger">*</span>
                                 </label>
-                                <div class="password-wrapper">
-                                    <input type="password" class="form-control form-control-modern @error('password') is-invalid @enderror" 
-                                           name="password" placeholder="Kosongkan jika tidak diubah" id="password">
-                                    <button type="button" class="btn-toggle-password" onclick="togglePassword()">
-                                        <i class="fas fa-eye" id="passwordIcon"></i>
-                                    </button>
-                                </div>
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>Minimal 8 karakter
-                                </small>
-                                @error('password')
+                                <input type="text" class="form-control form-control-modern @error('tempat_latihan') is-invalid @enderror" 
+                                       name="tempat_latihan" value="{{ old('tempat_latihan', $ekskul->tempat_latihan) }}" 
+                                       placeholder="Contoh: Lapangan Upacara, GOR" required>
+                                @error('tempat_latihan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -183,31 +207,19 @@
                         <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>Konfirmasi Password
-                                </label>
-                                <input type="password" class="form-control form-control-modern" 
-                                       name="password_confirmation" placeholder="Konfirmasi password baru">
-                            </div>
-                        </div>
-
-                        <!-- Ekskul -->
-                        <div class="col-md-12">
-                            <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-trophy text-primary me-2"></i>Ekstrakurikuler
+                                    <i class="fas fa-toggle-on text-primary me-2"></i>Status
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select class="form-select form-select-modern @error('ekskul_id') is-invalid @enderror" 
-                                        name="ekskul_id" required>
-                                    <option value="">Pilih Ekstrakurikuler</option>
-                                    @foreach($ekskuls as $ekskul)
-                                        <option value="{{ $ekskul->id }}" 
-                                            {{ old('ekskul_id', $anggota->ekskuls->first()->id ?? '') == $ekskul->id ? 'selected' : '' }}>
-                                            <i class="fas fa-trophy me-2"></i>{{ $ekskul->nama_ekskul }}
-                                        </option>
-                                    @endforeach
+                                <select class="form-select form-select-modern @error('status') is-invalid @enderror" 
+                                        name="status" required>
+                                    <option value="aktif" {{ old('status', $ekskul->status) == 'aktif' ? 'selected' : '' }}>
+                                        🟢 Aktif
+                                    </option>
+                                    <option value="nonaktif" {{ old('status', $ekskul->status) == 'nonaktif' ? 'selected' : '' }}>
+                                        🔴 Nonaktif
+                                    </option>
                                 </select>
-                                @error('ekskul_id')
+                                @error('status')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -223,11 +235,11 @@
                         <!-- Tombol Aksi -->
                         <div class="col-12">
                             <div class="d-flex gap-3 justify-content-end">
-                                <a href="{{ route('admin.anggota.index') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2">
+                                <a href="{{ route('admin.ekskul.index') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
                                 <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 btn-gradient">
-                                    <i class="fas fa-save me-2"></i>Update Anggota
+                                    <i class="fas fa-save me-2"></i>Update Ekskul
                                 </button>
                             </div>
                         </div>
@@ -276,36 +288,13 @@
         box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
     }
 
-    /* ===== PASSWORD TOGGLE ===== */
-    .password-wrapper {
-        position: relative;
+    textarea.form-control-modern {
+        resize: vertical;
+        min-height: 100px;
     }
 
-    .password-wrapper .form-control {
-        padding-right: 50px;
-    }
-
-    .btn-toggle-password {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: #94a3b8;
-        cursor: pointer;
-        padding: 8px;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-    }
-
-    .btn-toggle-password:hover {
-        background: #f1f5f9;
-        color: #6366f1;
-    }
-
-    /* ===== AVATAR UPLOAD ===== */
-    .btn-upload-avatar {
+    /* ===== LOGO UPLOAD ===== */
+    .btn-upload-logo {
         position: absolute;
         bottom: 5px;
         right: 5px;
@@ -323,7 +312,7 @@
         box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
     }
 
-    .btn-upload-avatar:hover {
+    .btn-upload-logo:hover {
         transform: scale(1.1);
         box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
     }
@@ -415,7 +404,7 @@
         .d-flex.gap-3.justify-content-end {
             flex-direction: column-reverse;
         }
-        .btn-upload-avatar {
+        .btn-upload-logo {
             width: 32px;
             height: 32px;
             font-size: 12px;
@@ -440,44 +429,32 @@
 </style>
 
 <script>
-    function previewAvatar(event) {
+    function previewLogo(event) {
         const input = event.target;
         const reader = new FileReader();
         reader.onload = function() {
-            const preview = document.getElementById('avatarPreview');
+            const preview = document.getElementById('logoPreview');
             if (preview) {
                 preview.src = reader.result;
             } else {
                 const container = input.closest('.position-relative');
                 const img = document.createElement('img');
-                img.id = 'avatarPreview';
+                img.id = 'logoPreview';
                 img.className = 'rounded-circle border border-4 border-white shadow-lg';
                 img.style.cssText = 'width: 120px; height: 120px; object-fit: cover;';
                 img.src = reader.result;
                 
-                const placeholder = container.querySelector('.avatar-upload-placeholder');
+                const placeholder = container.querySelector('.logo-upload-placeholder');
                 if (placeholder) placeholder.remove();
                 
-                const existingImg = container.querySelector('#avatarPreview');
+                const existingImg = container.querySelector('#logoPreview');
                 if (existingImg) existingImg.remove();
                 
-                container.insertBefore(img, container.querySelector('.btn-upload-avatar'));
+                container.insertBefore(img, container.querySelector('.btn-upload-logo'));
             }
         };
         if (input.files && input.files[0]) {
             reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const icon = document.getElementById('passwordIcon');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.className = 'fas fa-eye-slash';
-        } else {
-            passwordInput.type = 'password';
-            icon.className = 'fas fa-eye';
         }
     }
 </script>

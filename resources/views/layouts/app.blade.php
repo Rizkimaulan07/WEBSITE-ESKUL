@@ -429,13 +429,13 @@
                     @elseif($user->role == 'pelatih')
                         <!-- ===== MENU PELATIH ===== -->
                         <div class="menu-label">Main Menu</div>
-                        <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran') ? 'active' : '' }}">
-                            <i class="fas fa-check-circle"></i> Kehadiran
+                        <a href="{{ route('pelatih.dashboard') }}" class="nav-link {{ request()->routeIs('pelatih.dashboard') ? 'active' : '' }}">
+                            <i class="fas fa-th-large"></i> Dashboard
                         </a>
-                        <a href="{{ route('pelatih.nilai') }}" class="nav-link {{ request()->routeIs('pelatih.nilai') ? 'active' : '' }}">
+                        <a href="{{ route('pelatih.nilai') }}" class="nav-link {{ request()->routeIs('pelatih.nilai*') ? 'active' : '' }}">
                             <i class="fas fa-star"></i> Nilai Anggota
                         </a>
-                        <a href="{{ route('pelatih.dokumentasi') }}" class="nav-link {{ request()->routeIs('pelatih.dokumentasi') ? 'active' : '' }}">
+                        <a href="{{ route('pelatih.dokumentasi') }}" class="nav-link {{ request()->routeIs('pelatih.dokumentasi*') ? 'active' : '' }}">
                             <i class="fas fa-camera"></i> Dokumentasi
                         </a>
 

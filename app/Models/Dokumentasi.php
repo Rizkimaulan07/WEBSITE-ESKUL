@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Dokumentasi extends Model
 {
@@ -12,25 +12,23 @@ class Dokumentasi extends Model
     protected $fillable = [
         'judul',
         'deskripsi',
-        'foto_path',
-        'tanggal_kegiatan',
+        'tanggal',
+        'foto',
         'ekskul_id',
-        'diunggah_oleh'
+        'user_id'
     ];
 
     protected $casts = [
-        'tanggal_kegiatan' => 'date'
+        'tanggal' => 'date'
     ];
 
-    // Relasi ke Ekskul
     public function ekskul()
     {
         return $this->belongsTo(Ekstrakurikuler::class);
     }
 
-    // Relasi ke Pengunggah (User)
-    public function pengunggah()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'diunggah_oleh');
+        return $this->belongsTo(User::class);
     }
 }

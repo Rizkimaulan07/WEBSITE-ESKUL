@@ -8,6 +8,8 @@ use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\Pelatih\NilaiController;
 use App\Http\Controllers\Pelatih\DokumentasiController;
 use App\Http\Controllers\Pelatih\KehadiranController;
+use App\Http\Controllers\Anggota\KehadiranController as AnggotaKehadiranController;
+use App\Http\Controllers\Anggota\NilaiController as AnggotaNilaiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +36,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     });
+    
     Route::resource('ekskul', EkskulController::class);
     Route::resource('anggota', AnggotaController::class);
     Route::resource('template-surat', TemplateSuratController::class);
@@ -41,7 +44,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // === ROUTE PELATIH ===
-Route::middleware(['auth'])->prefix('pelatih')->name('pelatih.')->group(function () {
+Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')->group(function () {
     // Dashboard Pelatih
     Route::get('/dashboard', [DashboardController::class, 'pelatih'])->name('dashboard');
     Route::get('/', function () {
@@ -53,9 +56,10 @@ Route::middleware(['auth'])->prefix('pelatih')->name('pelatih.')->group(function
     Route::post('/kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
     Route::get('/kehadiran/rekap', [KehadiranController::class, 'rekap'])->name('kehadiran.rekap');
     
-    // Nilai
+    // Nilai & Kehadiran (gabungan)
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');
+    Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran'); // TAMBAHKAN INI
     Route::get('/nilai/export', [NilaiController::class, 'export'])->name('nilai.export');
     
     // Dokumentasi
@@ -67,10 +71,19 @@ Route::middleware(['auth'])->prefix('pelatih')->name('pelatih.')->group(function
 
 // === ROUTE ANGGOTA ===
 Route::middleware(['auth', 'role:anggota'])->prefix('anggota')->name('anggota.')->group(function () {
+    // Dashboard Anggota
     Route::get('/dashboard', [DashboardController::class, 'anggota'])->name('dashboard');
     Route::get('/', function () {
         return redirect()->route('anggota.dashboard');
     });
+    
+    // Kehadiran Anggota
+    Route::get('/kehadiran', [AnggotaKehadiranController::class, 'index'])->name('kehadiran');
+    Route::get('/kehadiran/detail', [AnggotaKehadiranController::class, 'detail'])->name('kehadiran.detail');
+    
+    // Nilai Anggota
+    Route::get('/nilai', [AnggotaNilaiController::class, 'index'])->name('nilai');
+    Route::get('/nilai/detail/{id}', [AnggotaNilaiController::class, 'detail'])->name('nilai.detail');
 });
 
 require __DIR__.'/auth.php';

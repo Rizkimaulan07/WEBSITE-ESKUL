@@ -60,7 +60,7 @@ class AnggotaController extends Controller
             $user->ekskuls()->attach($request->ekskul_id);
         }
 
-        return redirect()->route('anggota.index')
+        return redirect()->route('admin.anggota.index')
                          ->with('success', '🎉 Anggota berhasil ditambahkan!');
     }
 
@@ -113,7 +113,7 @@ class AnggotaController extends Controller
             $anggota->ekskuls()->detach();
         }
 
-        return redirect()->route('anggota.index')
+        return redirect()->route('admin.anggota.index')
                          ->with('success', '✅ Anggota berhasil diupdate!');
     }
 
@@ -127,7 +127,7 @@ class AnggotaController extends Controller
         
         $anggota->delete();
         
-        return redirect()->route('anggota.index')
+        return redirect()->route('admin.anggota.index')
                          ->with('success', '🗑️ Anggota berhasil dihapus!');
     }
 
