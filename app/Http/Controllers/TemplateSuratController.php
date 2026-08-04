@@ -10,7 +10,7 @@ class TemplateSuratController extends Controller
 {
     public function index()
     {
-        $templates = TemplateSurat::orderBy('created_at', 'desc')->get();
+        $templates = TemplateSurat::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.template-surat.index', compact('templates'));
     }
 
@@ -32,21 +32,18 @@ class TemplateSuratController extends Controller
         if ($request->hasFile('file_template')) {
             $file = $request->file('file_template');
             $namaFile = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('public/template-surat', $namaFile);
-            // Simpan hanya nama file atau path relatif
+            $file->storeAs('public/template-surat', $namaFile);
             $data['file_template'] = 'template-surat/' . $namaFile;
         }
 
         TemplateSurat::create($data);
 
-        // PERBAIKAN: Gunakan prefix admin.
         return redirect()->route('admin.template-surat.index')
-                         ->with('success', 'Template surat berhasil ditambahkan!');
+                         ->with('success', '✅ Template surat berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
-        // PERBAIKAN: Gunakan findOrFail untuk konsistensi
         $templateSurat = TemplateSurat::findOrFail($id);
         return view('admin.template-surat.edit', compact('templateSurat'));
     }
@@ -63,7 +60,6 @@ class TemplateSuratController extends Controller
         $data = $request->except(['_token', '_method']);
 
         if ($request->hasFile('file_template')) {
-            // Hapus file lama
             if ($templateSurat->file_template && Storage::exists('public/' . $templateSurat->file_template)) {
                 Storage::delete('public/' . $templateSurat->file_template);
             }
@@ -72,16 +68,12 @@ class TemplateSuratController extends Controller
             $namaFile = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/template-surat', $namaFile);
             $data['file_template'] = 'template-surat/' . $namaFile;
-        } else {
-            // Jika tidak upload file baru, pertahankan file lama
-            $data['file_template'] = $templateSurat->file_template;
         }
 
         $templateSurat->update($data);
 
-        // PERBAIKAN: Gunakan prefix admin.
         return redirect()->route('admin.template-surat.index')
-                         ->with('success', 'Template surat berhasil diupdate!');
+                         ->with('success', '✅ Template surat berhasil diupdate!');
     }
 
     public function destroy($id)
@@ -94,9 +86,8 @@ class TemplateSuratController extends Controller
         
         $templateSurat->delete();
 
-        // PERBAIKAN: Gunakan prefix admin.
         return redirect()->route('admin.template-surat.index')
-                         ->with('success', 'Template surat berhasil dihapus!');
+                         ->with('success', '🗑️ Template surat berhasil dihapus!');
     }
 
     public function download($id)

@@ -4,82 +4,81 @@
 @section('subtitle', 'Kelola semua ekstrakurikuler')
 
 @section('content')
-<!-- Stats Cards -->
+<!-- ===== STATS CARDS PREMIUM ===== -->
 <div class="row g-4 mb-4">
     <div class="col-xl-3 col-lg-6 col-md-6">
-        <div class="stat-card blue">
-            <div class="stat-icon blue">
+        <div class="stat-card" style="--accent: #4f46e5; --glow: rgba(79,70,229,0.15);">
+            <div class="stat-icon">
                 <i class="fas fa-trophy"></i>
             </div>
             <div class="stat-body">
                 <span class="stat-label">Total Ekskul</span>
                 <h3 class="stat-number">{{ $ekskuls->total() }}</h3>
-                <span class="stat-change up">
+                <span class="stat-trend up">
                     <i class="fas fa-arrow-up me-1"></i> {{ $ekskuls->where('status', 'aktif')->count() }} aktif
                 </span>
             </div>
-            <div class="stat-progress">
-                <div class="progress-bar" style="width: {{ $ekskuls->total() > 0 ? ($ekskuls->where('status', 'aktif')->count() / $ekskuls->total()) * 100 : 0 }}%;"></div>
-            </div>
+            <div class="stat-progress" style="--accent: #4f46e5;"></div>
+            <div class="stat-glow" style="--accent: #4f46e5;"></div>
         </div>
     </div>
     <div class="col-xl-3 col-lg-6 col-md-6">
-        <div class="stat-card gold">
-            <div class="stat-icon gold">
+        <div class="stat-card" style="--accent: #3b82f6; --glow: rgba(59,130,246,0.15);">
+            <div class="stat-icon" style="background: rgba(59,130,246,0.08); color: #3b82f6;">
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-body">
                 <span class="stat-label">Total Anggota</span>
                 <h3 class="stat-number">{{ $ekskuls->sum('users_count') }}</h3>
-                <span class="stat-change up">
+                <span class="stat-trend up">
                     <i class="fas fa-user-plus me-1"></i> Terdaftar
                 </span>
             </div>
-            <div class="stat-meta">
-                <span class="badge-soft">Rata-rata {{ $ekskuls->total() > 0 ? round($ekskuls->sum('users_count') / $ekskuls->total()) : 0 }} per ekskul</span>
-            </div>
+            <div class="stat-progress" style="--accent: #3b82f6;"></div>
+            <div class="stat-glow" style="--accent: #3b82f6;"></div>
         </div>
     </div>
     <div class="col-xl-3 col-lg-6 col-md-6">
-        <div class="stat-card green">
-            <div class="stat-icon green">
+        <div class="stat-card" style="--accent: #10b981; --glow: rgba(16,185,129,0.15);">
+            <div class="stat-icon" style="background: rgba(16,185,129,0.08); color: #10b981;">
                 <i class="fas fa-chalkboard-teacher"></i>
             </div>
             <div class="stat-body">
                 <span class="stat-label">Total Pembina</span>
                 <h3 class="stat-number">{{ $ekskuls->pluck('pembina')->unique()->count() }}</h3>
-                <span class="stat-change up">
+                <span class="stat-trend up">
                     <i class="fas fa-star me-1"></i> Profesional
                 </span>
             </div>
-            <div class="stat-meta">
-                <span class="badge-soft">Pembina berpengalaman</span>
-            </div>
+            <div class="stat-progress" style="--accent: #10b981;"></div>
+            <div class="stat-glow" style="--accent: #10b981;"></div>
         </div>
     </div>
     <div class="col-xl-3 col-lg-6 col-md-6">
-        <div class="stat-card purple">
-            <div class="stat-icon purple">
+        <div class="stat-card" style="--accent: #f59e0b; --glow: rgba(245,158,11,0.15);">
+            <div class="stat-icon" style="background: rgba(245,158,11,0.08); color: #f59e0b;">
                 <i class="fas fa-check-circle"></i>
             </div>
             <div class="stat-body">
                 <span class="stat-label">Status Ekskul</span>
                 <div class="d-flex gap-2 mt-1">
-                    <span class="status-badge active">🟢 Aktif</span>
-                    <span class="status-badge inactive">🔴 Nonaktif</span>
+                    <span class="status-badge active">● {{ $ekskuls->where('status', 'aktif')->count() }} Aktif</span>
+                    <span class="status-badge inactive">● {{ $ekskuls->where('status', 'nonaktif')->count() }} Nonaktif</span>
                 </div>
-                <span class="stat-change up">
+                <span class="stat-trend up">
                     <i class="fas fa-percent me-1"></i> 
                     {{ $ekskuls->total() > 0 ? round(($ekskuls->where('status', 'aktif')->count() / $ekskuls->total()) * 100) : 0 }}% aktif
                 </span>
             </div>
+            <div class="stat-progress" style="--accent: #f59e0b;"></div>
+            <div class="stat-glow" style="--accent: #f59e0b;"></div>
         </div>
     </div>
 </div>
 
-<!-- Search & Filter -->
-<div class="card-modern mb-4">
-    <div class="card-body-modern">
+<!-- ===== SEARCH & FILTER ===== -->
+<div class="card glass-card mb-4">
+    <div class="card-body p-4">
         <div class="row g-3 align-items-center">
             <div class="col-md-5">
                 <div class="search-wrapper">
@@ -91,13 +90,13 @@
                 <div class="d-flex flex-wrap gap-2 justify-content-md-end">
                     <select class="filter-select" id="filterStatus">
                         <option value="">Semua Status</option>
-                        <option value="aktif">🟢 Aktif</option>
-                        <option value="nonaktif">🔴 Nonaktif</option>
+                        <option value="aktif">● Aktif</option>
+                        <option value="nonaktif">● Nonaktif</option>
                     </select>
                     <button class="btn-reset" onclick="resetFilters()">
                         <i class="fas fa-undo me-1"></i> Reset
                     </button>
-                    <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-custom">
+                    <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-gradient">
                         <i class="fas fa-plus me-2"></i> Tambah Ekskul
                     </a>
                 </div>
@@ -106,33 +105,41 @@
     </div>
 </div>
 
-<!-- Table -->
-<div class="card-modern">
-    <div class="card-header-modern">
+<!-- ===== TABLE PREMIUM ===== -->
+<div class="card premium-table-card">
+    <div class="card-header premium-table-header">
         <div class="d-flex align-items-center gap-3">
-            <h6><i class="fas fa-list me-2" style="color: #6366f1;"></i>Daftar Ekstrakurikuler</h6>
-            <span class="badge-count">{{ $ekskuls->total() }} total</span>
+            <div class="header-icon">
+                <i class="fas fa-list-ul"></i>
+            </div>
+            <div>
+                <h6 class="mb-0 fw-bold">Daftar Ekstrakurikuler</h6>
+                <small class="text-muted">{{ $ekskuls->total() }} total data</small>
+            </div>
+        </div>
+        <div>
+            <span class="badge-count">{{ $ekskuls->total() }}</span>
         </div>
     </div>
-    <div class="card-body-modern p-0">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table-modern" id="ekskulTable">
+            <table class="table premium-table" id="ekskulTable">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Logo</th>
-                        <th>Nama Ekskul</th>
-                        <th>Pembina</th>
-                        <th>Jadwal</th>
-                        <th>Tempat</th>
-                        <th>Anggota</th>
-                        <th>Status</th>
-                        <th class="text-center">Aksi</th>
+                        <th width="5%">#</th>
+                        <th width="8%">Logo</th>
+                        <th width="18%">Nama Ekskul</th>
+                        <th width="15%">Pembina</th>
+                        <th width="15%">Jadwal</th>
+                        <th width="12%">Tempat</th>
+                        <th width="10%">Anggota</th>
+                        <th width="10%">Status</th>
+                        <th width="12%" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($ekskuls as $index => $ekskul)
-                    <tr data-status="{{ $ekskul->status }}">
+                    <tr data-status="{{ $ekskul->status }}" class="table-row">
                         <td>
                             <span class="number-badge">{{ $ekskuls->firstItem() + $index }}</span>
                         </td>
@@ -151,46 +158,47 @@
                         </td>
                         <td>
                             <div class="ekskul-name">
-                                <span class="fw-semibold">{{ $ekskul->nama_ekskul }}</span>
+                                <span class="fw-bold">{{ $ekskul->nama_ekskul }}</span>
                                 <span class="ekskul-slug">{{ $ekskul->slug }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="pembina-wrapper">
-                                <div class="pembina-icon">
-                                    <i class="fas fa-user-tie"></i>
+                                <div class="pembina-avatar">
+                                    {{ strtoupper(substr($ekskul->pembina, 0, 1)) }}
                                 </div>
                                 <span>{{ $ekskul->pembina }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="jadwal-wrapper">
-                                <span class="badge-soft">{{ $ekskul->hari_latihan }}</span>
-                                <span class="jam-wrapper">
+                                <span class="badge-day">{{ $ekskul->hari_latihan }}</span>
+                                <span class="time">
+                                    <i class="far fa-clock me-1"></i>
                                     {{ \Carbon\Carbon::parse($ekskul->jam_mulai)->format('H:i') }} - 
                                     {{ \Carbon\Carbon::parse($ekskul->jam_selesai)->format('H:i') }}
                                 </span>
                             </div>
                         </td>
                         <td>
-                            <span class="tempat-wrapper">
-                                <i class="fas fa-map-marker-alt me-1"></i>
+                            <span class="place">
+                                <i class="fas fa-map-pin me-1"></i>
                                 {{ $ekskul->tempat_latihan }}
                             </span>
                         </td>
                         <td>
-                            <span class="anggota-badge">
+                            <span class="member-badge">
                                 <i class="fas fa-user me-1"></i>
                                 {{ $ekskul->users_count ?? 0 }}
                             </span>
                         </td>
                         <td>
                             <span class="status-badge {{ $ekskul->status == 'aktif' ? 'active' : 'inactive' }}">
-                                {{ $ekskul->status == 'aktif' ? '🟢 Aktif' : '🔴 Nonaktif' }}
+                                {{ $ekskul->status == 'aktif' ? '● Aktif' : '● Nonaktif' }}
                             </span>
                         </td>
                         <td>
-                            <div class="action-buttons">
+                            <div class="action-group">
                                 <a href="{{ route('admin.ekskul.show', $ekskul) }}" class="btn-action view" title="Detail">
                                     <i class="fas fa-eye"></i>
                                 </a>
@@ -199,7 +207,7 @@
                                 </a>
                                 <form action="{{ route('admin.ekskul.destroy', $ekskul) }}" 
                                       method="POST" 
-                                      style="display:inline;"
+                                      class="d-inline"
                                       onsubmit="return confirm('Yakin ingin menghapus ekskul {{ $ekskul->nama_ekskul }}?')">
                                     @csrf
                                     @method('DELETE')
@@ -211,15 +219,13 @@
                         </td>
                     </tr>
                     @empty
-                    <tr id="emptyRow">
-                        <td colspan="9" class="text-center py-5">
+                    <tr>
+                        <td colspan="9">
                             <div class="empty-state">
-                                <div class="empty-icon">
-                                    <i class="fas fa-folder-open"></i>
-                                </div>
-                                <h5 class="empty-title">Belum ada data ekstrakurikuler</h5>
-                                <p class="empty-desc">Mulai tambahkan ekstrakurikuler pertama Anda</p>
-                                <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-custom mt-2">
+                                <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                                <h6 class="empty-title">Belum ada data</h6>
+                                <p class="empty-desc">Tambahkan ekstrakurikuler pertama Anda</p>
+                                <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-gradient mt-3">
                                     <i class="fas fa-plus me-2"></i> Tambah Ekskul
                                 </a>
                             </div>
@@ -230,8 +236,8 @@
             </table>
         </div>
     </div>
-    <div class="card-footer-modern">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
+    <div class="card-footer premium-table-footer">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <span class="footer-info">
                 <i class="fas fa-list me-1"></i>
                 Menampilkan {{ $ekskuls->firstItem() }} - {{ $ekskuls->lastItem() }} 
@@ -244,18 +250,18 @@
     </div>
 </div>
 
-<!-- Modal Preview Logo -->
+<!-- ===== MODAL PREVIEW LOGO ===== -->
 <div class="modal fade" id="logoModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content glass-modal">
+            <div class="modal-header border-0">
                 <h6 class="modal-title fw-bold">Preview Logo</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center py-4">
                 <img src="" id="logoPreviewModal" alt="Logo" class="modal-logo-preview">
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer border-0">
                 <button type="button" class="btn-modal-close" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -266,63 +272,47 @@
     /* ===== STAT CARDS ===== */
     .stat-card {
         background: #ffffff;
-        border-radius: 14px;
-        padding: 22px 24px;
+        border-radius: 18px;
+        padding: 24px 28px;
         border: 1px solid rgba(0,0,0,0.02);
         transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         position: relative;
         overflow: hidden;
+        display: flex;
+        gap: 16px;
+        align-items: center;
     }
 
     .stat-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
-        border-color: rgba(99, 102, 241, 0.04);
+        transform: translateY(-8px);
+        box-shadow: 0 16px 60px rgba(79,70,229,0.12);
+        border-color: rgba(79,70,229,0.06);
     }
 
     .stat-card .stat-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: rgba(79,70,229,0.08);
+        color: #4f46e5;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 22px;
         flex-shrink: 0;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: all 0.4s ease;
     }
 
     .stat-card:hover .stat-icon {
-        transform: scale(1.05) rotate(-2deg);
+        transform: scale(1.1) rotate(-3deg);
     }
 
-    .stat-card .stat-icon.blue { background: rgba(99, 102, 241, 0.06); color: #6366f1; }
-    .stat-card .stat-icon.gold { background: rgba(245, 158, 11, 0.06); color: #f59e0b; }
-    .stat-card .stat-icon.green { background: rgba(16, 185, 129, 0.06); color: #10b981; }
-    .stat-card .stat-icon.purple { background: rgba(139, 92, 246, 0.06); color: #8b5cf6; }
+    .stat-card .stat-body { flex: 1; }
+    .stat-card .stat-label { font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-number { font-size: 28px; font-weight: 800; color: #0f172a; margin: 2px 0; letter-spacing: -1px; }
 
-    .stat-card .stat-body {
-        flex: 1;
-    }
-
-    .stat-card .stat-label {
-        font-size: 12px;
-        color: #94a3b8;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .stat-card .stat-number {
-        font-size: 28px;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 2px 0;
-        letter-spacing: -0.5px;
-    }
-
-    .stat-change {
+    .stat-trend {
         font-size: 11px;
         font-weight: 600;
         padding: 2px 12px;
@@ -332,163 +322,100 @@
         gap: 4px;
     }
 
-    .stat-change.up {
-        background: rgba(16, 185, 129, 0.06);
-        color: #10b981;
-    }
-
-    .stat-change.down {
-        background: rgba(239, 68, 68, 0.06);
-        color: #ef4444;
-    }
+    .stat-trend.up { background: rgba(16,185,129,0.06); color: #10b981; }
+    .stat-trend.down { background: rgba(239,68,68,0.06); color: #ef4444; }
 
     .stat-progress {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 2px;
-        background: rgba(0,0,0,0.03);
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--accent));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.6s ease;
     }
 
-    .stat-progress .progress-bar {
-        height: 100%;
-        border-radius: 0;
-        transition: width 0.6s ease;
+    .stat-card:hover .stat-progress { transform: scaleX(1); }
+
+    .stat-glow {
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
     }
 
-    .stat-card.blue .progress-bar { background: linear-gradient(90deg, #6366f1, #818cf8); }
-    .stat-card.gold .progress-bar { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-    .stat-card.green .progress-bar { background: linear-gradient(90deg, #10b981, #34d399); }
-    .stat-card.purple .progress-bar { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .stat-card:hover .stat-glow { opacity: 0.06; }
 
-    .stat-meta {
-        margin-top: 8px;
-    }
-
-    .badge-soft {
-        background: rgba(99, 102, 241, 0.05);
-        color: #6366f1;
-        padding: 2px 14px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 500;
-    }
-
-    /* ===== CARD MODERN ===== */
-    .card-modern {
-        background: #ffffff;
-        border-radius: 14px;
-        border: 1px solid rgba(0,0,0,0.02);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .card-modern:hover {
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
-    }
-
-    .card-body-modern {
-        padding: 20px 24px;
-    }
-
-    .card-header-modern {
-        padding: 16px 24px;
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        background: rgba(248, 250, 252, 0.3);
-    }
-
-    .card-header-modern h6 {
-        font-weight: 600;
-        font-size: 14px;
-        color: #0f172a;
-        margin: 0;
-    }
-
-    .card-footer-modern {
-        padding: 14px 24px;
-        border-top: 1px solid rgba(0,0,0,0.02);
-        background: rgba(248, 250, 252, 0.2);
-    }
-
-    .badge-count {
-        background: rgba(99, 102, 241, 0.06);
-        color: #6366f1;
-        padding: 2px 12px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 500;
+    /* ===== GLASS CARD ===== */
+    .glass-card {
+        background: rgba(255,255,255,0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.04);
     }
 
     /* ===== SEARCH ===== */
-    .search-wrapper {
-        position: relative;
-    }
-
+    .search-wrapper { position: relative; }
     .search-wrapper .search-icon {
         position: absolute;
-        left: 14px;
+        left: 16px;
         top: 50%;
         transform: translateY(-50%);
         color: #94a3b8;
         font-size: 14px;
     }
-
     .search-wrapper .search-input {
         width: 100%;
-        padding: 10px 16px 10px 42px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        font-size: 13px;
-        font-family: 'Inter', sans-serif;
-        background: #f8fafc;
+        padding: 12px 16px 12px 44px;
+        border: 2px solid rgba(0,0,0,0.02);
+        border-radius: 12px;
+        font-size: 14px;
+        background: rgba(255,255,255,0.8);
         transition: all 0.3s ease;
         color: #0f172a;
+        font-family: 'Inter', sans-serif;
     }
-
     .search-wrapper .search-input:focus {
         outline: none;
-        border-color: #6366f1;
+        border-color: #4f46e5;
         background: #ffffff;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.04);
+        box-shadow: 0 0 0 4px rgba(79,70,229,0.06);
     }
 
-    .search-wrapper .search-input::placeholder {
-        color: #94a3b8;
-    }
-
-    /* ===== FILTER ===== */
     .filter-select {
-        padding: 10px 16px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
+        padding: 12px 16px;
+        border: 2px solid rgba(0,0,0,0.02);
+        border-radius: 12px;
         font-size: 13px;
-        font-family: 'Inter', sans-serif;
-        background: #f8fafc;
+        background: rgba(255,255,255,0.8);
         color: #0f172a;
         transition: all 0.3s ease;
         cursor: pointer;
         min-width: 140px;
+        font-family: 'Inter', sans-serif;
     }
-
     .filter-select:focus {
         outline: none;
-        border-color: #6366f1;
+        border-color: #4f46e5;
         background: #ffffff;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.04);
+        box-shadow: 0 0 0 4px rgba(79,70,229,0.06);
     }
 
     .btn-reset {
-        padding: 10px 20px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        background: #f8fafc;
+        padding: 12px 20px;
+        border: 2px solid rgba(0,0,0,0.02);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.8);
         color: #64748b;
         font-size: 13px;
         font-weight: 500;
@@ -496,17 +423,17 @@
         transition: all 0.3s ease;
         cursor: pointer;
     }
-
     .btn-reset:hover {
         background: #f1f5f9;
         transform: translateY(-2px);
+        border-color: transparent;
     }
 
-    .btn-primary-custom {
-        padding: 10px 24px;
+    .btn-primary-gradient {
+        padding: 12px 24px;
         border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
         color: #fff;
         font-size: 13px;
         font-weight: 600;
@@ -515,51 +442,108 @@
         text-decoration: none;
         display: inline-flex;
         align-items: center;
+        box-shadow: 0 4px 16px rgba(79,70,229,0.15);
     }
-
-    .btn-primary-custom:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+    .btn-primary-gradient:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(79,70,229,0.35);
         color: #fff;
         text-decoration: none;
     }
 
+    /* ===== PREMIUM TABLE ===== */
+    .premium-table-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.02);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .premium-table-card:hover {
+        box-shadow: 0 12px 60px rgba(79,70,229,0.06);
+    }
+
+    .premium-table-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid rgba(0,0,0,0.02);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(248,250,252,0.2);
+    }
+
+    .premium-table-header .header-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: rgba(79,70,229,0.06);
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .premium-table-header h6 { font-weight: 700; font-size: 14px; color: #0f172a; }
+    .premium-table-header small { font-size: 12px; color: #94a3b8; }
+
+    .premium-table-footer {
+        padding: 14px 24px;
+        border-top: 1px solid rgba(0,0,0,0.02);
+        background: rgba(248,250,252,0.2);
+    }
+
+    .badge-count {
+        background: rgba(79,70,229,0.06);
+        color: #4f46e5;
+        padding: 2px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
     /* ===== TABLE ===== */
-    .table-modern {
+    .premium-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
     }
 
-    .table-modern thead th {
-        background: rgba(248, 250, 252, 0.3);
+    .premium-table thead th {
+        background: rgba(248,250,252,0.2);
         color: #64748b;
         font-weight: 600;
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        padding: 12px 16px;
+        padding: 14px 16px;
         border-bottom: 1px solid rgba(0,0,0,0.02);
         text-align: left;
     }
 
-    .table-modern tbody td {
-        padding: 12px 16px;
-        border-bottom: 1px solid rgba(0,0,0,0.015);
+    .premium-table tbody td {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(0,0,0,0.01);
         vertical-align: middle;
     }
 
-    .table-modern tbody tr {
+    .table-row {
         transition: all 0.3s ease;
+        animation: fadeRow 0.5s ease forwards;
     }
 
-    .table-modern tbody tr:hover {
-        background: rgba(99, 102, 241, 0.012);
+    @keyframes fadeRow {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .table-modern tbody tr:last-child td {
-        border-bottom: none;
+    .table-row:hover {
+        background: rgba(79,70,229,0.015);
     }
+
+    .table-row:last-child td { border-bottom: none; }
 
     /* ===== NUMBER BADGE ===== */
     .number-badge {
@@ -569,37 +553,32 @@
         width: 28px;
         height: 28px;
         border-radius: 8px;
-        background: rgba(99, 102, 241, 0.04);
-        color: #6366f1;
+        background: rgba(79,70,229,0.04);
+        color: #4f46e5;
         font-weight: 600;
         font-size: 12px;
     }
 
     /* ===== LOGO ===== */
-    .logo-wrapper {
-        cursor: pointer;
-    }
-
+    .logo-wrapper { cursor: pointer; }
     .logo-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
         object-fit: cover;
-        border: 2px solid rgba(99, 102, 241, 0.04);
+        border: 2px solid rgba(0,0,0,0.02);
         transition: all 0.3s ease;
     }
-
     .logo-img:hover {
-        transform: scale(1.05);
-        border-color: #6366f1;
-        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+        transform: scale(1.08);
+        border-color: #4f46e5;
+        box-shadow: 0 4px 20px rgba(79,70,229,0.2);
     }
-
     .logo-placeholder {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: rgba(99, 102, 241, 0.04);
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.02);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -607,274 +586,192 @@
         border: 1px dashed rgba(0,0,0,0.04);
         transition: all 0.3s ease;
     }
-
     .logo-placeholder:hover {
-        background: rgba(99, 102, 241, 0.06);
+        background: rgba(79,70,229,0.04);
         transform: scale(1.05);
     }
 
     /* ===== EKSKUL NAME ===== */
-    .ekskul-name {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .ekskul-name .fw-semibold {
-        font-weight: 600;
-        color: #0f172a;
-    }
-
-    .ekskul-name .ekskul-slug {
-        font-size: 11px;
-        color: #94a3b8;
-    }
+    .ekskul-name { display: flex; flex-direction: column; }
+    .ekskul-name .fw-bold { font-weight: 700; color: #0f172a; font-size: 14px; }
+    .ekskul-name .ekskul-slug { font-size: 11px; color: #94a3b8; }
 
     /* ===== PEMBINA ===== */
-    .pembina-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .pembina-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        background: rgba(99, 102, 241, 0.04);
+    .pembina-wrapper { display: flex; align-items: center; gap: 10px; }
+    .pembina-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #4f46e5, #818cf8);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6366f1;
+        color: #fff;
+        font-weight: 700;
         font-size: 12px;
+        flex-shrink: 0;
     }
 
     /* ===== JADWAL ===== */
-    .jadwal-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-
-    .jam-wrapper {
-        font-size: 11px;
-        color: #94a3b8;
-    }
-
-    /* ===== TEMPAT ===== */
-    .tempat-wrapper {
-        font-size: 12px;
-        color: #475569;
-    }
-
-    /* ===== ANGGOTA BADGE ===== */
-    .anggota-badge {
-        background: rgba(99, 102, 241, 0.04);
-        color: #6366f1;
+    .jadwal-wrapper { display: flex; flex-direction: column; gap: 2px; }
+    .badge-day {
+        background: rgba(59,130,246,0.06);
+        color: #3b82f6;
         padding: 2px 12px;
-        border-radius: 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+        width: fit-content;
+    }
+    .time { font-size: 12px; color: #94a3b8; }
+
+    /* ===== PLACE ===== */
+    .place { font-size: 12px; color: #475569; }
+
+    /* ===== MEMBER BADGE ===== */
+    .member-badge {
+        background: rgba(16,185,129,0.06);
+        color: #10b981;
+        padding: 2px 12px;
+        border-radius: 8px;
         font-size: 12px;
         font-weight: 500;
     }
 
-    /* ===== STATUS BADGE ===== */
+    /* ===== STATUS ===== */
     .status-badge {
         padding: 3px 14px;
-        border-radius: 10px;
-        font-size: 11px;
+        border-radius: 12px;
+        font-size: 12px;
         font-weight: 500;
     }
 
     .status-badge.active {
-        background: rgba(16, 185, 129, 0.06);
+        background: rgba(16,185,129,0.08);
         color: #10b981;
     }
 
     .status-badge.inactive {
-        background: rgba(239, 68, 68, 0.06);
+        background: rgba(239,68,68,0.06);
         color: #ef4444;
     }
 
-    /* ===== ACTION BUTTONS ===== */
-    .action-buttons {
-        display: flex;
-        gap: 4px;
-        justify-content: center;
-    }
-
+    /* ===== ACTION ===== */
+    .action-group { display: flex; gap: 4px; justify-content: center; }
     .btn-action {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
         border: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 13px;
         transition: all 0.3s ease;
         cursor: pointer;
         text-decoration: none;
         background: transparent;
         color: #94a3b8;
     }
-
-    .btn-action:hover {
-        transform: translateY(-2px);
-    }
-
-    .btn-action.view:hover {
-        background: rgba(99, 102, 241, 0.06);
-        color: #6366f1;
-    }
-
-    .btn-action.edit:hover {
-        background: rgba(245, 158, 11, 0.06);
-        color: #f59e0b;
-    }
-
-    .btn-action.delete:hover {
-        background: rgba(239, 68, 68, 0.06);
-        color: #ef4444;
-    }
+    .btn-action:hover { transform: translateY(-3px); }
+    .btn-action.view:hover { background: rgba(79,70,229,0.06); color: #4f46e5; }
+    .btn-action.edit:hover { background: rgba(245,158,11,0.06); color: #f59e0b; }
+    .btn-action.delete:hover { background: rgba(239,68,68,0.06); color: #ef4444; }
 
     /* ===== EMPTY STATE ===== */
-    .empty-state {
-        padding: 40px 0;
-    }
-
-    .empty-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: rgba(99, 102, 241, 0.04);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        color: #94a3b8;
+    .empty-state { padding: 50px 0; text-align: center; }
+    .empty-state .empty-icon {
+        font-size: 56px;
+        color: #d1d5db;
         margin-bottom: 16px;
+        opacity: 0.5;
     }
+    .empty-state .empty-title { color: #64748b; margin-bottom: 4px; font-weight: 600; }
+    .empty-state .empty-desc { color: #94a3b8; font-size: 13px; }
 
-    .empty-title {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 4px;
-    }
-
-    .empty-desc {
-        color: #94a3b8;
+    /* ===== PAGINATION ===== */
+    .pagination .page-item .page-link {
+        border: none;
+        border-radius: 10px;
+        margin: 0 3px;
+        color: #64748b;
+        transition: all 0.3s ease;
         font-size: 13px;
-        margin-bottom: 16px;
+        padding: 8px 14px;
+    }
+    .pagination .page-item .page-link:hover {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(79,70,229,0.3);
+    }
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 16px rgba(79,70,229,0.3);
     }
 
-    /* ===== FOOTER INFO ===== */
-    .footer-info {
-        font-size: 12px;
-        color: #94a3b8;
-    }
+    .footer-info { font-size: 12px; color: #94a3b8; }
 
     /* ===== MODAL ===== */
-    .modal-content {
-        border: none;
-        border-radius: 14px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    .glass-modal {
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 20px;
     }
-
-    .modal-header {
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        padding: 16px 20px;
-    }
-
-    .modal-footer {
-        border-top: 1px solid rgba(0,0,0,0.02);
-        padding: 12px 20px;
-    }
-
-    .modal-logo-preview {
-        max-width: 100%;
-        max-height: 300px;
-        border-radius: 10px;
-    }
-
+    .modal-logo-preview { max-width: 100%; max-height: 300px; border-radius: 12px; }
     .btn-modal-close {
         padding: 8px 24px;
         border: none;
-        border-radius: 8px;
-        background: #f1f5f9;
+        border-radius: 10px;
+        background: rgba(0,0,0,0.02);
         color: #64748b;
         font-size: 13px;
         font-weight: 500;
         transition: all 0.3s ease;
     }
-
-    .btn-modal-close:hover {
-        background: #e2e8f0;
-    }
+    .btn-modal-close:hover { background: #f1f5f9; }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
-        .stat-card {
-            padding: 16px 18px;
-        }
-        .stat-card .stat-number {
-            font-size: 22px;
-        }
-        .card-header-modern {
-            flex-direction: column;
-            align-items: stretch;
-            padding: 14px 16px;
-        }
-        .card-body-modern {
-            padding: 14px 16px;
-        }
-        .card-footer-modern {
-            padding: 12px 16px;
-        }
-        .action-buttons {
-            gap: 2px;
-        }
-        .btn-action {
-            width: 28px;
-            height: 28px;
-            font-size: 11px;
-        }
+        .stat-card { padding: 16px 18px; }
+        .stat-card .stat-number { font-size: 22px; }
+        .premium-table-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .premium-table-footer .d-flex { flex-direction: column; gap: 12px; align-items: center; }
+        .action-group { gap: 2px; }
+        .btn-action { width: 28px; height: 28px; font-size: 11px; }
+        .premium-table { font-size: 12px; }
+        .glass-card .card-body { padding: 16px; }
+        .btn-primary-gradient { width: 100%; justify-content: center; }
     }
 </style>
 
 <script>
-    // Search Function
-    document.getElementById('searchInput')?.addEventListener('keyup', function() {
-        filterTable();
-    });
-
-    document.getElementById('filterStatus')?.addEventListener('change', function() {
-        filterTable();
-    });
+    // Search & Filter
+    document.getElementById('searchInput')?.addEventListener('keyup', filterTable);
+    document.getElementById('filterStatus')?.addEventListener('change', filterTable);
 
     function filterTable() {
         const search = document.getElementById('searchInput').value.toLowerCase();
         const statusFilter = document.getElementById('filterStatus').value;
-        
-        const rows = document.querySelectorAll('.table-modern tbody tr');
+        const rows = document.querySelectorAll('.table-row');
         let visibleCount = 0;
-        let visibleNumber = 0;
-        
+
         rows.forEach(row => {
-            if (row.id === 'emptyRow') return;
-            
             const text = row.textContent.toLowerCase();
             const rowStatus = row.dataset.status || '';
-            
             const matchSearch = text.includes(search);
             const matchStatus = !statusFilter || rowStatus === statusFilter;
-            
+
             if (matchSearch && matchStatus) {
                 row.style.display = '';
                 visibleCount++;
-                visibleNumber++;
-                const numberBadge = row.querySelector('.number-badge');
-                if (numberBadge) {
-                    numberBadge.textContent = visibleNumber;
-                }
+                const badge = row.querySelector('.number-badge');
+                if (badge) badge.textContent = visibleCount;
             } else {
                 row.style.display = 'none';
             }
@@ -886,10 +783,9 @@
         document.getElementById('filterStatus').value = '';
         filterTable();
     }
-    
-    // Logo Preview Modal
+
     function showLogo(src) {
-        if (src && src !== '') {
+        if (src && src !== '' && src !== 'null') {
             document.getElementById('logoPreviewModal').src = src;
             new bootstrap.Modal(document.getElementById('logoModal')).show();
         }
