@@ -59,13 +59,14 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     // Nilai & Kehadiran (gabungan)
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');
-    Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran'); // TAMBAHKAN INI
+    Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran');
     Route::get('/nilai/export', [NilaiController::class, 'export'])->name('nilai.export');
     
     // Dokumentasi
     Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi');
     Route::get('/dokumentasi/create', [DokumentasiController::class, 'create'])->name('dokumentasi.create');
     Route::post('/dokumentasi', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
+    Route::get('/dokumentasi/{id}', [DokumentasiController::class, 'show'])->name('dokumentasi.show'); // TAMBAHKAN INI
     Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
 });
 

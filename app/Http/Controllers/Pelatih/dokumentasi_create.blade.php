@@ -4,13 +4,6 @@
 @section('subtitle', 'Tambahkan dokumentasi kegiatan')
 
 @section('content')
-@php
-    $user = Auth::user();
-    // Ambil semua ekskul dari database
-    $allEkskuls = App\Models\Ekstrakurikuler::all();
-    $selectedEkskul = old('ekskul_id') ? $allEkskuls->firstWhere('id', old('ekskul_id')) : null;
-@endphp
-
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -79,80 +72,10 @@
                     </div>
                 @endif
 
-                <form action="{{ route('pelatih.dokumentasi.store') }}" method="POST" enctype="multipart/form-data" id="dokumentasiForm">
+                <form action="{{ route('pelatih.dokumentasi.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row g-4">
-                        <!-- ===== INFO EKSKUL ===== -->
-                        <div class="col-12">
-                            <div class="info-ekskul">
-                                <div class="d-flex align-items-center gap-3 p-3" 
-                                     style="background: rgba(79,70,229,0.03); border-radius: 12px; border: 1px solid rgba(79,70,229,0.06);">
-                                    <div class="ekskul-icon" 
-                                         style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #818cf8); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; flex-shrink: 0;">
-                                        <i class="fas fa-trophy"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted small text-uppercase" style="letter-spacing: 0.5px; font-weight: 600;">
-                                            <i class="fas fa-building me-1"></i> Ekstrakurikuler
-                                        </div>
-                                        <h5 class="fw-bold mb-0" style="color: #0f172a;">
-                                            @if($selectedEkskul)
-                                                {{ $selectedEkskul->nama_ekskul }}
-                                            @else
-                                                Pilih dari dropdown di bawah
-                                            @endif
-                                        </h5>
-                                        @if($selectedEkskul)
-                                            <small class="text-muted">
-                                                <i class="fas fa-user-tie me-1"></i>
-                                                {{ $selectedEkskul->pembina }}
-                                                <span class="mx-2">•</span>
-                                                <i class="fas fa-calendar-day me-1"></i>
-                                                {{ $selectedEkskul->hari_latihan }}
-                                            </small>
-                                        @endif
-                                    </div>
-                                    @if($selectedEkskul)
-                                        <div class="ms-auto">
-                                            <span class="badge" style="background: rgba(16,185,129,0.08); color: #10b981; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 500;">
-                                                <i class="fas fa-check-circle me-1"></i> Aktif
-                                            </span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pilih Ekskul Dropdown -->
-                        <div class="col-12">
-                            <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-trophy text-primary me-2"></i>Ekstrakurikuler
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select form-select-modern @error('ekskul_id') is-invalid @enderror" 
-                                        name="ekskul_id" id="ekskulSelect" required>
-                                    <option value="">-- Pilih Ekstrakurikuler --</option>
-                                    @foreach($allEkskuls as $ekskul)
-                                        <option value="{{ $ekskul->id }}" 
-                                            {{ old('ekskul_id') == $ekskul->id ? 'selected' : '' }}>
-                                            {{ $ekskul->nama_ekskul }} ({{ $ekskul->pembina }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('ekskul_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                @if($allEkskuls->count() == 0)
-                                    <small class="text-danger">
-                                        <i class="fas fa-exclamation-circle me-1"></i>
-                                        Belum ada ekstrakurikuler. Silakan tambahkan melalui admin.
-                                    </small>
-                                @endif
-                            </div>
-                        </div>
-
                         <!-- Judul -->
                         <div class="col-12">
                             <div class="form-group-modern">
@@ -238,21 +161,6 @@
 </div>
 
 <style>
-    .info-ekskul {
-        animation: fadeSlide 0.5s ease;
-    }
-
-    @keyframes fadeSlide {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     .form-group-modern {
         margin-bottom: 0;
     }
@@ -288,28 +196,6 @@
     textarea.form-control-modern {
         resize: vertical;
         min-height: 100px;
-    }
-
-    .form-select-modern {
-        padding: 12px 20px;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        font-size: 14px;
-        background: #fafbfc;
-        color: #0f172a;
-        appearance: auto;
-    }
-
-    .form-select-modern:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
-        background: #ffffff;
-    }
-
-    .form-select-modern.is-invalid {
-        border-color: #ef4444;
-        background: #fef2f2;
     }
 
     .upload-zone {
@@ -371,13 +257,6 @@
             min-height: 140px;
             padding: 20px !important;
         }
-        .info-ekskul .d-flex {
-            flex-wrap: wrap;
-        }
-        .info-ekskul .ms-auto {
-            margin-left: 0 !important;
-            margin-top: 8px;
-        }
     }
 </style>
 
@@ -398,70 +277,5 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
-
-    // HAPUS script reload otomatis - hanya update info ekskul saat dropdown berubah
-    document.addEventListener('DOMContentLoaded', function() {
-        const select = document.getElementById('ekskulSelect');
-        const infoEkskul = document.querySelector('.info-ekskul');
-        
-        if (select && infoEkskul) {
-            // Simpan data ekskul dalam bentuk array
-            const ekskulData = @json($allEkskuls);
-            
-            select.addEventListener('change', function() {
-                const selectedId = this.value;
-                const selectedEkskul = ekskulData.find(e => e.id == selectedId);
-                
-                if (selectedEkskul) {
-                    // Update info ekskul tanpa reload
-                    const nameElement = infoEkskul.querySelector('h5');
-                    const detailElement = infoEkskul.querySelector('small');
-                    const badgeElement = infoEkskul.querySelector('.badge');
-                    const iconElement = infoEkskul.querySelector('.ekskul-icon');
-                    
-                    if (nameElement) {
-                        nameElement.textContent = selectedEkskul.nama_ekskul;
-                    }
-                    
-                    if (detailElement) {
-                        detailElement.innerHTML = `
-                            <i class="fas fa-user-tie me-1"></i>
-                            ${selectedEkskul.pembina}
-                            <span class="mx-2">•</span>
-                            <i class="fas fa-calendar-day me-1"></i>
-                            ${selectedEkskul.hari_latihan}
-                        `;
-                    }
-                    
-                    // Update badge
-                    if (badgeElement) {
-                        badgeElement.style.display = 'inline-block';
-                        badgeElement.innerHTML = `<i class="fas fa-check-circle me-1"></i> Aktif`;
-                    }
-                    
-                    // Update icon background
-                    if (iconElement) {
-                        iconElement.style.background = 'linear-gradient(135deg, #4f46e5, #818cf8)';
-                    }
-                } else {
-                    // Reset jika tidak ada yang dipilih
-                    const nameElement = infoEkskul.querySelector('h5');
-                    if (nameElement) {
-                        nameElement.textContent = 'Pilih dari dropdown di bawah';
-                    }
-                    
-                    const detailElement = infoEkskul.querySelector('small');
-                    if (detailElement) {
-                        detailElement.textContent = '';
-                    }
-                    
-                    const badgeElement = infoEkskul.querySelector('.badge');
-                    if (badgeElement) {
-                        badgeElement.style.display = 'none';
-                    }
-                }
-            });
-        }
-    });
 </script>
-@endsection
+@endsection Are you nine

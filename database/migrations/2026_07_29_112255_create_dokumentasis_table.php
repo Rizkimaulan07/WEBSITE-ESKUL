@@ -6,30 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
-{
-    Schema::create('dokumentasis', function (Blueprint $table) {
-        $table->id();
-        $table->string('judul');
-        $table->text('deskripsi');
-        $table->string('foto_path');
-        $table->date('tanggal_kegiatan');
-        $table->unsignedBigInteger('ekskul_id');
-        $table->unsignedBigInteger('diunggah_oleh');
-        $table->timestamps();
-        
-        $table->foreign('ekskul_id')->references('id')->on('ekstrakurikulers');
-        $table->foreign('diunggah_oleh')->references('id')->on('users');
-    });
-}
+    {
+        Schema::create('dokumentasis', function (Blueprint $table) {
+            $table->id();
+            $table->string('judul');
+            $table->text('deskripsi')->nullable();
+            $table->string('foto_path')->nullable();
+            $table->date('tanggal_kegiatan')->nullable();
+            $table->unsignedBigInteger('ekskul_id');
+            $table->unsignedBigInteger('diunggah_oleh');
+            $table->timestamps();
+            
+            $table->foreign('ekskul_id')->references('id')->on('ekstrakurikulers')->onDelete('cascade');
+            $table->foreign('diunggah_oleh')->references('id')->on('users')->onDelete('cascade');
+        });
+    }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('dokumentasis');
     }

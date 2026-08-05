@@ -33,11 +33,19 @@ class EkskulController extends Controller
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
             'tempat_latihan' => 'required|string|max:255',
+            'status' => 'nullable|in:aktif,nonaktif',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
+        
+        // Set slug
         $data['slug'] = Str::slug($request->nama_ekskul);
+        
+        // Set status default jika tidak ada
+        if (!isset($data['status'])) {
+            $data['status'] = 'aktif';
+        }
         
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
@@ -67,6 +75,7 @@ class EkskulController extends Controller
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
             'tempat_latihan' => 'required|string|max:255',
+            'status' => 'nullable|in:aktif,nonaktif',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 

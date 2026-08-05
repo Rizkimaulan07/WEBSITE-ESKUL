@@ -65,8 +65,8 @@
     <div class="col-md-4 col-lg-3">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-card">
             <div class="position-relative">
-                @if($item->foto)
-                    <img src="{{ asset('storage/' . $item->foto) }}" 
+                @if($item->foto_path)
+                    <img src="{{ asset('storage/' . $item->foto_path) }}" 
                          class="card-img-top" 
                          alt="{{ $item->judul }}"
                          style="height: 200px; object-fit: cover;">
@@ -79,8 +79,19 @@
                 <div class="position-absolute top-0 end-0 p-2">
                     <span class="badge bg-dark bg-opacity-50 rounded-pill px-3 py-2">
                         <i class="far fa-calendar-alt me-1"></i>
-                        {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
+                        {{ \Carbon\Carbon::parse($item->tanggal_kegiatan)->format('d M Y') }}
                     </span>
+                </div>
+                <div class="position-absolute top-0 start-0 p-2">
+                    <form action="{{ route('pelatih.dokumentasi.destroy', $item->id) }}" method="POST"
+                          onsubmit="return confirm('Yakin ingin menghapus dokumentasi ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm rounded-circle" 
+                                style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-trash-alt fa-xs"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
             <div class="card-body">
@@ -91,14 +102,6 @@
                         <i class="far fa-clock me-1"></i>
                         {{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}
                     </small>
-                    <form action="{{ route('pelatih.dokumentasi.destroy', $item->id) }}" method="POST"
-                          onsubmit="return confirm('Yakin ingin menghapus dokumentasi ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm rounded-pill">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -123,6 +126,13 @@
     @endforelse
 </div>
 
+<!-- Pagination -->
+@if(method_exists($dokumentasi, 'links'))
+    <div class="mt-4">
+        {{ $dokumentasi->links('pagination::bootstrap-5') }}
+    </div>
+@endif
+
 <style>
     .hover-card {
         transition: all 0.3s ease;
@@ -146,6 +156,14 @@
     .btn-light:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(255,255,255,0.3);
+    }
+    .btn-danger {
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    .btn-danger:hover {
+        opacity: 1;
+        transform: scale(1.1);
     }
 </style>
 @endsection
