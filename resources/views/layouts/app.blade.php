@@ -419,11 +419,17 @@
                         <a href="{{ route('pelatih.dashboard') }}" class="nav-link {{ request()->routeIs('pelatih.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
                         </a>
+                        <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran*') ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-list"></i> Kehadiran
+                            <span class="badge">Input</span>
+                        </a>
                         <a href="{{ route('pelatih.nilai') }}" class="nav-link {{ request()->routeIs('pelatih.nilai*') ? 'active' : '' }}">
                             <i class="fas fa-star"></i> Nilai Anggota
+                            <span class="badge">Input</span>
                         </a>
                         <a href="{{ route('pelatih.dokumentasi') }}" class="nav-link {{ request()->routeIs('pelatih.dokumentasi*') ? 'active' : '' }}">
-                            <i class="fas fa-camera"></i> Dokumentasi
+                            <i class="fas fa-images"></i> Dokumentasi
+                            <span class="badge">Kelola</span>
                         </a>
 
                     @elseif($user->role == 'anggota')

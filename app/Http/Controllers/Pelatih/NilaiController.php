@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Pelatih;
 
 use App\Http\Controllers\Controller;
 use App\Models\NilaiAnggota;
-use App\Models\User;
 use App\Models\Kehadiran;
+use App\Models\User;
+use App\Models\Ekstrakurikuler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,7 @@ class NilaiController extends Controller
                    ->with('error', 'Anda belum terdaftar di ekskul manapun!');
         }
 
-        // Ambil semua anggota dari ekskul
+        // Ambil semua anggota dari ekskul yang sama
         $anggotas = User::where('role', 'anggota')
                         ->where('ekskul_id', $ekskul->id)
                         ->orderBy('name')
@@ -110,9 +111,9 @@ class NilaiController extends Controller
 
         if ($existing) {
             $existing->update([
-                'nilai_kehadiran' => $request->nilai_kehadiran ?? $existing->nilai_kehadiran,
-                'nilai_keterampilan' => $request->nilai_keterampilan ?? $existing->nilai_keterampilan,
-                'nilai_sikap' => $request->nilai_sikap ?? $existing->nilai_sikap,
+                'nilai_kehadiran' => 0,
+                'nilai_keterampilan' => 0,
+                'nilai_sikap' => 0,
                 'nilai_total' => $nilaiTotal,
                 'catatan' => $request->keterangan
             ]);

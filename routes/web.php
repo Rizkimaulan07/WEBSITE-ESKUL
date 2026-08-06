@@ -55,8 +55,9 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran');
     Route::post('/kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
     Route::get('/kehadiran/rekap', [KehadiranController::class, 'rekap'])->name('kehadiran.rekap');
+    Route::get('/kehadiran/{id}', [KehadiranController::class, 'show'])->name('kehadiran.show'); // TAMBAHKAN INI
     
-    // Nilai & Kehadiran (gabungan)
+    // Nilai
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');
     Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran');
@@ -66,7 +67,7 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi');
     Route::get('/dokumentasi/create', [DokumentasiController::class, 'create'])->name('dokumentasi.create');
     Route::post('/dokumentasi', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
-    Route::get('/dokumentasi/{id}', [DokumentasiController::class, 'show'])->name('dokumentasi.show'); // TAMBAHKAN INI
+    Route::get('/dokumentasi/{id}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
     Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
 });
 
@@ -80,7 +81,7 @@ Route::middleware(['auth', 'role:anggota'])->prefix('anggota')->name('anggota.')
     
     // Kehadiran Anggota
     Route::get('/kehadiran', [AnggotaKehadiranController::class, 'index'])->name('kehadiran');
-    Route::get('/kehadiran/detail', [AnggotaKehadiranController::class, 'detail'])->name('kehadiran.detail');
+    Route::get('/kehadiran/detail/{id}', [AnggotaKehadiranController::class, 'detail'])->name('kehadiran.detail');
     
     // Nilai Anggota
     Route::get('/nilai', [AnggotaNilaiController::class, 'index'])->name('nilai');

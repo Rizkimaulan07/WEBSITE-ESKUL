@@ -96,7 +96,7 @@
 
 <!-- Alert -->
 @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show rounded-3 border-0 shadow-sm" role="alert">
+    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
         <div class="d-flex align-items-center">
             <i class="fas fa-check-circle fa-2x me-3 text-success"></i>
             <div>
@@ -108,7 +108,7 @@
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show rounded-3 border-0 shadow-sm" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
         <div class="d-flex align-items-center">
             <i class="fas fa-exclamation-circle fa-2x me-3 text-danger"></i>
             <div>
@@ -119,23 +119,19 @@
     </div>
 @endif
 
-@if($anggotas->count() == 0)
-    <div class="alert alert-warning rounded-3 border-0 shadow-sm" role="alert">
-        <div class="d-flex align-items-center">
-            <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
-            <div>
-                <strong>Perhatian!</strong> Belum ada anggota yang terdaftar di ekskul ini.
-            </div>
-        </div>
-    </div>
-@endif
-
-<!-- Daftar Anggota -->
+<!-- Daftar Anggota dengan Input Nilai & Kehadiran -->
 <div class="card-modern">
     <div class="card-header-modern">
-        <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
             <h6><i class="fas fa-list me-2" style="color: #6366f1;"></i>Daftar Anggota</h6>
-            <span class="badge-soft">{{ $anggotas->count() }} anggota</span>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge-soft me-2">{{ $anggotas->count() }} anggota</span>
+                @if($anggotas->count() > 0)
+                <button class="btn-check-all" onclick="checkAllHadir()">
+                    <i class="fas fa-check-double me-1"></i> Hadir Semua
+                </button>
+                @endif
+            </div>
         </div>
     </div>
     <div class="card-body-modern p-0">
@@ -144,18 +140,18 @@
                 <thead>
                     <tr>
                         <th width="5%">No</th>
-                        <th width="20%">Nama Anggota</th>
+                        <th width="18%">Nama Anggota</th>
                         <th width="10%">Kelas</th>
                         <th width="20%">Nilai (A-E)</th>
                         <th width="25%">Kehadiran</th>
-                        <th width="15%">Status</th>
+                        <th width="12%">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($anggotas as $index => $item)
                         @php
                             $nilai = $item->nilai ?? null;
-                            $nilaiValue = $nilai ? $this->getNilaiHuruf($nilai->nilai_total) : '-';
+                            $nilaiHuruf = $nilai ? $this->getNilaiHuruf($nilai->nilai_total) : '-';
                             $kehadiran = $item->kehadiran ?? null;
                             $kehadiranStatus = $kehadiran ? $kehadiran->status : '-';
                             $status = $nilai ? 'Sudah Dinilai' : 'Belum Dinilai';
@@ -179,16 +175,16 @@
                             <span class="badge-soft">{{ $item->kelas ?? '-' }}</span>
                         </td>
                         <td>
-                            <form action="{{ route('pelatih.nilai.store') }}" method="POST" class="d-flex gap-1">
+                            <form action="{{ route('pelatih.nilai.store') }}" method="POST" class="d-flex gap-1 align-items-center">
                                 @csrf
                                 <input type="hidden" name="anggota_id" value="{{ $item->id }}">
-                                <select name="nilai" class="form-select form-select-sm" style="width: 80px;">
-                                    <option value="">-</option>
-                                    <option value="A" {{ $nilaiValue == 'A' ? 'selected' : '' }}>A</option>
-                                    <option value="B" {{ $nilaiValue == 'B' ? 'selected' : '' }}>B</option>
-                                    <option value="C" {{ $nilaiValue == 'C' ? 'selected' : '' }}>C</option>
-                                    <option value="D" {{ $nilaiValue == 'D' ? 'selected' : '' }}>D</option>
-                                    <option value="E" {{ $nilaiValue == 'E' ? 'selected' : '' }}>E</option>
+                                <select name="nilai" class="form-select form-select-sm nilai-select" required>
+                                    <option value="">- Pilih -</option>
+                                    <option value="A" {{ $nilaiHuruf == 'A' ? 'selected' : '' }}>A (Sangat Baik)</option>
+                                    <option value="B" {{ $nilaiHuruf == 'B' ? 'selected' : '' }}>B (Baik)</option>
+                                    <option value="C" {{ $nilaiHuruf == 'C' ? 'selected' : '' }}>C (Cukup)</option>
+                                    <option value="D" {{ $nilaiHuruf == 'D' ? 'selected' : '' }}>D (Kurang)</option>
+                                    <option value="E" {{ $nilaiHuruf == 'E' ? 'selected' : '' }}>E (Sangat Kurang)</option>
                                 </select>
                                 <button type="submit" class="btn-save-nilai" title="Simpan Nilai">
                                     <i class="fas fa-save"></i>
@@ -196,11 +192,11 @@
                             </form>
                         </td>
                         <td>
-                            <form action="{{ route('pelatih.nilai.kehadiran') }}" method="POST" class="d-flex gap-1">
+                            <form action="{{ route('pelatih.nilai.kehadiran') }}" method="POST" class="d-flex gap-1 align-items-center">
                                 @csrf
                                 <input type="hidden" name="anggota_id" value="{{ $item->id }}">
-                                <select name="status" class="form-select form-select-sm" style="width: 100px;">
-                                    <option value="">-</option>
+                                <select name="status" class="form-select form-select-sm kehadiran-select" required>
+                                    <option value="">- Pilih -</option>
                                     <option value="hadir" {{ $kehadiranStatus == 'hadir' ? 'selected' : '' }}>✅ Hadir</option>
                                     <option value="izin" {{ $kehadiranStatus == 'izin' ? 'selected' : '' }}>📝 Izin</option>
                                     <option value="sakit" {{ $kehadiranStatus == 'sakit' ? 'selected' : '' }}>🏥 Sakit</option>
@@ -212,7 +208,7 @@
                             </form>
                         </td>
                         <td>
-                            <span class="badge bg-{{ $statusClass }}" style="font-size: 12px; padding: 5px 12px;">
+                            <span class="badge bg-{{ $statusClass }}" style="font-size: 12px; padding: 5px 12px; display: inline-block;">
                                 {{ $status }}
                             </span>
                             @if($kehadiranStatus != '-')
@@ -225,8 +221,15 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="fas fa-inbox me-2"></i>Belum ada anggota
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-icon"><i class="fas fa-user-plus"></i></div>
+                                <h6 class="empty-title">Belum ada anggota</h6>
+                                <p class="empty-desc">Tambahkan anggota terlebih dahulu melalui menu Admin</p>
+                                <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient mt-2" target="_blank">
+                                    <i class="fas fa-plus me-2"></i> Tambah Anggota
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforelse
@@ -235,6 +238,27 @@
         </div>
     </div>
 </div>
+
+<!-- Informasi Input -->
+@if($anggotas->count() > 0)
+<div class="mt-4">
+    <div class="alert alert-info rounded-4 border-0 shadow-sm">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="bg-info bg-opacity-10 rounded-circle p-2">
+                <i class="fas fa-info-circle fa-2x text-info"></i>
+            </div>
+            <div>
+                <strong>Cara Input:</strong>
+                <ul class="mb-0 mt-1">
+                    <li>Pilih nilai (A-E) pada kolom <strong>Nilai</strong>, lalu klik tombol 💾</li>
+                    <li>Pilih status kehadiran pada kolom <strong>Kehadiran</strong>, lalu klik tombol 💾</li>
+                    <li>Klik tombol <strong>Hadir Semua</strong> untuk menandai semua anggota hadir</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 <style>
     .card-modern {
@@ -258,13 +282,6 @@
         flex-wrap: wrap;
         gap: 10px;
         background: rgba(248, 250, 252, 0.3);
-    }
-
-    .card-header-modern h6 {
-        font-weight: 600;
-        font-size: 14px;
-        color: #0f172a;
-        margin: 0;
     }
 
     .stat-card {
@@ -300,25 +317,9 @@
     .stat-card .stat-icon.green { background: rgba(16, 185, 129, 0.06); color: #10b981; }
     .stat-card .stat-icon.purple { background: rgba(139, 92, 246, 0.06); color: #8b5cf6; }
 
-    .stat-card .stat-body {
-        flex: 1;
-    }
-
-    .stat-card .stat-label {
-        font-size: 12px;
-        color: #94a3b8;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .stat-card .stat-number {
-        font-size: 28px;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 2px 0;
-        letter-spacing: -0.5px;
-    }
+    .stat-card .stat-body { flex: 1; }
+    .stat-card .stat-label { font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-number { font-size: 28px; font-weight: 700; color: #0f172a; margin: 2px 0; letter-spacing: -0.5px; }
 
     .stat-change {
         font-size: 11px;
@@ -330,10 +331,7 @@
         gap: 4px;
     }
 
-    .stat-change.up {
-        background: rgba(16, 185, 129, 0.06);
-        color: #10b981;
-    }
+    .stat-change.up { background: rgba(16, 185, 129, 0.06); color: #10b981; }
 
     .badge-soft {
         background: rgba(99, 102, 241, 0.05);
@@ -407,6 +405,8 @@
         border-radius: 8px;
         background: #f8fafc;
         transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 80px;
     }
 
     .form-select-sm:focus {
@@ -424,6 +424,9 @@
         font-size: 12px;
         transition: all 0.3s ease;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
     }
 
     .btn-save-nilai:hover {
@@ -441,6 +444,9 @@
         font-size: 12px;
         transition: all 0.3s ease;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
     }
 
     .btn-save-kehadiran:hover {
@@ -449,27 +455,66 @@
         box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
     }
 
-    .btn-secondary {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 8px 20px;
+    .btn-check-all {
+        padding: 6px 16px;
+        border: none;
+        border-radius: 8px;
+        background: rgba(16, 185, 129, 0.06);
+        color: #10b981;
+        font-size: 12px;
         font-weight: 500;
         transition: all 0.3s ease;
-        background: transparent;
-        color: #64748b;
+        cursor: pointer;
+    }
+
+    .btn-check-all:hover {
+        background: rgba(16, 185, 129, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .btn-primary-gradient {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-primary-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+        color: #fff;
         text-decoration: none;
     }
 
-    .btn-secondary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-        background: #f8fafc;
-        color: #0f172a;
+    .empty-state {
+        padding: 40px 0;
+        text-align: center;
     }
 
-    .alert {
-        border-radius: 12px;
-        padding: 16px 20px;
+    .empty-state .empty-icon {
+        font-size: 56px;
+        color: #d1d5db;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    .empty-state .empty-title {
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .empty-state .empty-desc {
+        color: #94a3b8;
+        font-size: 13px;
+        margin-bottom: 16px;
     }
 
     @media (max-width: 768px) {
@@ -485,10 +530,30 @@
         .table-modern {
             font-size: 12px;
         }
+        .btn-save-nilai, .btn-save-kehadiran {
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+        .form-select-sm {
+            font-size: 10px;
+            padding: 2px 4px;
+            width: 60px !important;
+        }
+        .card-header-modern {
+            flex-direction: column;
+            align-items: stretch;
+        }
     }
 </style>
 
-@php
+<script>
+    function checkAllHadir() {
+        document.querySelectorAll('.kehadiran-select').forEach(function(select) {
+            select.value = 'hadir';
+        });
+    }
+
+    @php
     function getNilaiHuruf($nilai)
     {
         if ($nilai >= 85) return 'A';
@@ -497,5 +562,6 @@
         if ($nilai >= 55) return 'D';
         return 'E';
     }
-@endphp
+    @endphp
+</script>
 @endsection
