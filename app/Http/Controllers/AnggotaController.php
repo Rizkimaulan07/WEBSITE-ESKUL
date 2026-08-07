@@ -13,9 +13,8 @@ class AnggotaController extends Controller
 {
     public function index()
     {
-        // Gunakan relasi many-to-many 'ekskuls' untuk anggota
         $anggotas = User::where('role', 'anggota')
-                        ->with('ekskuls') // many-to-many
+                        ->with('ekskuls')
                         ->orderBy('created_at', 'desc')
                         ->paginate(10);
         
@@ -34,17 +33,34 @@ class AnggotaController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'nis' => 'required|string|max:20|unique:users,nis',
             'kelas' => 'required|string|max:50',
+            'jurusan' => 'required|string|max:50',
             'no_hp' => 'required|string|max:15',
             'ekskul_id' => 'nullable|exists:ekstrakurikulers,id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
-        $data['password'] = Hash::make($request->password);
+        
+        // Generate email otomatis dari NIS
+        $data['email'] = $request->nis . '@siswa.sch.id';
+        
+        // Default password = nis
+        $data['password'] = Hash::make($request->nis);
+        
         $data['role'] = 'anggota';
+
+        // 🔥 TAMBAHKAN: Cari pelatih berdasarkan ekskul_id
+        if ($request->filled('ekskul_id')) {
+            $pelatih = User::where('role', 'pelatih')
+                           ->where('ekskul_id', $request->ekskul_id)
+                           ->first();
+            
+            if ($pelatih) {
+                $data['pelatih_id'] = $pelatih->id;
+            }
+        }
 
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
@@ -55,13 +71,14 @@ class AnggotaController extends Controller
 
         $user = User::create($data);
 
-        // Gunakan relasi many-to-many 'ekskuls'
         if ($request->filled('ekskul_id')) {
             $user->ekskuls()->attach($request->ekskul_id);
         }
 
+        $pelatihNama = $pelatih->name ?? 'Belum ada pelatih';
+        
         return redirect()->route('admin.anggota.index')
-                         ->with('success', '🎉 Anggota berhasil ditambahkan!');
+                         ->with('success', '🎉 Anggota berhasil ditambahkan! Email: ' . $data['email'] . ' | Password: ' . $request->nis . ' | Pelatih: ' . $pelatihNama);
     }
 
     public function edit($id)
@@ -77,8 +94,9 @@ class AnggotaController extends Controller
         
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($anggota->id)],
+            'nis' => ['required', 'string', 'max:20', Rule::unique('users')->ignore($anggota->id)],
             'kelas' => 'required|string|max:50',
+            'jurusan' => 'required|string|max:50',
             'no_hp' => 'required|string|max:15',
             'ekskul_id' => 'nullable|exists:ekstrakurikulers,id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
@@ -86,11 +104,24 @@ class AnggotaController extends Controller
 
         $data = $request->all();
 
-        if ($request->filled('password')) {
-            $request->validate(['password' => 'required|string|min:8|confirmed']);
-            $data['password'] = Hash::make($request->password);
+        // 🔥 TAMBAHKAN: Update pelatih_id jika ekskul berubah
+        if ($request->filled('ekskul_id')) {
+            $pelatih = User::where('role', 'pelatih')
+                           ->where('ekskul_id', $request->ekskul_id)
+                           ->first();
+            
+            if ($pelatih) {
+                $data['pelatih_id'] = $pelatih->id;
+            } else {
+                $data['pelatih_id'] = null;
+            }
         } else {
-            unset($data['password']);
+            $data['pelatih_id'] = null;
+        }
+
+        // Jika password diisi, update password
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
         }
 
         if ($request->hasFile('avatar')) {
@@ -106,7 +137,6 @@ class AnggotaController extends Controller
 
         $anggota->update($data);
 
-        // Gunakan relasi many-to-many 'ekskuls'
         if ($request->filled('ekskul_id')) {
             $anggota->ekskuls()->sync([$request->ekskul_id]);
         } else {

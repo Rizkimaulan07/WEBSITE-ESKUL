@@ -32,26 +32,25 @@ class NilaiController extends Controller
                    ->with('error', 'Anda belum terdaftar di ekskul manapun!');
         }
 
-        // Ambil semua anggota dari ekskul yang sama
+        // Hanya ambil anggota yang dibawah pelatih ini (berdasarkan pelatih_id)
         $anggotas = User::where('role', 'anggota')
                         ->where('ekskul_id', $ekskul->id)
+                        ->where('pelatih_id', $pelatih->id) // Filter: hanya anggotanya sendiri
                         ->orderBy('name')
                         ->get();
 
-        // Ambil nilai untuk setiap anggota
         foreach ($anggotas as $anggota) {
             $anggota->nilai = NilaiAnggota::where('anggota_id', $anggota->id)
                                           ->where('pelatih_id', $pelatih->id)
                                           ->where('ekskul_id', $ekskul->id)
                                           ->first();
             
-            // Ambil kehadiran hari ini
             $anggota->kehadiran = Kehadiran::where('anggota_id', $anggota->id)
                                            ->whereDate('tanggal', today())
                                            ->first();
         }
 
-        // Statistik Nilai
+        // Statistik hanya untuk anggotanya
         $nilaiQuery = NilaiAnggota::where('pelatih_id', $pelatih->id)
                                   ->where('ekskul_id', $ekskul->id);
 
@@ -78,8 +77,10 @@ class NilaiController extends Controller
     {
         $request->validate([
             'anggota_id' => 'required|exists:users,id',
-            'nilai' => 'required|in:A,B,C,D,E',
-            'keterangan' => 'nullable|string|max:255'
+            'nilai_kehadiran' => 'nullable|numeric|min:0|max:100',
+            'nilai_tugas' => 'nullable|numeric|min:0|max:100',
+            'nilai_ujian' => 'nullable|numeric|min:0|max:100',
+            'catatan' => 'nullable|string|max:255'
         ]);
 
         $pelatih = Auth::user();
@@ -89,21 +90,24 @@ class NilaiController extends Controller
             return redirect()->back()->with('error', 'Anda belum memiliki ekskul!');
         }
 
-        // Cek anggota
+        // Cek apakah anggota ini dibawah pelatih yang sama
         $anggota = User::where('id', $request->anggota_id)
                        ->where('role', 'anggota')
                        ->where('ekskul_id', $ekskul->id)
+                       ->where('pelatih_id', $pelatih->id) // Filter: hanya anggotanya sendiri
                        ->first();
 
         if (!$anggota) {
-            return redirect()->back()->with('error', 'Anggota tidak ditemukan!');
+            return redirect()->back()->with('error', 'Anggota tidak ditemukan atau bukan anggota Anda!');
         }
 
-        // Konversi nilai ke angka
-        $nilaiMap = ['A' => 90, 'B' => 80, 'C' => 70, 'D' => 60, 'E' => 50];
-        $nilaiTotal = $nilaiMap[$request->nilai] ?? 70;
+        // Hitung total nilai (20% kehadiran, 30% tugas, 50% ujian)
+        $nilaiKehadiran = $request->nilai_kehadiran ?? 0;
+        $nilaiTugas = $request->nilai_tugas ?? 0;
+        $nilaiUjian = $request->nilai_ujian ?? 0;
+        
+        $nilaiTotal = ($nilaiKehadiran * 0.2) + ($nilaiTugas * 0.3) + ($nilaiUjian * 0.5);
 
-        // Cek existing
         $existing = NilaiAnggota::where('anggota_id', $request->anggota_id)
                                 ->where('pelatih_id', $pelatih->id)
                                 ->where('ekskul_id', $ekskul->id)
@@ -111,11 +115,11 @@ class NilaiController extends Controller
 
         if ($existing) {
             $existing->update([
-                'nilai_kehadiran' => 0,
-                'nilai_keterampilan' => 0,
-                'nilai_sikap' => 0,
+                'nilai_kehadiran' => $nilaiKehadiran,
+                'nilai_tugas' => $nilaiTugas,
+                'nilai_ujian' => $nilaiUjian,
                 'nilai_total' => $nilaiTotal,
-                'catatan' => $request->keterangan
+                'catatan' => $request->catatan
             ]);
             $message = '✅ Nilai berhasil diupdate!';
         } else {
@@ -123,11 +127,11 @@ class NilaiController extends Controller
                 'anggota_id' => $request->anggota_id,
                 'pelatih_id' => $pelatih->id,
                 'ekskul_id' => $ekskul->id,
-                'nilai_kehadiran' => 0,
-                'nilai_keterampilan' => 0,
-                'nilai_sikap' => 0,
+                'nilai_kehadiran' => $nilaiKehadiran,
+                'nilai_tugas' => $nilaiTugas,
+                'nilai_ujian' => $nilaiUjian,
                 'nilai_total' => $nilaiTotal,
-                'catatan' => $request->keterangan,
+                'catatan' => $request->catatan,
                 'semester' => $this->getSemester(),
                 'tahun_ajaran' => date('Y')
             ]);
@@ -141,7 +145,8 @@ class NilaiController extends Controller
     {
         $request->validate([
             'anggota_id' => 'required|exists:users,id',
-            'status' => 'required|in:hadir,izin,sakit,alpa'
+            'status' => 'required|in:hadir,izin,sakit,alpa,terlambat',
+            'keterangan' => 'nullable|string|max:255'
         ]);
 
         $pelatih = Auth::user();
@@ -151,16 +156,17 @@ class NilaiController extends Controller
             return redirect()->back()->with('error', 'Anda belum memiliki ekskul!');
         }
 
+        // Cek apakah anggota ini dibawah pelatih yang sama
         $anggota = User::where('id', $request->anggota_id)
                        ->where('role', 'anggota')
                        ->where('ekskul_id', $ekskul->id)
+                       ->where('pelatih_id', $pelatih->id) // Filter: hanya anggotanya sendiri
                        ->first();
 
         if (!$anggota) {
-            return redirect()->back()->with('error', 'Anggota tidak ditemukan!');
+            return redirect()->back()->with('error', 'Anggota tidak ditemukan atau bukan anggota Anda!');
         }
 
-        // Cek existing kehadiran hari ini
         $existing = Kehadiran::where('anggota_id', $request->anggota_id)
                              ->whereDate('tanggal', today())
                              ->first();

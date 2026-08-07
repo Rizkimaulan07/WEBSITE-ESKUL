@@ -6,6 +6,20 @@
 @section('content')
 @php
     $user = Auth::user();
+    $statusColors = [
+        'hadir' => 'success',
+        'izin' => 'warning',
+        'sakit' => 'danger',
+        'alpa' => 'secondary',
+        'terlambat' => 'info'
+    ];
+    $statusIcons = [
+        'hadir' => '✅',
+        'izin' => '📝',
+        'sakit' => '🏥',
+        'alpa' => '❌',
+        'terlambat' => '⏰'
+    ];
 @endphp
 
 <!-- Info Ekskul -->
@@ -139,23 +153,38 @@
             <table class="table-modern">
                 <thead>
                     <tr>
-                        <th width="5%">No</th>
-                        <th width="18%">Nama Anggota</th>
-                        <th width="10%">Kelas</th>
-                        <th width="20%">Nilai (A-E)</th>
-                        <th width="25%">Kehadiran</th>
-                        <th width="12%">Status</th>
+                        <th width="4%">No</th>
+                        <th width="14%">Nama Anggota</th>
+                        <th width="8%">Kelas</th>
+                        <th width="10%">Nilai Huruf</th>
+                        <th width="18%">Nilai (0-100)</th>
+                        <th width="16%">Kehadiran</th>
+                        <th width="10%">Status</th>
+                        <th width="10%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($anggotas as $index => $item)
                         @php
                             $nilai = $item->nilai ?? null;
-                            $nilaiHuruf = $nilai ? $this->getNilaiHuruf($nilai->nilai_total) : '-';
+                            $nilaiTotal = $nilai ? $nilai->nilai_total : 0;
+                            // Konversi ke huruf
+                            if ($nilaiTotal >= 85) $nilaiHuruf = 'A';
+                            elseif ($nilaiTotal >= 75) $nilaiHuruf = 'B';
+                            elseif ($nilaiTotal >= 65) $nilaiHuruf = 'C';
+                            elseif ($nilaiTotal >= 55) $nilaiHuruf = 'D';
+                            else $nilaiHuruf = 'E';
+                            
                             $kehadiran = $item->kehadiran ?? null;
                             $kehadiranStatus = $kehadiran ? $kehadiran->status : '-';
                             $status = $nilai ? 'Sudah Dinilai' : 'Belum Dinilai';
                             $statusClass = $nilai ? 'success' : 'warning';
+                            
+                            // Data untuk input
+                            $nilaiKehadiran = $nilai ? $nilai->nilai_kehadiran : '';
+                            $nilaiTugas = $nilai ? $nilai->nilai_tugas : '';
+                            $nilaiUjian = $nilai ? $nilai->nilai_ujian : '';
+                            $catatan = $nilai ? $nilai->catatan : '';
                         @endphp
                     <tr>
                         <td>
@@ -175,32 +204,63 @@
                             <span class="badge-soft">{{ $item->kelas ?? '-' }}</span>
                         </td>
                         <td>
-                            <form action="{{ route('pelatih.nilai.store') }}" method="POST" class="d-flex gap-1 align-items-center">
+                            <span class="badge-nilai 
+                                {{ $nilaiHuruf == 'A' ? 'nilai-a' : 
+                                   ($nilaiHuruf == 'B' ? 'nilai-b' : 
+                                   ($nilaiHuruf == 'C' ? 'nilai-c' : 
+                                   ($nilaiHuruf == 'D' ? 'nilai-d' : 'nilai-e'))) }}">
+                                {{ $nilaiHuruf }}
+                            </span>
+                        </td>
+                        <td>
+                            <form action="{{ route('pelatih.nilai.store') }}" method="POST" class="nilai-form">
                                 @csrf
                                 <input type="hidden" name="anggota_id" value="{{ $item->id }}">
-                                <select name="nilai" class="form-select form-select-sm nilai-select" required>
-                                    <option value="">- Pilih -</option>
-                                    <option value="A" {{ $nilaiHuruf == 'A' ? 'selected' : '' }}>A (Sangat Baik)</option>
-                                    <option value="B" {{ $nilaiHuruf == 'B' ? 'selected' : '' }}>B (Baik)</option>
-                                    <option value="C" {{ $nilaiHuruf == 'C' ? 'selected' : '' }}>C (Cukup)</option>
-                                    <option value="D" {{ $nilaiHuruf == 'D' ? 'selected' : '' }}>D (Kurang)</option>
-                                    <option value="E" {{ $nilaiHuruf == 'E' ? 'selected' : '' }}>E (Sangat Kurang)</option>
-                                </select>
-                                <button type="submit" class="btn-save-nilai" title="Simpan Nilai">
-                                    <i class="fas fa-save"></i>
-                                </button>
+                                <div class="d-flex flex-wrap gap-1 align-items-center">
+                                    <div class="input-group-nilai">
+                                        <label class="label-nilai">Hadir</label>
+                                        <input type="number" name="nilai_kehadiran" class="form-control form-control-sm input-nilai" 
+                                               placeholder="0" min="0" max="100" step="0.01"
+                                               value="{{ $nilaiKehadiran }}" style="width: 60px;">
+                                    </div>
+                                    <div class="input-group-nilai">
+                                        <label class="label-nilai">Tugas</label>
+                                        <input type="number" name="nilai_tugas" class="form-control form-control-sm input-nilai" 
+                                               placeholder="0" min="0" max="100" step="0.01"
+                                               value="{{ $nilaiTugas }}" style="width: 60px;">
+                                    </div>
+                                    <div class="input-group-nilai">
+                                        <label class="label-nilai">Ujian</label>
+                                        <input type="number" name="nilai_ujian" class="form-control form-control-sm input-nilai" 
+                                               placeholder="0" min="0" max="100" step="0.01"
+                                               value="{{ $nilaiUjian }}" style="width: 60px;">
+                                    </div>
+                                    <button type="submit" class="btn-save-nilai" title="Simpan Nilai">
+                                        <i class="fas fa-save"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" name="catatan" value="{{ $catatan }}">
                             </form>
+                            <div class="bobot-nilai">
+                                <small class="text-muted">
+                                    <span class="bobot-item">Hadir 20%</span>
+                                    <span class="bobot-item">Tugas 30%</span>
+                                    <span class="bobot-item">Ujian 50%</span>
+                                    <span class="bobot-total">Total: <strong>{{ number_format($nilaiTotal, 1) }}</strong></span>
+                                </small>
+                            </div>
                         </td>
                         <td>
                             <form action="{{ route('pelatih.nilai.kehadiran') }}" method="POST" class="d-flex gap-1 align-items-center">
                                 @csrf
                                 <input type="hidden" name="anggota_id" value="{{ $item->id }}">
-                                <select name="status" class="form-select form-select-sm kehadiran-select" required>
+                                <select name="status" class="form-select form-select-sm kehadiran-select" required style="width: 120px;">
                                     <option value="">- Pilih -</option>
                                     <option value="hadir" {{ $kehadiranStatus == 'hadir' ? 'selected' : '' }}>✅ Hadir</option>
                                     <option value="izin" {{ $kehadiranStatus == 'izin' ? 'selected' : '' }}>📝 Izin</option>
                                     <option value="sakit" {{ $kehadiranStatus == 'sakit' ? 'selected' : '' }}>🏥 Sakit</option>
                                     <option value="alpa" {{ $kehadiranStatus == 'alpa' ? 'selected' : '' }}>❌ Alpa</option>
+                                    <option value="terlambat" {{ $kehadiranStatus == 'terlambat' ? 'selected' : '' }}>⏰ Terlambat</option>
                                 </select>
                                 <button type="submit" class="btn-save-kehadiran" title="Simpan Kehadiran">
                                     <i class="fas fa-save"></i>
@@ -208,24 +268,31 @@
                             </form>
                         </td>
                         <td>
-                            <span class="badge bg-{{ $statusClass }}" style="font-size: 12px; padding: 5px 12px; display: inline-block;">
+                            <span class="badge bg-{{ $statusClass }}" style="font-size: 11px; padding: 4px 10px; display: inline-block;">
                                 {{ $status }}
                             </span>
                             @if($kehadiranStatus != '-')
-                                <span class="badge bg-{{ $kehadiranStatus == 'hadir' ? 'success' : ($kehadiranStatus == 'izin' ? 'warning' : ($kehadiranStatus == 'sakit' ? 'info' : 'danger')) }}" 
-                                      style="font-size: 12px; padding: 5px 12px; margin-top: 3px; display: inline-block;">
-                                    {{ ucfirst($kehadiranStatus) }}
+                                <span class="badge bg-{{ $statusColors[$kehadiranStatus] ?? 'secondary' }}" 
+                                      style="font-size: 11px; padding: 4px 10px; margin-top: 2px; display: inline-block;">
+                                    {{ $statusIcons[$kehadiranStatus] ?? '' }} {{ ucfirst($kehadiranStatus) }}
                                 </span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($nilai)
+                            <button class="btn-detail" onclick="showDetail({{ $item->id }})" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
                             @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6">
+                        <td colspan="8">
                             <div class="empty-state">
                                 <div class="empty-icon"><i class="fas fa-user-plus"></i></div>
                                 <h6 class="empty-title">Belum ada anggota</h6>
-                                <p class="empty-desc">Tambahkan anggota terlebih dahulu melalui menu Admin</p>
+                                <p class="empty-desc">Tambahkan anggota terlebih dahulu</p>
                                 <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient mt-2" target="_blank">
                                     <i class="fas fa-plus me-2"></i> Tambah Anggota
                                 </a>
@@ -248,11 +315,13 @@
                 <i class="fas fa-info-circle fa-2x text-info"></i>
             </div>
             <div>
-                <strong>Cara Input:</strong>
+                <strong>Cara Input Nilai:</strong>
                 <ul class="mb-0 mt-1">
-                    <li>Pilih nilai (A-E) pada kolom <strong>Nilai</strong>, lalu klik tombol 💾</li>
-                    <li>Pilih status kehadiran pada kolom <strong>Kehadiran</strong>, lalu klik tombol 💾</li>
-                    <li>Klik tombol <strong>Hadir Semua</strong> untuk menandai semua anggota hadir</li>
+                    <li>Masukkan nilai <strong>Hadir (20%)</strong>, <strong>Tugas (30%)</strong>, dan <strong>Ujian (50%)</strong> pada kolom Nilai</li>
+                    <li>Total nilai otomatis dihitung dari bobot masing-masing</li>
+                    <li>Klik tombol <strong>💾</strong> untuk menyimpan nilai</li>
+                    <li>Pilih status kehadiran dan klik <strong>💾</strong> untuk menyimpan</li>
+                    <li>Nilai akan otomatis dikonversi menjadi huruf (A-E)</li>
                 </ul>
             </div>
         </div>
@@ -342,6 +411,22 @@
         font-weight: 500;
     }
 
+    .badge-nilai {
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        display: inline-block;
+        min-width: 32px;
+        text-align: center;
+    }
+
+    .badge-nilai.nilai-a { background: rgba(16, 185, 129, 0.08); color: #10b981; }
+    .badge-nilai.nilai-b { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
+    .badge-nilai.nilai-c { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
+    .badge-nilai.nilai-d { background: rgba(239, 68, 68, 0.08); color: #ef4444; }
+    .badge-nilai.nilai-e { background: rgba(0,0,0,0.03); color: #94a3b8; }
+
     .table-modern {
         width: 100%;
         border-collapse: collapse;
@@ -398,35 +483,87 @@
         box-shadow: 0 2px 12px rgba(99, 102, 241, 0.15);
     }
 
-    .form-select-sm {
-        font-size: 12px;
-        padding: 4px 8px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        background: #f8fafc;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        min-width: 80px;
+    .input-group-nilai {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
     }
 
-    .form-select-sm:focus {
+    .label-nilai {
+        font-size: 8px;
+        color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .input-nilai {
+        font-size: 12px;
+        padding: 2px 4px;
+        border: 2px solid #e5e7eb;
+        border-radius: 6px;
+        background: #fafbfc;
+        transition: all 0.3s ease;
+        width: 60px;
+        text-align: center;
+    }
+
+    .input-nilai:focus {
         border-color: #6366f1;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
         outline: none;
+        background: #ffffff;
+    }
+
+    .nilai-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .bobot-nilai {
+        margin-top: 2px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .bobot-item {
+        font-size: 9px;
+        color: #94a3b8;
+        background: #f1f5f9;
+        padding: 1px 6px;
+        border-radius: 4px;
+    }
+
+    .bobot-total {
+        font-size: 10px;
+        color: #0f172a;
+        font-weight: 600;
+    }
+
+    .bobot-total strong {
+        color: #4f46e5;
+        font-size: 12px;
     }
 
     .btn-save-nilai {
         background: #6366f1;
         border: none;
         color: white;
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 11px;
         transition: all 0.3s ease;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        height: 28px;
+        align-self: flex-end;
     }
 
     .btn-save-nilai:hover {
@@ -440,13 +577,14 @@
         border: none;
         color: white;
         padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 12px;
+        border-radius: 6px;
+        font-size: 11px;
         transition: all 0.3s ease;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        height: 28px;
     }
 
     .btn-save-kehadiran:hover {
@@ -469,6 +607,22 @@
 
     .btn-check-all:hover {
         background: rgba(16, 185, 129, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .btn-detail {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-detail:hover {
+        background: rgba(99, 102, 241, 0.06);
+        color: #6366f1;
         transform: translateY(-2px);
     }
 
@@ -514,7 +668,24 @@
     .empty-state .empty-desc {
         color: #94a3b8;
         font-size: 13px;
-        margin-bottom: 16px;
+        margin-bottom: 4px;
+    }
+
+    .form-select-sm {
+        font-size: 12px;
+        padding: 4px 8px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 80px;
+    }
+
+    .form-select-sm:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+        outline: none;
     }
 
     @media (max-width: 768px) {
@@ -530,18 +701,33 @@
         .table-modern {
             font-size: 12px;
         }
+        .input-nilai {
+            width: 45px;
+            font-size: 10px;
+        }
         .btn-save-nilai, .btn-save-kehadiran {
             padding: 2px 6px;
             font-size: 10px;
+            height: 24px;
         }
         .form-select-sm {
             font-size: 10px;
             padding: 2px 4px;
-            width: 60px !important;
+            width: 90px !important;
         }
         .card-header-modern {
             flex-direction: column;
             align-items: stretch;
+        }
+        .nilai-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .bobot-nilai {
+            flex-wrap: wrap;
+        }
+        .label-nilai {
+            font-size: 7px;
         }
     }
 </style>
@@ -553,15 +739,8 @@
         });
     }
 
-    @php
-    function getNilaiHuruf($nilai)
-    {
-        if ($nilai >= 85) return 'A';
-        if ($nilai >= 75) return 'B';
-        if ($nilai >= 65) return 'C';
-        if ($nilai >= 55) return 'D';
-        return 'E';
+    function showDetail(id) {
+        alert('Detail nilai untuk anggota ID: ' + id + '\nFitur detail akan segera hadir!');
     }
-    @endphp
 </script>
 @endsection

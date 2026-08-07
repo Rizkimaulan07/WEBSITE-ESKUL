@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -12,12 +12,17 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'nis', // Tambahkan NIS
         'email',
         'password',
         'role',
         'no_hp',
         'kelas',
-        'ekskul_id'
+        'jurusan', // Tambahkan Jurusan
+        'ekskul_id',
+        'pelatih_id',
+        'is_verified',
+        'verified_at'
     ];
 
     protected $hidden = [
@@ -30,16 +35,30 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'verified_at' => 'datetime',
+            'is_verified' => 'boolean',
         ];
     }
 
-    // Relasi ke Ekskul (untuk pelatih)
+    // Relasi ke Ekskul
     public function ekskul()
     {
         return $this->belongsTo(Ekstrakurikuler::class);
     }
 
-    // Relasi ke Ekskul (untuk anggota) - Many to Many
+    // Relasi ke Pelatih (untuk anggota)
+    public function pelatih()
+    {
+        return $this->belongsTo(User::class, 'pelatih_id');
+    }
+
+    // Relasi ke Anggota (untuk pelatih)
+    public function anggotas()
+    {
+        return $this->hasMany(User::class, 'pelatih_id');
+    }
+
+    // Relasi ke Ekskuls (many-to-many)
     public function ekskuls()
     {
         return $this->belongsToMany(Ekstrakurikuler::class, 'anggota_ekskul', 'user_id', 'ekskul_id')
@@ -77,6 +96,7 @@ class User extends Authenticatable
         return $this->hasMany(Dokumentasi::class, 'diunggah_oleh');
     }
 
+    // Helper methods
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -90,5 +110,41 @@ class User extends Authenticatable
     public function isAnggota()
     {
         return $this->role === 'anggota';
+    }
+
+    // Accessor untuk NIS
+    public function getNisFormattedAttribute()
+    {
+        return $this->nis ? 'NIS: ' . $this->nis : '-';
+    }
+
+    // Accessor untuk Jurusan
+    public function getJurusanFormattedAttribute()
+    {
+        return $this->jurusan ?? '-';
+    }
+
+    // Scope untuk pelatih yang belum diverifikasi
+    public function scopeUnverified($query)
+    {
+        return $query->where('role', 'pelatih')->where('is_verified', false);
+    }
+
+    // Scope untuk pelatih yang sudah diverifikasi
+    public function scopeVerified($query)
+    {
+        return $query->where('role', 'pelatih')->where('is_verified', true);
+    }
+
+    // Scope untuk anggota berdasarkan ekskul
+    public function scopeByEkskul($query, $ekskulId)
+    {
+        return $query->where('ekskul_id', $ekskulId);
+    }
+
+    // Scope untuk anggota berdasarkan pelatih
+    public function scopeByPelatih($query, $pelatihId)
+    {
+        return $query->where('pelatih_id', $pelatihId);
     }
 }

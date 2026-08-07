@@ -22,6 +22,7 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
+        
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <!-- Header Card -->
             <div class="card-header border-0 py-4 px-5" 
@@ -100,6 +101,36 @@
                     @csrf
 
                     <div class="row g-4">
+                        <!-- Info Ekskul (khusus pelatih) -->
+                        @if($isPelatih && $ekskuls->isNotEmpty())
+                        <div class="col-12">
+                            <div class="info-ekskul p-3 rounded-3" style="background: rgba(79,70,229,0.03); border: 1px solid rgba(79,70,229,0.06);">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ekskul-icon" style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #4f46e5, #818cf8); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small text-uppercase" style="letter-spacing: 0.5px; font-weight: 600;">
+                                            <i class="fas fa-building me-1"></i> Ekskul Tujuan
+                                        </div>
+                                        <h5 class="fw-bold mb-0" style="color: #0f172a;">
+                                            {{ $ekskuls->first()->nama_ekskul }}
+                                        </h5>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user-tie me-1"></i>
+                                            {{ $ekskuls->first()->pembina }}
+                                        </small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <span class="badge" style="background: rgba(16,185,129,0.08); color: #10b981; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 500;">
+                                            <i class="fas fa-check-circle me-1"></i> Aktif
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <!-- Nama Lengkap -->
                         <div class="col-md-6">
                             <div class="form-group-modern">
@@ -181,6 +212,36 @@
                                 <input type="text" class="form-control form-control-modern @error('no_hp') is-invalid @enderror" 
                                        name="no_hp" value="{{ old('no_hp') }}" placeholder="Contoh: 08123456789" required>
                                 @error('no_hp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Email (hidden, auto-generated) -->
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="email" class="form-control form-control-modern @error('email') is-invalid @enderror" 
+                                       name="email" value="{{ old('email') }}" placeholder="Masukkan email" required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-lock text-primary me-2"></i>Password
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="password" class="form-control form-control-modern @error('password') is-invalid @enderror" 
+                                       name="password" placeholder="Minimal 8 karakter" required>
+                                @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
