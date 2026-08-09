@@ -41,6 +41,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('anggota', AnggotaController::class);
     Route::resource('template-surat', TemplateSuratController::class);
     Route::get('template-surat/{templateSurat}/download', [TemplateSuratController::class, 'download'])->name('template-surat.download');
+    
+    // ===== ROUTE DOKUMENTASI ADMIN =====
+    Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi.index');
+    Route::get('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
+    Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
 });
 
 // === ROUTE PELATIH ===
@@ -55,7 +60,7 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran');
     Route::post('/kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
     Route::get('/kehadiran/rekap', [KehadiranController::class, 'rekap'])->name('kehadiran.rekap');
-    Route::get('/kehadiran/{id}', [KehadiranController::class, 'show'])->name('kehadiran.show'); // TAMBAHKAN INI
+    Route::get('/kehadiran/{kehadiran}', [KehadiranController::class, 'show'])->name('kehadiran.show');
     
     // Nilai
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
@@ -63,11 +68,20 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran');
     Route::get('/nilai/export', [NilaiController::class, 'export'])->name('nilai.export');
     
-    // Dokumentasi
+    // ===== DOKUMENTASI =====
     Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi');
     Route::get('/dokumentasi/create', [DokumentasiController::class, 'create'])->name('dokumentasi.create');
     Route::post('/dokumentasi', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
-    Route::get('/dokumentasi/{id}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
+    
+    // ===== ROUTE FIX-PATHS (HARUS DI ATAS ROUTE SHOW) =====
+    Route::get('/dokumentasi/fix-paths', [DokumentasiController::class, 'fixPaths'])->name('dokumentasi.fix');
+    
+    // Route Edit & Update
+    Route::get('/dokumentasi/{dokumentasi}/edit', [DokumentasiController::class, 'edit'])->name('dokumentasi.edit');
+    Route::put('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'update'])->name('dokumentasi.update');
+    
+    // Route Show (HARUS DI BAWAH ROUTE FIX-PATHS)
+    Route::get('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
     Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
 });
 

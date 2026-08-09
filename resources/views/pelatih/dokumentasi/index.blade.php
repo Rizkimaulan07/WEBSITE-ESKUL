@@ -11,9 +11,8 @@
             <a href="{{ route('pelatih.dokumentasi.create') }}" class="btn-primary-custom">
                 <i class="fas fa-plus me-2"></i> Tambah Dokumentasi
             </a>
-            {{-- PERBAIKAN: Gunakan pelatih.dashboard --}}
             <a href="{{ route('pelatih.dashboard') }}" class="btn-secondary-custom">
-                <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
+                <i class="fas fa-arrow-left me-2"></i> Kembali
             </a>
         </div>
     </div>
@@ -25,7 +24,14 @@
             </div>
         @endif
 
-        @if($dokumentasis->isEmpty())
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if($dokumentasi->isEmpty())
             <div class="text-center py-5">
                 <i class="fas fa-images fa-4x text-muted mb-3"></i>
                 <h5>Belum ada dokumentasi</h5>
@@ -36,12 +42,12 @@
             </div>
         @else
             <div class="row g-4">
-                @foreach($dokumentasis as $dokumentasi)
+                @foreach($dokumentasi as $item)
                 <div class="col-md-4 col-lg-3">
                     <div class="dokumentasi-card">
                         <div class="dokumentasi-image">
-                            @if($dokumentasi->foto)
-                                <img src="{{ asset('storage/' . $dokumentasi->foto) }}" alt="{{ $dokumentasi->judul }}">
+                            @if($item->foto_path && Storage::disk('public')->exists($item->foto_path))
+                                <img src="{{ asset('storage/' . $item->foto_path) }}" alt="{{ $item->judul }}">
                             @else
                                 <div class="no-image">
                                     <i class="fas fa-image"></i>
@@ -49,14 +55,14 @@
                             @endif
                         </div>
                         <div class="dokumentasi-body">
-                            <h6 class="dokumentasi-title">{{ $dokumentasi->judul }}</h6>
-                            <p class="dokumentasi-desc">{{ Str::limit($dokumentasi->deskripsi, 60) }}</p>
+                            <h6 class="dokumentasi-title">{{ $item->judul }}</h6>
+                            <p class="dokumentasi-desc">{{ Str::limit($item->deskripsi, 60) }}</p>
                             <div class="dokumentasi-footer">
                                 <span class="dokumentasi-date">
                                     <i class="fas fa-calendar me-1"></i>
-                                    {{ $dokumentasi->tanggal->format('d M Y') }}
+                                    {{ $item->tanggal_kegiatan ? $item->tanggal_kegiatan->format('d M Y') : '-' }}
                                 </span>
-                                <form action="{{ route('pelatih.dokumentasi.destroy', $dokumentasi->id) }}" 
+                                <form action="{{ route('pelatih.dokumentasi.destroy', $item->id) }}" 
                                       method="POST" 
                                       style="display:inline;"
                                       onsubmit="return confirm('Yakin ingin menghapus dokumentasi ini?')">
@@ -71,6 +77,9 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+            <div class="mt-4">
+                {{ $dokumentasi->links() }}
             </div>
         @endif
     </div>

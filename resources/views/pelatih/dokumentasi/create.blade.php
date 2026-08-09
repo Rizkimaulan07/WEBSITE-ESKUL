@@ -59,6 +59,32 @@
                     @csrf
 
                     <div class="row g-4">
+                        <!-- Ekskul ID (hidden jika pelatih sudah punya ekskul) -->
+                        @if(Auth::user()->ekskul_id)
+                            <input type="hidden" name="ekskul_id" value="{{ Auth::user()->ekskul_id }}">
+                        @else
+                            <div class="col-12">
+                                <div class="form-group-modern">
+                                    <label class="fw-semibold mb-2">
+                                        <i class="fas fa-trophy text-primary me-2"></i>Ekstrakurikuler
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-control form-control-modern @error('ekskul_id') is-invalid @enderror" 
+                                            name="ekskul_id" required>
+                                        <option value="">Pilih Ekstrakurikuler</option>
+                                        @foreach($allEkskuls as $ekskul)
+                                            <option value="{{ $ekskul->id }}" {{ old('ekskul_id') == $ekskul->id ? 'selected' : '' }}>
+                                                {{ $ekskul->nama_ekskul }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('ekskul_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Judul -->
                         <div class="col-12">
                             <div class="form-group-modern">
@@ -90,6 +116,20 @@
                             </div>
                         </div>
 
+                        <!-- Tanggal Kegiatan -->
+                        <div class="col-12">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-calendar text-primary me-2"></i>Tanggal Kegiatan
+                                </label>
+                                <input type="date" class="form-control form-control-modern @error('tanggal_kegiatan') is-invalid @enderror" 
+                                       name="tanggal_kegiatan" value="{{ old('tanggal_kegiatan', date('Y-m-d')) }}">
+                                @error('tanggal_kegiatan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <!-- Upload Foto -->
                         <div class="col-12">
                             <div class="form-group-modern">
@@ -99,9 +139,7 @@
                                 </label>
                                 <div class="upload-zone border-2 border-dashed rounded-4 p-5 text-center" 
                                      style="border-color: #e5e7eb; background: #fafbfc; cursor: pointer; transition: all 0.3s ease;"
-                                     onclick="document.getElementById('foto').click()"
-                                     ondragover="event.preventDefault(); this.style.borderColor='#4f46e5'; this.style.background='rgba(79,70,229,0.05)';"
-                                     ondrop="event.preventDefault(); this.style.borderColor='#e5e7eb'; this.style.background='#fafbfc';">
+                                     onclick="document.getElementById('foto').click()">
                                     <div id="uploadPreview">
                                         <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
                                         <p class="text-muted mb-0">
@@ -124,13 +162,6 @@
                             </div>
                         </div>
 
-                        <!-- Divider -->
-                        <div class="col-12">
-                            <div class="divider-custom">
-                                <span><i class="fas fa-image text-primary"></i></span>
-                            </div>
-                        </div>
-
                         <!-- Tombol Aksi -->
                         <div class="col-12">
                             <div class="d-flex gap-3 justify-content-end">
@@ -150,7 +181,6 @@
 </div>
 
 <style>
-    /* ===== FORM GROUP MODERN ===== */
     .form-group-modern {
         margin-bottom: 0;
     }
@@ -183,16 +213,6 @@
         background: #fef2f2;
     }
 
-    .form-control-modern.is-invalid:focus {
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
-    }
-
-    textarea.form-control-modern {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    /* ===== UPLOAD ZONE ===== */
     .upload-zone {
         transition: all 0.3s ease;
         min-height: 180px;
@@ -207,32 +227,6 @@
         transform: scale(1.01);
     }
 
-    /* ===== DIVIDER ===== */
-    .divider-custom {
-        text-align: center;
-        position: relative;
-        margin: 8px 0;
-    }
-
-    .divider-custom::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 50%;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-    }
-
-    .divider-custom span {
-        background: #ffffff;
-        padding: 0 16px;
-        position: relative;
-        color: #6366f1;
-        font-size: 16px;
-    }
-
-    /* ===== BUTTON GRADIENT ===== */
     .btn-gradient {
         background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4f46e5 100%) !important;
         border: none !important;
@@ -244,30 +238,6 @@
         box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35) !important;
     }
 
-    .btn-outline-secondary {
-        border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-secondary:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-        background: #f8fafc;
-        border-color: #94a3b8;
-    }
-
-    /* ===== ALERT ===== */
-    .alert {
-        border-radius: 16px;
-        padding: 16px 20px;
-        margin-bottom: 24px;
-    }
-
-    .text-primary {
-        color: #4f46e5 !important;
-    }
-
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
         .card-body {
             padding: 20px !important;
@@ -281,29 +251,10 @@
         .d-flex.gap-3 {
             flex-direction: column;
         }
-        .d-flex.gap-3.justify-content-end {
-            flex-direction: column-reverse;
-        }
         .upload-zone {
             min-height: 140px;
             padding: 20px !important;
         }
-    }
-
-    /* ===== ANIMATION ===== */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .card {
-        animation: fadeInUp 0.6s ease;
     }
 </style>
 

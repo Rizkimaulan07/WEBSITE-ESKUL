@@ -38,4 +38,13 @@ class Dokumentasi extends Model
     {
         return $this->belongsTo(User::class, 'diunggah_oleh');
     }
+
+    /**
+     * Relasi ke model User sebagai pelatih
+     * Menggunakan foreign key 'diunggah_oleh' yang merujuk ke id user
+     */
+    public function pelatih()
+    {
+        return $this->belongsTo(User::class, 'diunggah_oleh');
+    }
 }
