@@ -21,8 +21,10 @@ class CheckRole
             return $next($request);
         }
 
+        $safeRole = $user->role ?? '';
+
         // Cek apakah role user ada di daftar roles yang diizinkan
-        if (in_array($user->role, $roles)) {
+        if (in_array($safeRole, $roles, true)) {
             return $next($request);
         }
 
@@ -30,8 +32,8 @@ class CheckRole
         if ($user->role === 'admin') {
             return redirect('/admin/dashboard');
         } elseif ($user->role === 'pelatih') {
-            return redirect('/pelatih/nilai');
-        } elseif ($user->role === 'anggota') {
+            return redirect('/pelatih/dashboard');
+        } elseif ($user->role === 'anggota' || empty($user->role)) {
             return redirect('/anggota/dashboard');
         }
 

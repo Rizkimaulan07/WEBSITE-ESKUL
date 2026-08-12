@@ -35,7 +35,10 @@ class NilaiController extends Controller
         // Hanya ambil anggota yang dibawah pelatih ini (berdasarkan pelatih_id)
         $anggotas = User::where('role', 'anggota')
                         ->where('ekskul_id', $ekskul->id)
-                        ->where('pelatih_id', $pelatih->id) // Filter: hanya anggotanya sendiri
+                        ->where(function ($query) use ($pelatih) {
+                            $query->where('pelatih_id', $pelatih->id)
+                                  ->orWhereNull('pelatih_id');
+                        })
                         ->orderBy('name')
                         ->get();
 

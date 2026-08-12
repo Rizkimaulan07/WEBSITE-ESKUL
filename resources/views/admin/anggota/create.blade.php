@@ -96,7 +96,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.anggota.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ $isPelatih ? route('pelatih.anggota.store') : route('admin.anggota.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row g-4">
@@ -125,6 +125,34 @@
                                 <input type="text" class="form-control form-control-modern @error('nis') is-invalid @enderror" 
                                        name="nis" value="{{ old('nis') }}" placeholder="Masukkan NIS" required>
                                 @error('nis')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                </label>
+                                <input type="email" class="form-control form-control-modern @error('email') is-invalid @enderror" 
+                                       name="email" value="{{ old('email') }}" placeholder="contoh: siswa@gmail.com">
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-lock text-primary me-2"></i>Password
+                                </label>
+                                <input type="password" class="form-control form-control-modern @error('password') is-invalid @enderror" 
+                                       name="password" placeholder="Kosongkan untuk default dari NIS" autocomplete="new-password">
+                                @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -212,6 +240,26 @@
                         <!-- Hidden input untuk pelatih -->
                         <input type="hidden" name="ekskul_id" value="{{ $selectedEkskul }}">
                         @endif
+
+                        <!-- Foto Anggota -->
+                        <div class="col-12">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2">
+                                    <i class="fas fa-camera text-primary me-2"></i>Foto Anggota
+                                </label>
+                                {{-- PERBAIKAN: Hapus duplikasi border --}}
+                                <div class="border-2 border-dashed rounded-4 p-3 text-center bg-light-subtle">
+                                    <input type="file" class="form-control form-control-modern @error('avatar') is-invalid @enderror" 
+                                           name="avatar" accept="image/*">
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="fas fa-info-circle me-1"></i>Format JPG, PNG, atau WEBP maksimal 2MB
+                                    </small>
+                                    @error('avatar')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Divider -->
                         <div class="col-12">

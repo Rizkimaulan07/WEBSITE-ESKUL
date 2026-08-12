@@ -8,13 +8,18 @@ use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\Pelatih\NilaiController;
 use App\Http\Controllers\Pelatih\DokumentasiController;
 use App\Http\Controllers\Pelatih\KehadiranController;
+use App\Http\Controllers\Pelatih\KehadiranPelatihController;
 use App\Http\Controllers\Anggota\KehadiranController as AnggotaKehadiranController;
 use App\Http\Controllers\Anggota\NilaiController as AnggotaNilaiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return view('welcome');
 });
 
 // ===== DASHBOARD =====
@@ -41,11 +46,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('anggota', AnggotaController::class);
     Route::resource('template-surat', TemplateSuratController::class);
     Route::get('template-surat/{templateSurat}/download', [TemplateSuratController::class, 'download'])->name('template-surat.download');
+    Route::get('/kehadiran-pelatih', [KehadiranPelatihController::class, 'adminIndex'])->name('kehadiran_pelatih');
+    Route::get('/kehadiran-anggota', [KehadiranController::class, 'adminIndex'])->name('kehadiran_anggota');
     
     // ===== ROUTE DOKUMENTASI ADMIN =====
-    Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi.index');
-    Route::get('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
-    Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
+    Route::get('/dokumentasi', [DokumentasiController::class, 'adminIndex'])->name('dokumentasi.index');
+    Route::get('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'adminShow'])->name('dokumentasi.show');
+    Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'adminDestroy'])->name('dokumentasi.destroy');
 });
 
 // === ROUTE PELATIH ===
@@ -56,11 +63,19 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
         return redirect()->route('pelatih.dashboard');
     });
     
-    // Kehadiran
+    // Kehadiran Pelatih (untuk pelatih sendiri)
+    Route::get('/kehadiran-pelatih', [KehadiranPelatihController::class, 'index'])->name('kehadiran_pelatih');
+    Route::post('/kehadiran-pelatih', [KehadiranPelatihController::class, 'store'])->name('kehadiran_pelatih.store');
+    
+    // Kehadiran Anggota
     Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran');
     Route::post('/kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
     Route::get('/kehadiran/rekap', [KehadiranController::class, 'rekap'])->name('kehadiran.rekap');
     Route::get('/kehadiran/{kehadiran}', [KehadiranController::class, 'show'])->name('kehadiran.show');
+
+    // Anggota (pelatih)
+    Route::get('/anggota/create', [AnggotaController::class, 'createPelatih'])->name('anggota.create');
+    Route::post('/anggota', [AnggotaController::class, 'storePelatih'])->name('anggota.store');
     
     // Nilai
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
@@ -68,19 +83,12 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran');
     Route::get('/nilai/export', [NilaiController::class, 'export'])->name('nilai.export');
     
-    // ===== DOKUMENTASI =====
+    // Dokumentasi
     Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi');
     Route::get('/dokumentasi/create', [DokumentasiController::class, 'create'])->name('dokumentasi.create');
     Route::post('/dokumentasi', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
-    
-    // ===== ROUTE FIX-PATHS (HARUS DI ATAS ROUTE SHOW) =====
-    Route::get('/dokumentasi/fix-paths', [DokumentasiController::class, 'fixPaths'])->name('dokumentasi.fix');
-    
-    // Route Edit & Update
     Route::get('/dokumentasi/{dokumentasi}/edit', [DokumentasiController::class, 'edit'])->name('dokumentasi.edit');
     Route::put('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'update'])->name('dokumentasi.update');
-    
-    // Route Show (HARUS DI BAWAH ROUTE FIX-PATHS)
     Route::get('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
     Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
 });

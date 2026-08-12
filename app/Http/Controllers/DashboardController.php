@@ -22,7 +22,7 @@ class DashboardController extends Controller
             return redirect()->route('admin.dashboard');
         } elseif ($user->role == 'pelatih') {
             return redirect()->route('pelatih.dashboard');
-        } elseif ($user->role == 'anggota') {
+        } elseif ($user->role == 'anggota' || empty($user->role)) {
             return redirect()->route('anggota.dashboard');
         }
         
@@ -30,21 +30,25 @@ class DashboardController extends Controller
     }
 
     // ===== DASHBOARD ADMIN =====
-    public function admin()
+    public function admin(Request $request)
     {
         $user = Auth::user();
-        
-        // Data dokumentasi terbaru dari semua pelatih
-        $dokumentasiTerbaru = Dokumentasi::with(['ekskul', 'pelatih'])
-                                        ->orderBy('created_at', 'desc')
-                                        ->limit(5)
-                                        ->get();
-        
-        // Total dokumentasi
-        $totalDokumentasi = Dokumentasi::count();
-        
-        // Dokumentasi per ekskul
+
+        $ekskulId = $request->input('ekskul_id');
+
+        $dokumentasiQuery = Dokumentasi::with(['ekskul', 'user'])->orderBy('created_at', 'desc');
+
+        if ($ekskulId !== null && $ekskulId !== '') {
+            $dokumentasiQuery->where('ekskul_id', $ekskulId);
+        }
+
+        $dokumentasiTerbaru = (clone $dokumentasiQuery)->limit(5)->get();
+        $totalDokumentasi = (clone $dokumentasiQuery)->count();
+
         $dokumentasiPerEkskul = Dokumentasi::select('ekskul_id', DB::raw('count(*) as total'))
+                                          ->when($ekskulId !== null && $ekskulId !== '', function ($query) use ($ekskulId) {
+                                              $query->where('ekskul_id', $ekskulId);
+                                          })
                                           ->groupBy('ekskul_id')
                                           ->with('ekskul')
                                           ->get();
@@ -77,40 +81,43 @@ class DashboardController extends Controller
                 'kehadiran_hari_ini' => 0,
                 'total_dokumentasi' => 0,
                 'dokumentasi_terbaru' => collect([]),
+                'kehadiran_terbaru' => collect([]),
                 'anggota_terbaru' => collect([]),
                 'ekskul' => null,
             ];
-            return view('pelatih.dashboard', compact('data', 'user'))
-                   ->with('error', 'Anda belum memiliki ekskul! Silakan hubungi admin.');
+            return view('pelatih.dashboard', compact('data', 'user'));
         }
         
-        // Hanya ambil anggota yang dibawah pelatih ini (berdasarkan pelatih_id)
+        // Ambil anggota dari ekskul yang sama
         $anggotaTerbaru = User::where('ekskul_id', $ekskulId)
                               ->where('role', 'anggota')
-                              ->where('pelatih_id', $user->id) // Filter: hanya anggotanya sendiri
                               ->orderBy('created_at', 'desc')
                               ->limit(5)
                               ->get();
         
-        // Hitung total anggota (hanya yang dibawah pelatih ini)
         $totalAnggota = User::where('ekskul_id', $ekskulId)
                             ->where('role', 'anggota')
-                            ->where('pelatih_id', $user->id) // Filter: hanya anggotanya sendiri
                             ->count();
         
-        // Total kehadiran (hanya untuk anggotanya)
-        $totalKehadiran = Kehadiran::whereHas('anggota', function($query) use ($ekskulId, $user) {
-            $query->where('ekskul_id', $ekskulId)
-                  ->where('pelatih_id', $user->id);
+        // Kehadiran
+        $totalKehadiran = Kehadiran::whereHas('anggota', function($query) use ($ekskulId) {
+            $query->where('ekskul_id', $ekskulId);
         })->count();
         
-        // Kehadiran hari ini (hanya untuk anggotanya)
-        $kehadiranHariIni = Kehadiran::whereHas('anggota', function($query) use ($ekskulId, $user) {
-            $query->where('ekskul_id', $ekskulId)
-                  ->where('pelatih_id', $user->id);
+        $kehadiranHariIni = Kehadiran::whereHas('anggota', function($query) use ($ekskulId) {
+            $query->where('ekskul_id', $ekskulId);
         })->whereDate('tanggal', today())->count();
         
-        // Dokumentasi (berdasarkan ekskul)
+        // Kehadiran terbaru
+        $kehadiranTerbaru = Kehadiran::whereHas('anggota', function($query) use ($ekskulId) {
+            $query->where('ekskul_id', $ekskulId);
+        })
+        ->with('anggota')
+        ->orderBy('created_at', 'desc')
+        ->limit(5)
+        ->get();
+        
+        // Dokumentasi
         $totalDokumentasi = Dokumentasi::where('ekskul_id', $ekskulId)->count();
         
         $dokumentasiTerbaru = Dokumentasi::where('ekskul_id', $ekskulId)
@@ -124,6 +131,7 @@ class DashboardController extends Controller
             'kehadiran_hari_ini' => $kehadiranHariIni,
             'total_dokumentasi' => $totalDokumentasi,
             'dokumentasi_terbaru' => $dokumentasiTerbaru,
+            'kehadiran_terbaru' => $kehadiranTerbaru,
             'anggota_terbaru' => $anggotaTerbaru,
             'ekskul' => Ekstrakurikuler::find($ekskulId),
         ];
@@ -147,6 +155,9 @@ class DashboardController extends Controller
                                    ->limit(5)
                                    ->get();
         
+        // Nilai rata-rata
+        $nilaiRata = NilaiAnggota::where('anggota_id', $user->id)->avg('nilai_total') ?? 0;
+        
         $data = [
             'total_kehadiran' => $totalKehadiran,
             'hadir' => $hadir,
@@ -155,6 +166,7 @@ class DashboardController extends Controller
             'alpa' => $alpa,
             'persentase_hadir' => $totalKehadiran > 0 ? round(($hadir / $totalKehadiran) * 100) : 0,
             'riwayat_terbaru' => $riwayatTerbaru,
+            'nilai_rata' => $nilaiRata,
             'ekskul' => $user->ekskul,
         ];
         

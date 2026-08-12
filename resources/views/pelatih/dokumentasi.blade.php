@@ -65,57 +65,37 @@
     <div class="col-md-4 col-lg-3">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-card">
             <div class="position-relative">
-                {{-- TAMPILKAN GAMBAR DARI MULTIPLE PATH --}}
+                {{-- TAMPILKAN GAMBAR --}}
                 @if($item->foto_path)
                     @php
-                        // Cek beberapa kemungkinan path
-                        $possiblePaths = [
-                            $item->foto_path, // original
-                            'foto/' . basename($item->foto_path), // foto/
-                            str_replace('dokumentasi/', 'foto/', $item->foto_path), // ganti prefix
-                        ];
-                        
-                        $foundPath = null;
-                        foreach ($possiblePaths as $p) {
-                            if (file_exists(public_path($p))) {
-                                $foundPath = $p;
-                                break;
-                            }
-                        }
-                        
-                        // Jika masih tidak ditemukan, coba di storage
-                        if (!$foundPath) {
-                            $storagePath = str_replace('foto/', 'dokumentasi/', $item->foto_path);
-                            if (file_exists(storage_path('app/public/' . $storagePath))) {
-                                // Copy file ke public/foto
-                                if (!file_exists(public_path('foto'))) {
-                                    mkdir(public_path('foto'), 0777, true);
-                                }
-                                copy(storage_path('app/public/' . $storagePath), public_path('foto/' . basename($item->foto_path)));
-                                $foundPath = 'foto/' . basename($item->foto_path);
-                            }
+                        $normalizedPath = App\Models\Dokumentasi::normalizeFotoPath($item->foto_path);
+                        $imagePath = null;
+
+                        if (!empty($normalizedPath) && Storage::disk('public')->exists($normalizedPath)) {
+                            $imagePath = Storage::url($normalizedPath);
+                        } elseif (!empty($normalizedPath) && file_exists(storage_path('app/public/' . $normalizedPath))) {
+                            $imagePath = asset('storage/' . $normalizedPath);
+                        } elseif (!empty($normalizedPath) && file_exists(public_path('storage/' . $normalizedPath))) {
+                            $imagePath = asset('storage/' . $normalizedPath);
                         }
                     @endphp
-                    
-                    @if($foundPath)
-                        <img src="{{ asset($foundPath) }}" 
-                             class="card-img-top" 
+
+                    @if($imagePath)
+                        <img src="{{ $imagePath }}"
+                             class="card-img-top"
                              alt="{{ $item->judul }}"
-                             style="height: 200px; object-fit: cover;">
+                             style="height: 220px; object-fit: cover;">
                     @else
                         <div class="bg-light d-flex flex-column align-items-center justify-content-center" 
-                             style="height: 200px;">
+                             style="height: 220px;">
                             <i class="fas fa-image fa-4x text-muted mb-2"></i>
                             <small class="text-muted">Gambar tidak ditemukan</small>
-                            <small class="text-danger" style="font-size: 10px;">{{ $item->foto_path }}</small>
-                            <small class="text-muted" style="font-size: 9px; margin-top: 4px;">
-                                Coba: {{ implode(', ', array_map(function($p) { return basename($p); }, $possiblePaths)) }}
-                            </small>
+                            <small class="text-danger" style="font-size: 10px;">{{ $normalizedPath ?? $item->foto_path }}</small>
                         </div>
                     @endif
                 @else
                     <div class="bg-light d-flex align-items-center justify-content-center" 
-                         style="height: 200px;">
+                         style="height: 220px;">
                         <i class="fas fa-image fa-4x text-muted"></i>
                     </div>
                 @endif
@@ -124,49 +104,39 @@
                 <div class="position-absolute top-0 end-0 p-2">
                     <span class="badge bg-dark bg-opacity-50 rounded-pill px-3 py-2">
                         <i class="far fa-calendar-alt me-1"></i>
-                        {{ \Carbon\Carbon::parse($item->tanggal_kegiatan)->format('d M Y') }}
+                        {{ \Carbon\Carbon::parse($item->tanggal_kegiatan ?? $item->created_at)->format('d M Y') }}
                     </span>
                 </div>
 
-                {{-- Tombol Aksi: Edit & Hapus --}}
-                <div class="position-absolute bottom-0 start-0 end-0 p-2" 
-                     style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
-                    <div class="d-flex gap-2 justify-content-end">
-                        {{-- Tombol Edit --}}
-                        <a href="{{ route('pelatih.dokumentasi.edit', $item->id) }}" 
-                           class="btn btn-warning btn-sm rounded-circle"
-                           style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"
-                           title="Edit Dokumentasi">
-                            <i class="fas fa-edit fa-xs"></i>
-                        </a>
-                        
-                        {{-- Tombol Hapus --}}
-                        <form action="{{ route('pelatih.dokumentasi.destroy', $item->id) }}" 
-                              method="POST"
-                              onsubmit="return confirm('Yakin ingin menghapus dokumentasi ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm rounded-circle" 
-                                    style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"
-                                    title="Hapus Dokumentasi">
-                                <i class="fas fa-trash-alt fa-xs"></i>
-                            </button>
-                        </form>
-                    </div>
+                {{-- Tombol Hapus --}}
+                <div class="position-absolute bottom-0 end-0 p-2">
+                    <form action="{{ route('pelatih.dokumentasi.destroy', $item->id) }}" 
+                          method="POST"
+                          onsubmit="return confirm('Yakin ingin menghapus dokumentasi ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm rounded-circle" 
+                                style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"
+                                title="Hapus Dokumentasi">
+                            <i class="fas fa-trash-alt fa-xs"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
             <div class="card-body">
-                <h6 class="fw-bold mb-1">{{ $item->judul }}</h6>
-                <p class="text-muted small mb-2">{{ Str::limit($item->deskripsi ?? '', 80) }}</p>
+                <h6 class="fw-bold mb-1 text-truncate">{{ $item->judul }}</h6>
+                <p class="text-muted small mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ Str::limit($item->deskripsi ?? '', 80) }}
+                </p>
                 <div class="d-flex justify-content-between align-items-center">
                     <small class="text-muted">
                         <i class="far fa-clock me-1"></i>
                         {{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}
                     </small>
-                    <a href="{{ route('pelatih.dokumentasi.show', $item->id) }}" 
-                       class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                        <i class="fas fa-eye me-1"></i> Detail
-                    </a>
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">
+                        <i class="fas fa-user me-1"></i>
+                        {{ $item->user->name ?? 'Pelatih' }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -222,16 +192,6 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(255,255,255,0.3);
     }
-    .btn-warning {
-        opacity: 0.8;
-        transition: all 0.3s ease;
-        color: #fff;
-    }
-    .btn-warning:hover {
-        opacity: 1;
-        transform: scale(1.1);
-        color: #fff;
-    }
     .btn-danger {
         opacity: 0.8;
         transition: all 0.3s ease;
@@ -240,14 +200,29 @@
         opacity: 1;
         transform: scale(1.1);
     }
-    .btn-outline-primary {
-        border-color: #e5e7eb;
-        color: #64748b;
+    .text-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    .btn-outline-primary:hover {
-        background: #4f46e5;
-        border-color: #4f46e5;
-        color: #fff;
+    .pagination .page-item .page-link {
+        border: none;
+        border-radius: 10px;
+        margin: 0 3px;
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+    .pagination .page-item .page-link:hover {
+        background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4f46e5 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4f46e5 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
     }
 </style>
 @endsection

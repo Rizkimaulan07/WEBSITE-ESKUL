@@ -24,25 +24,44 @@ class Dokumentasi extends Model
         'tanggal_kegiatan' => 'date'
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $dokumentasi) {
+            $dokumentasi->foto_path = self::normalizeFotoPath($dokumentasi->foto_path);
+        });
+    }
+
+    public static function normalizeFotoPath(?string $path): ?string
+    {
+        if (blank($path)) {
+            return null;
+        }
+
+        $normalized = str_replace('\\', '/', $path);
+        $normalized = preg_replace('#^/?(public|storage)/#', '', $normalized);
+        $normalized = ltrim($normalized, '/');
+
+        return $normalized ?: null;
+    }
+
+    public function getFotoPathAttribute($value): ?string
+    {
+        return self::normalizeFotoPath($value);
+    }
+
+    // Relasi ke Ekstrakurikuler
     public function ekskul()
     {
-        return $this->belongsTo(Ekstrakurikuler::class);
+        return $this->belongsTo(Ekstrakurikuler::class, 'ekskul_id');
     }
 
-    public function pengunggah()
-    {
-        return $this->belongsTo(User::class, 'diunggah_oleh');
-    }
-
+    // Relasi ke User (yang mengunggah)
     public function user()
     {
         return $this->belongsTo(User::class, 'diunggah_oleh');
     }
 
-    /**
-     * Relasi ke model User sebagai pelatih
-     * Menggunakan foreign key 'diunggah_oleh' yang merujuk ke id user
-     */
+    // Alias untuk pelatih (agar kompatibel dengan kode yang memanggil ->pelatih)
     public function pelatih()
     {
         return $this->belongsTo(User::class, 'diunggah_oleh');

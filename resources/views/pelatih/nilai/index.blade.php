@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Nilai & Kehadiran')
-@section('subtitle', 'Input nilai dan kehadiran anggota')
+@section('title', 'Nilai Anggota')
+@section('subtitle', 'Input nilai anggota')
 
 @section('content')
 @php
@@ -140,11 +140,6 @@
             <h6><i class="fas fa-list me-2" style="color: #6366f1;"></i>Daftar Anggota</h6>
             <div class="d-flex align-items-center gap-2 flex-wrap">
                 <span class="badge-soft me-2">{{ $anggotas->count() }} anggota</span>
-                @if($anggotas->count() > 0)
-                <button class="btn-check-all" onclick="checkAllHadir()">
-                    <i class="fas fa-check-double me-1"></i> Hadir Semua
-                </button>
-                @endif
             </div>
         </div>
     </div>
@@ -154,12 +149,11 @@
                 <thead>
                     <tr>
                         <th width="4%">No</th>
-                        <th width="14%">Nama Anggota</th>
+                        <th width="18%">Nama Anggota</th>
                         <th width="8%">Kelas</th>
-                        <th width="10%">Nilai Huruf</th>
-                        <th width="18%">Nilai (0-100)</th>
-                        <th width="16%">Kehadiran</th>
-                        <th width="10%">Status</th>
+                        <th width="10%">Nilai</th>
+                        <th width="22%">Nilai (0-100)</th>
+                        <th width="18%">Status</th>
                         <th width="10%">Aksi</th>
                     </tr>
                 </thead>
@@ -168,18 +162,24 @@
                         @php
                             $nilai = $item->nilai ?? null;
                             $nilaiTotal = $nilai ? $nilai->nilai_total : 0;
-                            // Konversi ke huruf
-                            if ($nilaiTotal >= 85) $nilaiHuruf = 'A';
-                            elseif ($nilaiTotal >= 75) $nilaiHuruf = 'B';
-                            elseif ($nilaiTotal >= 65) $nilaiHuruf = 'C';
-                            elseif ($nilaiTotal >= 55) $nilaiHuruf = 'D';
-                            else $nilaiHuruf = 'E';
+                            // Konversi ke skala yang sesuai kebutuhan user: S = Sangat Baik, A = Baik, B = Cukup
+                            if ($nilaiTotal >= 85) {
+                                $nilaiHuruf = 'S';
+                                $nilaiLabel = 'Sangat Baik';
+                            } elseif ($nilaiTotal >= 70) {
+                                $nilaiHuruf = 'A';
+                                $nilaiLabel = 'Baik';
+                            } elseif ($nilaiTotal >= 55) {
+                                $nilaiHuruf = 'B';
+                                $nilaiLabel = 'Cukup';
+                            } else {
+                                $nilaiHuruf = 'C';
+                                $nilaiLabel = 'Perlu Perbaikan';
+                            }
                             
-                            $kehadiran = $item->kehadiran ?? null;
-                            $kehadiranStatus = $kehadiran ? $kehadiran->status : '-';
                             $status = $nilai ? 'Sudah Dinilai' : 'Belum Dinilai';
                             $statusClass = $nilai ? 'success' : 'warning';
-                            
+
                             // Data untuk input
                             $nilaiKehadiran = $nilai ? $nilai->nilai_kehadiran : '';
                             $nilaiTugas = $nilai ? $nilai->nilai_tugas : '';
@@ -205,10 +205,10 @@
                         </td>
                         <td>
                             <span class="badge-nilai 
-                                {{ $nilaiHuruf == 'A' ? 'nilai-a' : 
-                                   ($nilaiHuruf == 'B' ? 'nilai-b' : 
-                                   ($nilaiHuruf == 'C' ? 'nilai-c' : 
-                                   ($nilaiHuruf == 'D' ? 'nilai-d' : 'nilai-e'))) }}">
+                                {{ $nilaiHuruf == 'S' ? 'nilai-s' : 
+                                   ($nilaiHuruf == 'A' ? 'nilai-a' : 
+                                   ($nilaiHuruf == 'B' ? 'nilai-b' : 'nilai-c')) }}"
+                                title="{{ $nilaiLabel }}">
                                 {{ $nilaiHuruf }}
                             </span>
                         </td>
@@ -251,32 +251,9 @@
                             </div>
                         </td>
                         <td>
-                            <form action="{{ route('pelatih.nilai.kehadiran') }}" method="POST" class="d-flex gap-1 align-items-center">
-                                @csrf
-                                <input type="hidden" name="anggota_id" value="{{ $item->id }}">
-                                <select name="status" class="form-select form-select-sm kehadiran-select" required style="width: 120px;">
-                                    <option value="">- Pilih -</option>
-                                    <option value="hadir" {{ $kehadiranStatus == 'hadir' ? 'selected' : '' }}>✅ Hadir</option>
-                                    <option value="izin" {{ $kehadiranStatus == 'izin' ? 'selected' : '' }}>📝 Izin</option>
-                                    <option value="sakit" {{ $kehadiranStatus == 'sakit' ? 'selected' : '' }}>🏥 Sakit</option>
-                                    <option value="alpa" {{ $kehadiranStatus == 'alpa' ? 'selected' : '' }}>❌ Alpa</option>
-                                    <option value="terlambat" {{ $kehadiranStatus == 'terlambat' ? 'selected' : '' }}>⏰ Terlambat</option>
-                                </select>
-                                <button type="submit" class="btn-save-kehadiran" title="Simpan Kehadiran">
-                                    <i class="fas fa-save"></i>
-                                </button>
-                            </form>
-                        </td>
-                        <td>
                             <span class="badge bg-{{ $statusClass }}" style="font-size: 11px; padding: 4px 10px; display: inline-block;">
                                 {{ $status }}
                             </span>
-                            @if($kehadiranStatus != '-')
-                                <span class="badge bg-{{ $statusColors[$kehadiranStatus] ?? 'secondary' }}" 
-                                      style="font-size: 11px; padding: 4px 10px; margin-top: 2px; display: inline-block;">
-                                    {{ $statusIcons[$kehadiranStatus] ?? '' }} {{ ucfirst($kehadiranStatus) }}
-                                </span>
-                            @endif
                         </td>
                         <td>
                             @if($nilai)
@@ -319,9 +296,8 @@
                 <ul class="mb-0 mt-1">
                     <li>Masukkan nilai <strong>Hadir (20%)</strong>, <strong>Tugas (30%)</strong>, dan <strong>Ujian (50%)</strong> pada kolom Nilai</li>
                     <li>Total nilai otomatis dihitung dari bobot masing-masing</li>
+                    <li>Skala penilaian: <strong>S</strong> = Sangat Baik, <strong>A</strong> = Baik, <strong>B</strong> = Cukup</li>
                     <li>Klik tombol <strong>💾</strong> untuk menyimpan nilai</li>
-                    <li>Pilih status kehadiran dan klik <strong>💾</strong> untuk menyimpan</li>
-                    <li>Nilai akan otomatis dikonversi menjadi huruf (A-E)</li>
                 </ul>
             </div>
         </div>
@@ -421,11 +397,10 @@
         text-align: center;
     }
 
-    .badge-nilai.nilai-a { background: rgba(16, 185, 129, 0.08); color: #10b981; }
-    .badge-nilai.nilai-b { background: rgba(59, 130, 246, 0.08); color: #3b82f6; }
-    .badge-nilai.nilai-c { background: rgba(245, 158, 11, 0.08); color: #f59e0b; }
-    .badge-nilai.nilai-d { background: rgba(239, 68, 68, 0.08); color: #ef4444; }
-    .badge-nilai.nilai-e { background: rgba(0,0,0,0.03); color: #94a3b8; }
+    .badge-nilai.nilai-s { background: rgba(16, 185, 129, 0.12); color: #047857; }
+    .badge-nilai.nilai-a { background: rgba(59, 130, 246, 0.10); color: #1d4ed8; }
+    .badge-nilai.nilai-b { background: rgba(245, 158, 11, 0.10); color: #b45309; }
+    .badge-nilai.nilai-c { background: rgba(239, 68, 68, 0.10); color: #b91c1c; }
 
     .table-modern {
         width: 100%;
@@ -572,44 +547,6 @@
         box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
     }
 
-    .btn-save-kehadiran {
-        background: #10b981;
-        border: none;
-        color: white;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 11px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        height: 28px;
-    }
-
-    .btn-save-kehadiran:hover {
-        background: #059669;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
-    }
-
-    .btn-check-all {
-        padding: 6px 16px;
-        border: none;
-        border-radius: 8px;
-        background: rgba(16, 185, 129, 0.06);
-        color: #10b981;
-        font-size: 12px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .btn-check-all:hover {
-        background: rgba(16, 185, 129, 0.12);
-        transform: translateY(-2px);
-    }
-
     .btn-detail {
         background: transparent;
         border: none;
@@ -733,12 +670,6 @@
 </style>
 
 <script>
-    function checkAllHadir() {
-        document.querySelectorAll('.kehadiran-select').forEach(function(select) {
-            select.value = 'hadir';
-        });
-    }
-
     function showDetail(id) {
         alert('Detail nilai untuk anggota ID: ' + id + '\nFitur detail akan segera hadir!');
     }

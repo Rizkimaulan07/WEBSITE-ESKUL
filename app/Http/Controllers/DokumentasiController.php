@@ -11,92 +11,79 @@ use Illuminate\Support\Facades\Storage;
 
 class DokumentasiController extends Controller
 {
+    // ===== PELATIH METHODS =====
+    
     public function index()
-{
-    $user = Auth::user();
-    $ekskul = $user->ekskul;
+    {
+        $user = Auth::user();
+        $ekskul = $user->ekskul;
 
-    // DEBUG - Tampilkan semua data untuk sementara
-    $dokumentasi = Dokumentasi::orderBy('created_at', 'desc')
-                              ->paginate(12);
+        if (!$ekskul) {
+            $dokumentasi = collect([]);
+            return view('pelatih.dokumentasi', compact('dokumentasi'))
+                   ->with('error', 'Anda belum memiliki ekskul!');
+        }
 
-    \Log::info('=== INDEX DOKUMENTASI ===');
-    \Log::info('Total data: ' . Dokumentasi::count());
+        $dokumentasi = Dokumentasi::where('ekskul_id', $ekskul->id)
+                                  ->orderBy('created_at', 'desc')
+                                  ->paginate(12);
 
-    return view('pelatih.dokumentasi', compact('dokumentasi'));
-}
+        return view('pelatih.dokumentasi', compact('dokumentasi'));
+    }
 
     public function create()
     {
         $user = Auth::user();
         
-        if ($user->ekskul_id) {
-            return view('pelatih.dokumentasi_create');
-        }
-
-        $allEkskuls = Ekstrakurikuler::orderBy('nama_ekskul')->get();
-
-        if ($allEkskuls->count() == 0) {
+        // Cek apakah pelatih memiliki ekskul
+        if (!$user->ekskul) {
             return redirect()->route('pelatih.dokumentasi')
-                             ->with('error', 'Belum ada ekstrakurikuler. Silakan hubungi admin.');
+                             ->with('error', 'Anda belum memiliki ekskul! Silakan hubungi admin.');
         }
 
-        return view('pelatih.dokumentasi_create', compact('allEkskuls'));
+        return view('pelatih.dokumentasi_create');
     }
 
- public function store(Request $request)
-{
-    $request->validate([
-        'judul' => 'required|string|max:255',
-        'deskripsi' => 'nullable|string',
-        'foto' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
-        'ekskul_id' => 'required|exists:ekstrakurikulers,id'
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
+        ]);
 
-    $user = Auth::user();
+        $user = Auth::user();
+        $ekskul = $user->ekskul;
 
-    // DEBUG
-    \Log::info('=== UPLOAD DOKUMENTASI ===');
-    \Log::info('User ID: ' . $user->id);
-    \Log::info('Ekskul ID: ' . $request->ekskul_id);
-
-    if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-        $filename = time() . '_' . str_replace(' ', '_', $request->judul) . '.' . $file->getClientOriginalExtension();
-        
-        if (!is_dir(public_path('foto'))) {
-            mkdir(public_path('foto'), 0777, true);
+        if (!$ekskul) {
+            return redirect()->back()->with('error', 'Anda belum memiliki ekskul!');
         }
-        
-        $file->move(public_path('foto'), $filename);
-        $path = 'foto/' . $filename;
-        
-        \Log::info('File saved: ' . $path);
-        \Log::info('File exists: ' . (file_exists(public_path($path)) ? 'YES' : 'NO'));
+
+        $data = [
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tanggal_kegiatan' => now()->format('Y-m-d'),
+            'ekskul_id' => $ekskul->id,
+            'diunggah_oleh' => $user->id
+        ];
+
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $namaFoto = time() . '_' . preg_replace('/\s+/', '_', trim($request->judul)) . '.' . $foto->getClientOriginalExtension();
+
+            Storage::disk('public')->putFileAs('dokumentasi', $foto, $namaFoto);
+            $data['foto_path'] = Dokumentasi::normalizeFotoPath('dokumentasi/' . $namaFoto);
+        }
+
+        Dokumentasi::create($data);
+
+        return redirect()->route('pelatih.dokumentasi')
+                         ->with('success', '✅ Dokumentasi berhasil ditambahkan!');
     }
 
-    $data = [
-        'judul' => $request->judul,
-        'deskripsi' => $request->deskripsi,
-        'foto_path' => $path,
-        'tanggal_kegiatan' => $request->tanggal_kegiatan ?? now(),
-        'ekskul_id' => $request->ekskul_id,
-        'diunggah_oleh' => $user->id
-    ];
-
-    \Log::info('Data to save:', $data);
-
-    $dokumentasi = Dokumentasi::create($data);
-
-    \Log::info('Dokumentasi created ID: ' . $dokumentasi->id);
-    \Log::info('Total dokumentasi: ' . Dokumentasi::count());
-
-    return redirect()->route('pelatih.dokumentasi')
-                     ->with('success', '✅ Dokumentasi berhasil ditambahkan!');
-}
     public function show($id)
     {
-        $dokumentasi = Dokumentasi::with('ekskul')->findOrFail($id);
+        $dokumentasi = Dokumentasi::with(['ekskul', 'user'])->findOrFail($id);
         
         $user = Auth::user();
         if ($dokumentasi->ekskul_id != $user->ekskul_id) {
@@ -144,14 +131,15 @@ class DokumentasiController extends Controller
         ];
 
         if ($request->hasFile('foto')) {
-            if ($dokumentasi->foto_path && file_exists(public_path($dokumentasi->foto_path))) {
-                unlink(public_path($dokumentasi->foto_path));
+            // Hapus foto lama
+            if ($dokumentasi->foto_path && Storage::disk('public')->exists($dokumentasi->foto_path)) {
+                Storage::disk('public')->delete($dokumentasi->foto_path);
             }
-            
-            $file = $request->file('foto');
-            $filename = time() . '_' . str_replace(' ', '_', $request->judul) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('foto'), $filename);
-            $data['foto_path'] = 'foto/' . $filename;
+
+            $foto = $request->file('foto');
+            $namaFoto = time() . '_' . preg_replace('/\s+/', '_', trim($request->judul)) . '.' . $foto->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('dokumentasi', $foto, $namaFoto);
+            $data['foto_path'] = Dokumentasi::normalizeFotoPath('dokumentasi/' . $namaFoto);
         }
 
         $dokumentasi->update($data);
@@ -165,13 +153,13 @@ class DokumentasiController extends Controller
         $dokumentasi = Dokumentasi::findOrFail($id);
         
         $user = Auth::user();
-        if ($dokumentasi->diunggah_oleh != $user->id) {
+        if ($dokumentasi->diunggah_oleh != $user->id && $user->role != 'admin') {
             return redirect()->route('pelatih.dokumentasi')
                              ->with('error', 'Anda tidak memiliki izin untuk menghapus dokumentasi ini!');
         }
         
-        if ($dokumentasi->foto_path && file_exists(public_path($dokumentasi->foto_path))) {
-            unlink(public_path($dokumentasi->foto_path));
+        if ($dokumentasi->foto_path && Storage::exists('public/' . $dokumentasi->foto_path)) {
+            Storage::delete('public/' . $dokumentasi->foto_path);
         }
         
         $dokumentasi->delete();
@@ -180,73 +168,34 @@ class DokumentasiController extends Controller
                          ->with('success', '🗑️ Dokumentasi berhasil dihapus!');
     }
 
-    /**
-     * FIX: Perbaiki path gambar yang salah
-     * Jalankan method ini sekali untuk memperbaiki semua data
-     */
-    public function fixPaths()
+    // ===== ADMIN METHODS =====
+    
+    public function adminIndex()
     {
-        $dokumentasis = Dokumentasi::all();
-        $updated = 0;
-        $copied = 0;
+        $dokumentasi = Dokumentasi::with(['ekskul', 'user'])
+                                  ->orderBy('created_at', 'desc')
+                                  ->paginate(20);
         
-        // Buat folder jika belum ada
-        if (!file_exists(public_path('foto'))) {
-            mkdir(public_path('foto'), 0777, true);
+        return view('admin.dokumentasi.index', compact('dokumentasi'));
+    }
+
+    public function adminShow($id)
+    {
+        $dokumentasi = Dokumentasi::with(['ekskul', 'user'])->findOrFail($id);
+        return view('admin.dokumentasi.show', compact('dokumentasi'));
+    }
+
+    public function adminDestroy($id)
+    {
+        $dokumentasi = Dokumentasi::findOrFail($id);
+        
+        if ($dokumentasi->foto_path && Storage::exists('public/' . $dokumentasi->foto_path)) {
+            Storage::delete('public/' . $dokumentasi->foto_path);
         }
         
-        foreach ($dokumentasis as $dok) {
-            $oldPath = $dok->foto_path;
-            
-            if (!$oldPath) {
-                continue;
-            }
-            
-            // Jika path sudah menggunakan 'foto/', lanjutkan
-            if (strpos($oldPath, 'foto/') === 0) {
-                continue;
-            }
-            
-            // Ambil nama file
-            $filename = basename($oldPath);
-            $newPath = 'foto/' . $filename;
-            
-            // Cek apakah file ada di public/foto
-            if (file_exists(public_path($newPath))) {
-                // File sudah ada di public/foto
-                $dok->foto_path = $newPath;
-                $dok->save();
-                $updated++;
-                continue;
-            }
-            
-            // Cek apakah file ada di storage (old path)
-            $storagePath = str_replace('dokumentasi/', '', $oldPath);
-            $storageFullPath = storage_path('app/public/dokumentasi/' . $storagePath);
-            
-            if (file_exists($storageFullPath)) {
-                // Copy file dari storage ke public/foto
-                copy($storageFullPath, public_path($newPath));
-                $dok->foto_path = $newPath;
-                $dok->save();
-                $updated++;
-                $copied++;
-                continue;
-            }
-            
-            // Cek apakah file ada di storage dengan path lengkap
-            $storageFullPath2 = storage_path('app/public/' . $oldPath);
-            if (file_exists($storageFullPath2)) {
-                copy($storageFullPath2, public_path($newPath));
-                $dok->foto_path = $newPath;
-                $dok->save();
-                $updated++;
-                $copied++;
-                continue;
-            }
-        }
+        $dokumentasi->delete();
         
-        return redirect()->route('pelatih.dokumentasi')
-                         ->with('success', "✅ Berhasil memperbaiki {$updated} dokumentasi ({$copied} file disalin dari storage)");
+        return redirect()->route('admin.dokumentasi.index')
+                         ->with('success', '🗑️ Dokumentasi berhasil dihapus!');
     }
 }

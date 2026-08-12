@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $publicStoragePath = public_path('storage');
+        $storageDiskPath = storage_path('app/public');
+
+        if (!is_dir($publicStoragePath) && is_dir($storageDiskPath)) {
+            @symlink($storageDiskPath, $publicStoragePath);
+        }
     }
 }

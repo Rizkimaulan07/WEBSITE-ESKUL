@@ -11,7 +11,63 @@
         'sakit' => 'danger',
         'alpa' => 'secondary'
     ];
+
+    $hari = [
+        'Sunday' => 'Minggu',
+        'Monday' => 'Senin',
+        'Tuesday' => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday' => 'Kamis',
+        'Friday' => 'Jumat',
+        'Saturday' => 'Sabtu'
+    ];
+
+    $bulan = [
+        'January' => 'Januari',
+        'February' => 'Februari',
+        'March' => 'Maret',
+        'April' => 'April',
+        'May' => 'Mei',
+        'June' => 'Juni',
+        'July' => 'Juli',
+        'August' => 'Agustus',
+        'September' => 'September',
+        'October' => 'Oktober',
+        'November' => 'November',
+        'December' => 'Desember'
+    ];
+
+    $hariIni = $hari[date('l')];
+    $tanggal = date('d');
+    $bulanIni = $bulan[date('F')];
+    $tahun = date('Y');
 @endphp
+
+<!-- Header -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header border-0 py-4 px-5" 
+         style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #312e81 60%, #4f46e5 100%);">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-4">
+                <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                    <i class="fas fa-clipboard-list fa-2x text-white"></i>
+                </div>
+                <div>
+                    <h4 class="text-white fw-bold mb-0">Kehadiran Anggota</h4>
+                    <p class="text-white-50 mb-0 small">
+                        <i class="far fa-calendar-alt me-2"></i>
+                        {{ $hariIni }}, {{ $tanggal }} {{ $bulanIni }} {{ $tahun }}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <a href="{{ route('pelatih.dashboard') }}" class="btn btn-outline-light rounded-pill px-4">
+                    <i class="fas fa-arrow-left me-2"></i>Kembali
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Stats Cards -->
 <div class="row g-4 mb-4">
@@ -47,7 +103,7 @@
             <div class="stat-meta">
                 <span class="badge-soft">
                     <i class="far fa-calendar-alt me-1"></i>
-                    {{ now()->format('F Y') }}
+                    {{ $bulanIni }} {{ $tahun }}
                 </span>
             </div>
         </div>
@@ -75,7 +131,7 @@
     </div>
 </div>
 
-<!-- Info Ekskul & Button Kembali -->
+<!-- Info Ekskul & Button -->
 <div class="card-modern mb-4">
     <div class="card-body-modern">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -84,15 +140,18 @@
                     <i class="fas fa-trophy text-primary me-2"></i>
                     {{ $ekskul->nama_ekskul ?? 'Ekskul' }}
                 </h6>
-                <small class="text-muted">Input kehadiran untuk hari ini</small>
+                <small class="text-muted">
+                    <i class="far fa-calendar-alt me-1"></i>
+                    {{ $hariIni }}, {{ $tanggal }} {{ $bulanIni }} {{ $tahun }}
+                </small>
             </div>
             <div class="d-flex gap-2">
                 <span class="badge-soft">
-                    <i class="far fa-calendar-alt me-1"></i>
-                    {{ now()->translatedFormat('l, d F Y') }}
+                    <i class="far fa-clock me-1"></i>
+                    {{ now()->format('H:i') }} WIB
                 </span>
-                <a href="{{ route('pelatih.dashboard') }}" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-arrow-left me-1"></i>Kembali ke Dashboard
+                <a href="{{ route('pelatih.kehadiran.rekap') }}" class="btn btn-primary btn-sm rounded-pill">
+                    <i class="fas fa-chart-bar me-1"></i> Rekap
                 </a>
             </div>
         </div>
@@ -199,6 +258,7 @@
                                             id="status_{{ $a->id }}"
                                             style="width: 100px;"
                                             {{ $isChecked ? 'disabled' : '' }}>
+                                        <option value="hadir" {{ $status == 'hadir' ? 'selected' : '' }}>✅ Hadir</option>
                                         <option value="izin" {{ $status == 'izin' ? 'selected' : '' }}>📝 Izin</option>
                                         <option value="sakit" {{ $status == 'sakit' ? 'selected' : '' }}>🏥 Sakit</option>
                                         <option value="alpa" {{ $status == 'alpa' ? 'selected' : '' }}>❌ Alpa</option>
@@ -208,8 +268,9 @@
                             <td>
                                 <input type="text" class="form-control form-control-sm" 
                                        name="keterangan[{{ $a->id }}]"
-                                       placeholder="Keterangan (opsional)"
+                                       placeholder="Contoh: Izin keluarga, Sakit, dll"
                                        value="{{ $kehadiran ? $kehadiran->keterangan : '' }}">
+                                <small class="text-muted d-block mt-1">Keterangan opsional</small>
                             </td>
                         </tr>
                         @empty
@@ -332,10 +393,12 @@
         var statusSelect = document.getElementById('status_' + id);
         if (checkbox.checked) {
             statusSelect.disabled = true;
-            statusSelect.value = 'izin';
+            statusSelect.value = 'hadir';
         } else {
             statusSelect.disabled = false;
-            statusSelect.value = 'alpa';
+            if (statusSelect.value === 'hadir') {
+                statusSelect.value = 'izin';
+            }
         }
         updateHadirCount();
     }

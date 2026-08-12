@@ -84,7 +84,7 @@
                             <div class="menu-icon" style="background: rgba(99, 102, 241, 0.06); color: #6366f1;">
                                 <i class="fas fa-clipboard-list"></i>
                             </div>
-                            <h6>Kehadiran</h6>
+                            <h6>Kehadiran Anggota</h6>
                             <p class="text-muted small">Kelola kehadiran anggota</p>
                         </a>
                     </div>
@@ -93,7 +93,7 @@
                             <div class="menu-icon" style="background: rgba(16, 185, 129, 0.06); color: #10b981;">
                                 <i class="fas fa-star"></i>
                             </div>
-                            <h6>Nilai</h6>
+                            <h6>Nilai Anggota</h6>
                             <p class="text-muted small">Kelola nilai anggota</p>
                         </a>
                     </div>

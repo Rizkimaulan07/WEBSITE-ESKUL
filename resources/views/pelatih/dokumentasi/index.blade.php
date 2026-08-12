@@ -46,8 +46,15 @@
                 <div class="col-md-4 col-lg-3">
                     <div class="dokumentasi-card">
                         <div class="dokumentasi-image">
-                            @if($item->foto_path && Storage::disk('public')->exists($item->foto_path))
-                                <img src="{{ asset('storage/' . $item->foto_path) }}" alt="{{ $item->judul }}">
+                            @php
+                                $normalizedPath = App\Models\Dokumentasi::normalizeFotoPath($item->foto_path);
+                                $imageSource = null;
+                                if (!empty($normalizedPath) && Storage::disk('public')->exists($normalizedPath)) {
+                                    $imageSource = asset('storage/' . $normalizedPath);
+                                }
+                            @endphp
+                            @if($imageSource)
+                                <img src="{{ $imageSource }}" alt="{{ $item->judul }}">
                             @else
                                 <div class="no-image">
                                     <i class="fas fa-image"></i>

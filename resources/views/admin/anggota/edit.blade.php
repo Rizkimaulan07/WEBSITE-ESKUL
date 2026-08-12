@@ -71,7 +71,7 @@
                                 <div class="position-relative d-inline-block">
                                     @if($anggota->avatar)
                                         <img src="{{ asset('storage/' . $anggota->avatar) }}" 
-                                             class="rounded-circle border border-4 border-white shadow-lg" 
+                                             class="rounded-circle border-4 border-white shadow-lg" 
                                              style="width: 120px; height: 120px; object-fit: cover;"
                                              id="avatarPreview">
                                     @else
@@ -92,7 +92,7 @@
                             </div>
                         </div>
 
-                        <!-- Nama & Email -->
+                        <!-- Nama -->
                         <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
@@ -109,12 +109,12 @@
                         <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2">
-                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                    <i class="fas fa-id-card text-primary me-2"></i>NIS
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input type="email" class="form-control form-control-modern @error('email') is-invalid @enderror" 
-                                       name="email" value="{{ old('email', $anggota->email) }}" placeholder="Masukkan email" required>
-                                @error('email')
+                                <input type="text" class="form-control form-control-modern @error('nis') is-invalid @enderror" 
+                                       name="nis" value="{{ old('nis', $anggota->nis) }}" placeholder="Masukkan NIS" required>
+                                @error('nis')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -159,34 +159,20 @@
                             </div>
                         </div>
 
-                        <!-- Password -->
-                        <div class="col-md-6">
-                            <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-lock text-primary me-2"></i>Password Baru
-                                </label>
-                                <div class="password-wrapper">
-                                    <input type="password" class="form-control form-control-modern @error('password') is-invalid @enderror" 
-                                           name="password" placeholder="Kosongkan jika tidak diubah" id="password">
-                                    <button type="button" class="btn-toggle-password" onclick="togglePassword()">
-                                        <i class="fas fa-eye" id="passwordIcon"></i>
-                                    </button>
+                        <!-- Informasi Login Otomatis -->
+                        <div class="col-12">
+                            <div class="alert alert-light border-0 rounded-4 shadow-sm">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                        <i class="fas fa-info-circle text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Informasi login otomatis:</strong>
+                                        <div class="small text-muted mt-1">
+                                            Email dan password anggota dibuat otomatis dari NIS, jadi admin tidak perlu mengisi manual saat menambah data.
+                                        </div>
+                                    </div>
                                 </div>
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>Minimal 8 karakter
-                                </small>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>Konfirmasi Password
-                                </label>
-                                <input type="password" class="form-control form-control-modern" 
-                                       name="password_confirmation" placeholder="Konfirmasi password baru">
                             </div>
                         </div>
 
@@ -200,9 +186,9 @@
                                 <select class="form-select form-select-modern @error('ekskul_id') is-invalid @enderror" 
                                         name="ekskul_id" required>
                                     <option value="">Pilih Ekstrakurikuler</option>
-                                    @foreach($ekskuls as $ekskul)
+                                    @foreach($ekskuls ?? [] as $ekskul)
                                         <option value="{{ $ekskul->id }}" 
-                                            {{ old('ekskul_id', $anggota->ekskuls->first()->id ?? '') == $ekskul->id ? 'selected' : '' }}>
+                                            {{ old('ekskul_id', optional($anggota->ekskuls->first())->id ?? '') == $ekskul->id ? 'selected' : '' }}>
                                             <i class="fas fa-trophy me-2"></i>{{ $ekskul->nama_ekskul }}
                                         </option>
                                     @endforeach
@@ -451,7 +437,7 @@
                 const container = input.closest('.position-relative');
                 const img = document.createElement('img');
                 img.id = 'avatarPreview';
-                img.className = 'rounded-circle border border-4 border-white shadow-lg';
+                img.className = 'rounded-circle border-4 border-white shadow-lg';
                 img.style.cssText = 'width: 120px; height: 120px; object-fit: cover;';
                 img.src = reader.result;
                 

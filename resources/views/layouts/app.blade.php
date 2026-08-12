@@ -399,6 +399,7 @@
                     @php $user = Auth::user(); @endphp
 
                     @if($user->role == 'admin')
+                        <!-- ===== MENU ADMIN ===== -->
                         <div class="menu-label">Main Menu</div>
                         <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
@@ -410,29 +411,37 @@
                             <i class="fas fa-users"></i> Anggota
                             <span class="badge">{{ \App\Models\User::where('role', 'anggota')->count() }}</span>
                         </a>
+                        <a href="{{ route('admin.kehadiran_pelatih') }}" class="nav-link {{ request()->routeIs('admin.kehadiran_pelatih') ? 'active' : '' }}">
+                            <i class="fas fa-user-check"></i> Kehadiran Pelatih
+                        </a>
+                        <a href="{{ route('admin.kehadiran_anggota') }}" class="nav-link {{ request()->routeIs('admin.kehadiran_anggota') ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-list"></i> Kehadiran Anggota
+                        </a>
                         <a href="{{ route('admin.template-surat.index') }}" class="nav-link {{ request()->routeIs('admin.template-surat.*') ? 'active' : '' }}">
                             <i class="fas fa-file-alt"></i> Template Surat
                         </a>
 
                     @elseif($user->role == 'pelatih')
+                        <!-- ===== MENU PELATIH ===== -->
                         <div class="menu-label">Main Menu</div>
                         <a href="{{ route('pelatih.dashboard') }}" class="nav-link {{ request()->routeIs('pelatih.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
                         </a>
-                        <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran*') ? 'active' : '' }}">
-                            <i class="fas fa-clipboard-list"></i> Kehadiran
-                            <span class="badge">Input</span>
+                        <a href="{{ route('pelatih.kehadiran_pelatih') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran_pelatih*') ? 'active' : '' }}">
+                            <i class="fas fa-user-check"></i> Kehadiran Saya
+                        </a>
+                        <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran*') && !request()->routeIs('pelatih.kehadiran_pelatih*') ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-list"></i> Kehadiran Anggota
                         </a>
                         <a href="{{ route('pelatih.nilai') }}" class="nav-link {{ request()->routeIs('pelatih.nilai*') ? 'active' : '' }}">
                             <i class="fas fa-star"></i> Nilai Anggota
-                            <span class="badge">Input</span>
                         </a>
                         <a href="{{ route('pelatih.dokumentasi') }}" class="nav-link {{ request()->routeIs('pelatih.dokumentasi*') ? 'active' : '' }}">
-                            <i class="fas fa-images"></i> Dokumentasi
-                            <span class="badge">Kelola</span>
+                            <i class="fas fa-camera"></i> Dokumentasi
                         </a>
 
                     @elseif($user->role == 'anggota')
+                        <!-- ===== MENU ANGGOTA ===== -->
                         <div class="menu-label">Main Menu</div>
                         <a href="{{ route('anggota.dashboard') }}" class="nav-link {{ request()->routeIs('anggota.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
@@ -446,6 +455,7 @@
                     @endif
                 @endauth
 
+                <!-- ===== SETTINGS ===== -->
                 <div class="menu-label">Settings</div>
                 <a href="{{ route('profile.edit') }}" class="nav-link">
                     <i class="fas fa-user-cog"></i> Profile
