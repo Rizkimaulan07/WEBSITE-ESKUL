@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kehadiran;
 use App\Models\User;
 use App\Models\Ekstrakurikuler;
+use App\Models\NilaiAnggota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
@@ -132,8 +133,8 @@ class KehadiranController extends Controller
                              ->with('error', 'Anda belum memiliki ekskul!');
         }
 
-        $selectedMonth = $request->get('month', now()->format('Y-m'));
-        [$year, $month] = array_pad(explode('-', $selectedMonth), 2, now()->month);
+        // Tipe rekap: monthly atau yearly
+        $type = $request->get('type', 'monthly');
 
         $ekskul = $user->ekskul;
 
@@ -142,53 +143,124 @@ class KehadiranController extends Controller
                        ->orderBy('name')
                        ->get();
 
-        $rekap = $anggota->map(function ($a) use ($month, $year) {
-            $hadir = Kehadiran::where('anggota_id', $a->id)
-                              ->whereMonth('tanggal', $month)
-                              ->whereYear('tanggal', $year)
-                              ->where('status', 'hadir')
-                              ->count();
+        if ($type === 'yearly') {
+            $selectedYear = (int) $request->get('year', now()->year);
 
-            $izin = Kehadiran::where('anggota_id', $a->id)
-                             ->whereMonth('tanggal', $month)
-                             ->whereYear('tanggal', $year)
-                             ->where('status', 'izin')
-                             ->count();
+            $rekap = $anggota->map(function ($a) use ($selectedYear) {
+                $hadir = Kehadiran::where('anggota_id', $a->id)
+                                  ->whereYear('tanggal', $selectedYear)
+                                  ->where('status', 'hadir')
+                                  ->count();
 
-            $sakit = Kehadiran::where('anggota_id', $a->id)
-                              ->whereMonth('tanggal', $month)
-                              ->whereYear('tanggal', $year)
-                              ->where('status', 'sakit')
-                              ->count();
+                $izin = Kehadiran::where('anggota_id', $a->id)
+                                 ->whereYear('tanggal', $selectedYear)
+                                 ->where('status', 'izin')
+                                 ->count();
 
-            $alpa = Kehadiran::where('anggota_id', $a->id)
-                             ->whereMonth('tanggal', $month)
-                             ->whereYear('tanggal', $year)
-                             ->where('status', 'alpa')
-                             ->count();
+                $sakit = Kehadiran::where('anggota_id', $a->id)
+                                  ->whereYear('tanggal', $selectedYear)
+                                  ->where('status', 'sakit')
+                                  ->count();
 
-            $total = $hadir + $izin + $sakit + $alpa;
+                $alpa = Kehadiran::where('anggota_id', $a->id)
+                                 ->whereYear('tanggal', $selectedYear)
+                                 ->where('status', 'alpa')
+                                 ->count();
 
-            return (object) [
-                'anggota' => $a,
-                'hadir' => $hadir,
-                'izin' => $izin,
-                'sakit' => $sakit,
-                'alpa' => $alpa,
-                'total' => $total,
-                'persentase_hadir' => $total > 0 ? round(($hadir / $total) * 100, 1) : 0,
+                $total = $hadir + $izin + $sakit + $alpa;
+
+                // Rata-rata nilai anggota untuk tahun ini (jika ada)
+                $nilaiAvg = NilaiAnggota::where('anggota_id', $a->id)
+                            ->whereYear('created_at', $selectedYear)
+                            ->avg('nilai_total');
+
+                $nilaiAvg = $nilaiAvg ? round($nilaiAvg, 2) : null;
+
+                return (object) [
+                    'anggota' => $a,
+                    'hadir' => $hadir,
+                    'izin' => $izin,
+                    'sakit' => $sakit,
+                    'alpa' => $alpa,
+                    'total' => $total,
+                    'persentase_hadir' => $total > 0 ? round(($hadir / $total) * 100, 1) : 0,
+                    'nilai_avg' => $nilaiAvg,
+                ];
+            });
+
+            $statistik = [
+                'total' => $rekap->sum('total'),
+                'hadir' => $rekap->sum('hadir'),
+                'izin' => $rekap->sum('izin'),
+                'sakit' => $rekap->sum('sakit'),
+                'alpa' => $rekap->sum('alpa'),
             ];
-        });
 
-        $statistik = [
-            'total' => $rekap->sum('total'),
-            'hadir' => $rekap->sum('hadir'),
-            'izin' => $rekap->sum('izin'),
-            'sakit' => $rekap->sum('sakit'),
-            'alpa' => $rekap->sum('alpa'),
-        ];
+            $selectedMonth = null;
 
-        return view('pelatih.kehadiran.rekap', compact('rekap', 'ekskul', 'selectedMonth', 'statistik'));
+        } else {
+            $selectedMonth = $request->get('month', now()->format('Y-m'));
+            [$year, $month] = array_pad(explode('-', $selectedMonth), 2, now()->month);
+
+            $rekap = $anggota->map(function ($a) use ($month, $year) {
+                $hadir = Kehadiran::where('anggota_id', $a->id)
+                                  ->whereMonth('tanggal', $month)
+                                  ->whereYear('tanggal', $year)
+                                  ->where('status', 'hadir')
+                                  ->count();
+
+                $izin = Kehadiran::where('anggota_id', $a->id)
+                                 ->whereMonth('tanggal', $month)
+                                 ->whereYear('tanggal', $year)
+                                 ->where('status', 'izin')
+                                 ->count();
+
+                $sakit = Kehadiran::where('anggota_id', $a->id)
+                                  ->whereMonth('tanggal', $month)
+                                  ->whereYear('tanggal', $year)
+                                  ->where('status', 'sakit')
+                                  ->count();
+
+                $alpa = Kehadiran::where('anggota_id', $a->id)
+                                 ->whereMonth('tanggal', $month)
+                                 ->whereYear('tanggal', $year)
+                                 ->where('status', 'alpa')
+                                 ->count();
+
+                $total = $hadir + $izin + $sakit + $alpa;
+
+                // Rata-rata nilai anggota untuk bulan ini
+                $nilaiAvg = NilaiAnggota::where('anggota_id', $a->id)
+                            ->whereYear('created_at', $year)
+                            ->whereMonth('created_at', $month)
+                            ->avg('nilai_total');
+
+                $nilaiAvg = $nilaiAvg ? round($nilaiAvg, 2) : null;
+
+                return (object) [
+                    'anggota' => $a,
+                    'hadir' => $hadir,
+                    'izin' => $izin,
+                    'sakit' => $sakit,
+                    'alpa' => $alpa,
+                    'total' => $total,
+                    'persentase_hadir' => $total > 0 ? round(($hadir / $total) * 100, 1) : 0,
+                    'nilai_avg' => $nilaiAvg,
+                ];
+            });
+
+            $statistik = [
+                'total' => $rekap->sum('total'),
+                'hadir' => $rekap->sum('hadir'),
+                'izin' => $rekap->sum('izin'),
+                'sakit' => $rekap->sum('sakit'),
+                'alpa' => $rekap->sum('alpa'),
+            ];
+
+            $selectedYear = (int) ($year ?? now()->year);
+        }
+
+        return view('pelatih.kehadiran.rekap', compact('rekap', 'ekskul', 'selectedMonth', 'statistik', 'type', 'selectedYear'));
     }
 
     public function adminIndex(Request $request)

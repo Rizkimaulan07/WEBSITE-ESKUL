@@ -15,11 +15,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    // Jika sudah login, arahkan ke dashboard sesuai role
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
 
-    return view('welcome');
+    // Jika belum login, arahkan ke halaman login (bukan welcome Laravel)
+    return redirect()->route('login');
 });
 
 // ===== DASHBOARD =====

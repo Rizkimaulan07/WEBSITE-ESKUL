@@ -439,6 +439,12 @@
                         <a href="{{ route('pelatih.dokumentasi') }}" class="nav-link {{ request()->routeIs('pelatih.dokumentasi*') ? 'active' : '' }}">
                             <i class="fas fa-camera"></i> Dokumentasi
                         </a>
+                        <a href="{{ route('pelatih.kehadiran.rekap') }}?type=monthly" class="nav-link {{ request()->fullUrlIs(url(route('pelatih.kehadiran.rekap')) . '*') && request()->get('type')=='monthly' ? 'active' : '' }}">
+                            <i class="fas fa-chart-line"></i> Rekap Bulanan
+                        </a>
+                        <a href="{{ route('pelatih.kehadiran.rekap') }}?type=yearly" class="nav-link {{ request()->fullUrlIs(url(route('pelatih.kehadiran.rekap')) . '*') && request()->get('type')=='yearly' ? 'active' : '' }}">
+                            <i class="fas fa-calendar-alt"></i> Rekap Tahunan
+                        </a>
 
                     @elseif($user->role == 'anggota')
                         <!-- ===== MENU ANGGOTA ===== -->
