@@ -1,3 +1,4 @@
+<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -5,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'SISMEKUL') }} - @yield('title')</title>
+    {{-- PWA META TAGS --}}
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5e9">
+    <link rel="apple-touch-icon" href="/images/logo-smk-bppi.png">
+
+    <title>{{ config('app.name', 'SIMSKUL') }} - @yield('title')</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -14,23 +20,31 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 
     <style>
+        /* ===== ROOT VARIABLES - BIRU CERAH ===== */
         :root {
-            --primary: #4f46e5;
-            --primary-light: #818cf8;
-            --primary-dark: #0f172a;
+            --primary: #0ea5e9;
+            --primary-light: #38bdf8;
+            --primary-dark: #0284c7;
+            --primary-bg: #f0f9ff;
             --secondary: #06b6d4;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --bg-main: #f0f2f5;
-            --card-shadow: 0 8px 40px rgba(0,0,0,0.06);
-            --card-hover: 0 12px 50px rgba(79, 70, 229, 0.15);
+            --bg-main: #f0f7ff;
+            --card-shadow: 0 8px 40px rgba(14, 165, 233, 0.06);
+            --card-hover: 0 12px 50px rgba(14, 165, 233, 0.12);
             --radius: 16px;
             --radius-sm: 10px;
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --sidebar-width: 280px;
+            --topbar-height: 72px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -42,9 +56,9 @@
 
         /* ===== SIDEBAR ===== */
         .sidebar {
-            width: 280px;
+            width: var(--sidebar-width);
             min-height: 100vh;
-            background: var(--primary-dark);
+            background: linear-gradient(180deg, #0c4a6e 0%, #0284c7 50%, #0c4a6e 100%);
             position: fixed;
             top: 0;
             left: 0;
@@ -53,60 +67,100 @@
             padding: 0;
             overflow-y: auto;
             transition: var(--transition);
-            border-right: 1px solid rgba(255,255,255,0.04);
+            border-right: 1px solid rgba(255,255,255,0.06);
         }
 
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 10px; }
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
 
-        /* Brand */
+        /* ===== SIDEBAR BRAND ===== */
         .sidebar-brand {
-            padding: 28px 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: 24px 20px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             align-items: center;
             gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-brand::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .sidebar-brand .brand-icon {
             width: 48px;
             height: 48px;
             border-radius: 14px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8, #06b6d4);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 22px;
-            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+            font-size: 20px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
             transition: var(--transition);
+            flex-shrink: 0;
+            overflow: hidden;
+            padding: 6px;
+        }
+
+        .sidebar-brand .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
         }
 
         .sidebar-brand .brand-icon:hover {
             transform: rotate(-8deg) scale(1.05);
-            box-shadow: 0 6px 30px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 6px 30px rgba(14, 165, 233, 0.4);
         }
 
-        .sidebar-brand h5 {
-            color: #fff;
+        .sidebar-brand .brand-text h5 {
+            color: #ffffff;
             font-weight: 800;
             font-size: 18px;
             margin: 0;
             letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
-        .sidebar-brand small {
-            color: rgba(255,255,255,0.3);
+        .sidebar-brand .brand-text small {
+            color: rgba(255,255,255,0.4);
             font-size: 10px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        /* Menu */
-        .sidebar-menu { padding: 16px 12px; }
+        /* ===== SIDEBAR MENU ===== */
+        .sidebar-menu {
+            padding: 16px 12px;
+        }
 
         .sidebar-menu .menu-label {
-            color: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.2);
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -115,7 +169,7 @@
         }
 
         .sidebar-menu .nav-link {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.6);
             padding: 11px 16px;
             border-radius: var(--radius-sm);
             font-weight: 500;
@@ -126,6 +180,7 @@
             gap: 14px;
             text-decoration: none;
             position: relative;
+            cursor: pointer;
         }
 
         .sidebar-menu .nav-link::before {
@@ -136,7 +191,7 @@
             transform: translateY(-50%) scaleX(0);
             width: 3px;
             height: 28px;
-            background: linear-gradient(180deg, #4f46e5, #818cf8);
+            background: #ffffff;
             border-radius: 0 4px 4px 0;
             transition: var(--transition);
         }
@@ -147,91 +202,111 @@
         }
 
         .sidebar-menu .nav-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.04);
+            color: #ffffff;
+            background: rgba(255,255,255,0.08);
             transform: translateX(4px);
         }
 
         .sidebar-menu .nav-link.active {
-            color: #818cf8;
-            background: rgba(99,102,241,0.08);
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
         }
 
         .sidebar-menu .nav-link i {
             width: 20px;
             text-align: center;
             font-size: 16px;
+            flex-shrink: 0;
         }
 
         .sidebar-menu .nav-link .badge {
             margin-left: auto;
-            background: rgba(99,102,241,0.2);
-            color: #818cf8;
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
             font-size: 9px;
             padding: 2px 10px;
             border-radius: 20px;
             font-weight: 600;
         }
 
-        /* User Info */
+        /* ===== SIDEBAR USER ===== */
         .sidebar-user {
             padding: 16px 20px;
-            border-top: 1px solid rgba(255,255,255,0.04);
+            border-top: 1px solid rgba(255,255,255,0.06);
             margin-top: 8px;
+            background: rgba(255,255,255,0.03);
         }
 
         .sidebar-user .avatar {
             width: 40px;
             height: 40px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
+            color: #ffffff;
             font-weight: 700;
             font-size: 16px;
+            flex-shrink: 0;
         }
 
         .sidebar-user .name {
-            color: #fff;
+            color: #ffffff;
             font-weight: 600;
             font-size: 14px;
             margin: 0;
         }
 
         .sidebar-user .role {
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.4);
             font-size: 11px;
             margin: 0;
         }
 
+        .sidebar-user .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
         /* ===== MAIN CONTENT ===== */
         .main-content {
-            margin-left: 280px;
+            margin-left: var(--sidebar-width);
             min-height: 100vh;
             padding: 0;
         }
 
         /* ===== TOPBAR GLASS ===== */
         .topbar {
-            background: rgba(255,255,255,0.75);
+            background: rgba(255,255,255,0.8);
             backdrop-filter: blur(24px) saturate(1.8);
             -webkit-backdrop-filter: blur(24px) saturate(1.8);
             padding: 14px 36px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.08);
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            min-height: var(--topbar-height);
         }
 
         .topbar .page-title h4 {
             font-weight: 800;
             font-size: 20px;
-            color: #0f172a;
+            color: #0c4a6e;
             margin: 0;
             letter-spacing: -0.5px;
         }
@@ -250,19 +325,22 @@
         }
 
         .topbar .topbar-right .date-display {
-            color: #64748b;
+            color: #0c4a6e;
             font-size: 13px;
             font-weight: 500;
             padding: 6px 14px;
-            background: rgba(0,0,0,0.03);
+            background: rgba(14, 165, 233, 0.06);
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .topbar .topbar-right .avatar-top {
             width: 38px;
             height: 38px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -271,12 +349,12 @@
             font-size: 14px;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 2px 16px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 2px 16px rgba(14, 165, 233, 0.15);
         }
 
         .topbar .topbar-right .avatar-top:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 24px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 4px 24px rgba(14, 165, 233, 0.3);
         }
 
         .topbar .topbar-right .btn-logout {
@@ -301,29 +379,21 @@
             box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
         }
 
-        /* ===== PAGE CONTENT ===== */
-        .page-content {
-            padding: 28px 36px;
-            animation: fadeUp 0.6s ease;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== RESPONSIVE ===== */
+        /* ===== SIDEBAR TOGGLE ===== */
         .sidebar-toggle {
             display: none;
             background: none;
             border: none;
-            color: #0f172a;
+            color: #0c4a6e;
             font-size: 22px;
             padding: 0;
             transition: var(--transition);
         }
 
-        .sidebar-toggle:hover { color: #4f46e5; transform: scale(1.1); }
+        .sidebar-toggle:hover {
+            color: #0ea5e9;
+            transform: scale(1.1);
+        }
 
         .sidebar-overlay {
             display: none;
@@ -335,34 +405,73 @@
             transition: var(--transition);
         }
 
-        .sidebar-overlay.show { display: block; }
+        .sidebar-overlay.show {
+            display: block;
+        }
 
+        /* ===== PAGE CONTENT ===== */
+        .page-content {
+            padding: 28px 36px;
+            animation: fadeUp 0.6s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
                 width: 300px;
             }
-            .sidebar.open { transform: translateX(0); }
-            .sidebar-toggle { display: block; }
-            .main-content { margin-left: 0; }
-            .topbar { padding: 12px 16px; }
-            .page-content { padding: 16px; }
-            .sidebar-overlay.show { display: block; }
-            .topbar .topbar-right .date-display { display: none; }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .topbar {
+                padding: 12px 16px;
+            }
+            .page-content {
+                padding: 16px;
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+            .topbar .topbar-right .date-display {
+                display: none;
+            }
         }
 
         @media (max-width: 576px) {
-            .topbar .page-title h4 { font-size: 17px; }
-            .topbar .page-title p { display: none; }
-            .topbar .topbar-right .btn-logout span { display: none; }
-            .page-content { padding: 12px; }
+            .topbar .page-title h4 {
+                font-size: 17px;
+            }
+            .topbar .page-title p {
+                display: none;
+            }
+            .topbar .topbar-right .btn-logout span {
+                display: none;
+            }
+            .page-content {
+                padding: 12px;
+            }
+            .sidebar {
+                width: 280px;
+            }
         }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.15); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(79, 70, 229, 0.3); }
 
         /* ===== UTILITY ===== */
         .glass {
@@ -372,9 +481,58 @@
         }
 
         .text-gradient {
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .card-modern {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
+            border: 1px solid rgba(14, 165, 233, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .card-modern:hover {
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.08);
+        }
+
+        .card-modern .card-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.04);
+            padding: 20px 24px;
+            font-weight: 600;
+        }
+
+        .card-modern .card-body {
+            padding: 24px;
+        }
+
+        /* ===== TOMBOL DOWNLOAD SIDEBAR ===== */
+        .btn-download-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            transition: var(--transition);
+            margin-top: 16px;
+            border: none;
+            width: 100%;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-download-sidebar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4);
+            color: #ffffff;
         }
     </style>
 
@@ -384,13 +542,14 @@
     <div class="app-wrapper">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
+            <!-- ===== BRAND / LOGO ===== -->
             <div class="sidebar-brand">
                 <div class="brand-icon">
-                    <i class="fas fa-trophy"></i>
+                    <img src="{{ asset('images/logo-smk-bppi.png') }}" alt="Logo SMK BPPI">
                 </div>
-                <div>
-                    <h5>SISMEKUL</h5>
-                    <small>Management System</small>
+                <div class="brand-text">
+                    <h5>SIMSKUL</h5>
+                    <small>Sistem Manajemen Eskul</small>
                 </div>
             </div>
 
@@ -400,7 +559,7 @@
 
                     @if($user->role == 'admin')
                         <!-- ===== MENU ADMIN ===== -->
-                        <div class="menu-label">Main Menu</div>
+                        <div class="menu-label">Menu Utama</div>
                         <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
                         </a>
@@ -408,8 +567,12 @@
                             <i class="fas fa-trophy"></i> Ekstrakurikuler
                         </a>
                         <a href="{{ route('admin.anggota.index') }}" class="nav-link {{ request()->routeIs('admin.anggota.*') ? 'active' : '' }}">
-                            <i class="fas fa-users"></i> Anggota
+                            <i class="fas fa-users"></i> Data Anggota
                             <span class="badge">{{ \App\Models\User::where('role', 'anggota')->count() }}</span>
+                        </a>
+                        <a href="{{ route('admin.pelatih.index') }}" class="nav-link {{ request()->routeIs('admin.pelatih.*') ? 'active' : '' }}">
+                            <i class="fas fa-chalkboard-teacher"></i> Data Pelatih
+                            <span class="badge">{{ \App\Models\User::where('role', 'pelatih')->count() }}</span>
                         </a>
                         <a href="{{ route('admin.kehadiran_pelatih') }}" class="nav-link {{ request()->routeIs('admin.kehadiran_pelatih') ? 'active' : '' }}">
                             <i class="fas fa-user-check"></i> Kehadiran Pelatih
@@ -420,17 +583,20 @@
                         <a href="{{ route('admin.template-surat.index') }}" class="nav-link {{ request()->routeIs('admin.template-surat.*') ? 'active' : '' }}">
                             <i class="fas fa-file-alt"></i> Template Surat
                         </a>
+                        <a href="{{ route('admin.dokumentasi.index') }}" class="nav-link {{ request()->routeIs('admin.dokumentasi.*') ? 'active' : '' }}">
+                            <i class="fas fa-image"></i> Dokumentasi
+                        </a>
 
                     @elseif($user->role == 'pelatih')
                         <!-- ===== MENU PELATIH ===== -->
-                        <div class="menu-label">Main Menu</div>
+                        <div class="menu-label">Menu Utama</div>
                         <a href="{{ route('pelatih.dashboard') }}" class="nav-link {{ request()->routeIs('pelatih.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
                         </a>
                         <a href="{{ route('pelatih.kehadiran_pelatih') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran_pelatih*') ? 'active' : '' }}">
                             <i class="fas fa-user-check"></i> Kehadiran Saya
                         </a>
-                        <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran*') && !request()->routeIs('pelatih.kehadiran_pelatih*') ? 'active' : '' }}">
+                        <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran') && !request()->routeIs('pelatih.kehadiran_pelatih*') ? 'active' : '' }}">
                             <i class="fas fa-clipboard-list"></i> Kehadiran Anggota
                         </a>
                         <a href="{{ route('pelatih.nilai') }}" class="nav-link {{ request()->routeIs('pelatih.nilai*') ? 'active' : '' }}">
@@ -439,16 +605,10 @@
                         <a href="{{ route('pelatih.dokumentasi') }}" class="nav-link {{ request()->routeIs('pelatih.dokumentasi*') ? 'active' : '' }}">
                             <i class="fas fa-camera"></i> Dokumentasi
                         </a>
-                        <a href="{{ route('pelatih.kehadiran.rekap') }}?type=monthly" class="nav-link {{ request()->fullUrlIs(url(route('pelatih.kehadiran.rekap')) . '*') && request()->get('type')=='monthly' ? 'active' : '' }}">
-                            <i class="fas fa-chart-line"></i> Rekap Bulanan
-                        </a>
-                        <a href="{{ route('pelatih.kehadiran.rekap') }}?type=yearly" class="nav-link {{ request()->fullUrlIs(url(route('pelatih.kehadiran.rekap')) . '*') && request()->get('type')=='yearly' ? 'active' : '' }}">
-                            <i class="fas fa-calendar-alt"></i> Rekap Tahunan
-                        </a>
 
                     @elseif($user->role == 'anggota')
                         <!-- ===== MENU ANGGOTA ===== -->
-                        <div class="menu-label">Main Menu</div>
+                        <div class="menu-label">Menu Utama</div>
                         <a href="{{ route('anggota.dashboard') }}" class="nav-link {{ request()->routeIs('anggota.dashboard') ? 'active' : '' }}">
                             <i class="fas fa-th-large"></i> Dashboard
                         </a>
@@ -461,15 +621,35 @@
                     @endif
                 @endauth
 
-                <!-- ===== SETTINGS ===== -->
-                <div class="menu-label">Settings</div>
-                <a href="{{ route('profile.edit') }}" class="nav-link">
-                    <i class="fas fa-user-cog"></i> Profile
+                <!-- ===== PENGATURAN ===== -->
+                <div class="menu-label">Pengaturan</div>
+                <a href="{{ route('profile.show') }}" class="nav-link">
+                    <i class="fas fa-user-cog"></i> Profil
                 </a>
                 <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="fas fa-sign-out-alt"></i> Keluar
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+
+                <!-- ===== TOMBOL DOWNLOAD APLIKASI ===== -->
+                @php
+                    $apkPath = public_path('downloads/SIMSKUL.apk');
+                    $apkExists = file_exists($apkPath);
+                    if (!$apkExists) {
+                        $apkPath = public_path('apk/SIMSKUL.apk');
+                        $apkExists = file_exists($apkPath);
+                    }
+                @endphp
+
+                @if($apkExists)
+                    <a href="{{ asset('downloads/SIMSKUL.apk') }}" class="btn-download-sidebar" download>
+                        <i class="fas fa-download"></i> Unduh Aplikasi
+                    </a>
+                @else
+                    <a href="{{ route('admin.downloads.index') }}" class="btn-download-sidebar">
+                        <i class="fas fa-download"></i> Unduh Aplikasi
+                    </a>
+                @endif
             </div>
 
             @auth
@@ -478,7 +658,10 @@
                     <div class="avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                     <div>
                         <p class="name">{{ Auth::user()->name }}</p>
-                        <p class="role">{{ ucfirst(Auth::user()->role) }}</p>
+                        <p class="role">
+                            <span class="status-dot"></span>
+                            {{ ucfirst(Auth::user()->role) }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -503,14 +686,14 @@
                 </div>
                 <div class="topbar-right">
                     <span class="date-display">
-                        <i class="far fa-calendar-alt me-1"></i>
+                        <i class="far fa-calendar-alt"></i>
                         {{ now()->translatedFormat('d F Y') }}
                     </span>
                     <div class="avatar-top">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                     <form method="POST" action="{{ route('logout') }}" class="d-inline">
                         @csrf
                         <button type="submit" class="btn-logout">
-                            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                            <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -551,6 +734,17 @@
                 }
             }
         });
+
+        // ===== REGISTER SERVICE WORKER (Untuk PWA) =====
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registered: ', registration.scope);
+                }).catch(function(error) {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+            });
+        }
     </script>
     @stack('scripts')
 </body>

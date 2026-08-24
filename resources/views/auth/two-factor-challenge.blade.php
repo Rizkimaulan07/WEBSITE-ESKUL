@@ -4,72 +4,75 @@
 
 @section('content')
 <div class="logo">
-    <div class="logo-icon" style="background: linear-gradient(135deg, #6C63FF, #3D3B8A);">
+    <div class="logo-icon" style="background: linear-gradient(135deg, #2563eb, #3b82f6); box-shadow: 0 8px 30px rgba(59,130,246,0.25);">
         <i class="bi bi-shield-check"></i>
     </div>
-    <h3>Verifikasi Dua Faktor</h3>
-    <p class="subtitle">Masukkan kode dari aplikasi authenticator Anda</p>
+    <h3 style="color: #0f172a;">Verifikasi Dua Faktor</h3>
+    <p class="subtitle" style="color: #64748b;">Masukkan kode dari aplikasi authenticator Anda</p>
 </div>
 
-<!-- Error Message -->
 @if ($errors->any())
-    <div class="alert-custom">
-        <i class="bi bi-exclamation-circle-fill alert-icon"></i>
-        @foreach ($errors->all() as $error)
-            <div>{{ $error }}</div>
-        @endforeach
+    <div class="alert-custom" style="background: #fee2e2; border-left: 4px solid #dc2626; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px;">
+        <i class="bi bi-exclamation-circle-fill alert-icon" style="color: #dc2626; font-size: 18px;"></i>
+        <div style="color: #991b1b;">
+            @foreach ($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
     </div>
 @endif
 
 <form method="POST" action="{{ route('two-factor.login') }}">
     @csrf
 
-    <!-- Code -->
-    <div class="form-group">
-        <label for="code">Kode Authenticator</label>
-        <input type="text" 
-               class="form-control @error('code') is-invalid @enderror" 
-               id="code" 
-               name="code" 
-               placeholder="Masukkan 6 digit kode"
-               required>
-        <i class="bi bi-shield-lock input-icon"></i>
-        @error('code')
-            <small class="text-danger mt-1 d-block">{{ $message }}</small>
-        @enderror
+    <div class="form-group" style="margin-bottom: 20px;">
+        <label for="code" style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: block;">Kode Authenticator</label>
+        <div class="input-wrapper" style="position: relative;">
+            <input type="text" 
+                   class="form-control @error('code') is-invalid @enderror" 
+                   id="code" 
+                   name="code" 
+                   placeholder="Masukkan 6 digit kode"
+                   required
+                   style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
+            <i class="bi bi-shield-lock input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
+            @error('code')
+                <small class="text-danger" style="color: #dc2626; font-size: 13px; display: block; margin-top: 4px;">{{ $message }}</small>
+            @enderror
+        </div>
     </div>
 
     <div class="text-center mb-3">
-        <small class="text-muted">Atau gunakan salah satu recovery code</small>
+        <small class="text-muted" style="color: #94a3b8;">Atau gunakan salah satu recovery code</small>
     </div>
 
-    <!-- Recovery Code -->
-    <div class="form-group">
-        <label for="recovery_code">Recovery Code</label>
-        <input type="text" 
-               class="form-control @error('recovery_code') is-invalid @enderror" 
-               id="recovery_code" 
-               name="recovery_code" 
-               placeholder="Masukkan recovery code"
-               required>
-        <i class="bi bi-key input-icon"></i>
-        @error('recovery_code')
-            <small class="text-danger mt-1 d-block">{{ $message }}</small>
-        @enderror
+    <div class="form-group" style="margin-bottom: 20px;">
+        <label for="recovery_code" style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: block;">Recovery Code</label>
+        <div class="input-wrapper" style="position: relative;">
+            <input type="text" 
+                   class="form-control @error('recovery_code') is-invalid @enderror" 
+                   id="recovery_code" 
+                   name="recovery_code" 
+                   placeholder="Masukkan recovery code"
+                   required
+                   style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
+            <i class="bi bi-key input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
+            @error('recovery_code')
+                <small class="text-danger" style="color: #dc2626; font-size: 13px; display: block; margin-top: 4px;">{{ $message }}</small>
+            @enderror
+        </div>
     </div>
 
-    <!-- Button -->
-    <button type="submit" class="btn-auth">
+    <button type="submit" class="btn-auth" style="width: 100%; padding: 16px; border: none; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 4px 24px rgba(59,130,246,0.25);">
         <span class="btn-text">Verifikasi <i class="bi bi-arrow-right ms-2"></i></span>
         <span class="spinner"></span>
     </button>
 </form>
 
-<!-- Footer -->
-<div class="auth-footer">
+<div class="auth-footer" style="text-align: center; margin-top: 20px;">
     <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button type="submit" class="btn btn-link text-decoration-none p-0" style="color: var(--primary); font-weight: 600;">
+        <button type="submit" class="btn btn-link text-decoration-none p-0" style="color: #3b82f6; font-weight: 600; border: none; background: none; cursor: pointer;">
             Logout
         </button>
     </form>

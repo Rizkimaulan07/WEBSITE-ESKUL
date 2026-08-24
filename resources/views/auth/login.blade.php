@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>SISMEKUL - Login</title>
+    <title>SIMSKUL - Login</title>
     
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -12,12 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -28,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* ===== BACKGROUND ANIMATION ===== */
+        /* ===== BACKGROUND ANIMATION - BIRU CERAH ===== */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -37,28 +32,24 @@
             bottom: 0;
             z-index: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 40%, #2d1b69 70%, #4f46e5 100%);
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6a 30%, #0ea5e9 60%, #38bdf8 100%);
         }
-
-        /* Animated Gradient */
         .bg-gradient-animation {
             position: absolute;
             width: 200%;
             height: 200%;
             top: -50%;
             left: -50%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(79,70,229,0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 50%, rgba(6,182,212,0.1) 0%, transparent 50%),
-                        radial-gradient(ellipse at 50% 80%, rgba(139,92,246,0.1) 0%, transparent 50%);
+            background: radial-gradient(ellipse at 30% 50%, rgba(14,165,233,0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 50%, rgba(56,189,248,0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(14,165,233,0.1) 0%, transparent 50%);
             animation: gradientMove 15s ease-in-out infinite alternate;
         }
-
         @keyframes gradientMove {
             0% { transform: translate(0, 0) rotate(0deg); }
             100% { transform: translate(-10%, -10%) rotate(5deg); }
         }
 
-        /* Floating Orbs */
         .orb {
             position: absolute;
             border-radius: 50%;
@@ -66,34 +57,9 @@
             animation: floatOrb 20s ease-in-out infinite;
             opacity: 0.1;
         }
-
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: #4f46e5;
-            top: -200px;
-            left: -200px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: #06b6d4;
-            bottom: -150px;
-            right: -150px;
-            animation-delay: -5s;
-        }
-
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            background: #8b5cf6;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -10s;
-        }
+        .orb-1 { width: 600px; height: 600px; background: #0ea5e9; top: -200px; left: -200px; animation-delay: 0s; }
+        .orb-2 { width: 500px; height: 500px; background: #38bdf8; bottom: -150px; right: -150px; animation-delay: -5s; }
+        .orb-3 { width: 400px; height: 400px; background: #7dd3fc; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
 
         @keyframes floatOrb {
             0%, 100% { transform: translate(0, 0) scale(1); }
@@ -102,22 +68,19 @@
             75% { transform: translate(150px, 50px) scale(1.05); }
         }
 
-        /* Sport Icons */
         .sport-icons {
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            opacity: 0.025;
+            opacity: 0.015;
         }
-
         .sport-icon {
             position: absolute;
             font-size: 80px;
             color: #fff;
             animation: sportFloat 25s linear infinite;
         }
-
         .sport-icon:nth-child(1) { left: 5%; top: 10%; animation-delay: 0s; font-size: 60px; }
         .sport-icon:nth-child(2) { left: 15%; top: 30%; animation-delay: -3s; font-size: 100px; }
         .sport-icon:nth-child(3) { left: 25%; top: 60%; animation-delay: -6s; font-size: 70px; }
@@ -146,7 +109,6 @@
             max-width: 440px;
             padding: 20px;
         }
-
         .login-card {
             background: rgba(255,255,255,0.96);
             backdrop-filter: blur(20px);
@@ -159,7 +121,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .login-card::before {
             content: '';
             position: absolute;
@@ -167,58 +128,48 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(ellipse at 100% 0%, rgba(79,70,229,0.02), transparent 60%);
+            background: radial-gradient(ellipse at 100% 0%, rgba(14,165,233,0.02), transparent 60%);
             pointer-events: none;
         }
-
         .login-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 40px 120px rgba(79,70,229,0.15);
+            box-shadow: 0 40px 120px rgba(14,165,233,0.15);
         }
 
         /* Brand */
-        .brand {
-            text-align: center;
-            margin-bottom: 32px;
-            position: relative;
-        }
-
-        .brand .brand-icon {
-            width: 72px;
-            height: 72px;
+        .brand { text-align: center; margin-bottom: 28px; position: relative; }
+        .brand-logo-wrapper { display: flex; justify-content: center; align-items: center; margin-bottom: 14px; }
+        .brand-logo-container {
+            width: 90px;
+            height: 90px;
             border-radius: 20px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8);
-            display: inline-flex;
+            background: #ffffff;
+            display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 32px;
-            box-shadow: 0 8px 40px rgba(79,70,229,0.3);
-            margin-bottom: 14px;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 40px rgba(14,165,233,0.2);
+            padding: 10px;
             position: relative;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid rgba(14,165,233,0.08);
         }
-
-        .brand .brand-icon::after {
+        .brand-logo-container::after {
             content: '';
             position: absolute;
             inset: -4px;
             border-radius: 24px;
-            background: linear-gradient(135deg, #4f46e5, #818cf8, #06b6d4);
-            opacity: 0.3;
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc);
+            opacity: 0.2;
             filter: blur(12px);
             z-index: -1;
             animation: glowPulse 3s ease-in-out infinite;
         }
-
         @keyframes glowPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.05); }
         }
-
-        .brand .brand-icon:hover {
-            transform: rotate(-8deg) scale(1.05);
-        }
+        .brand-logo-container:hover { transform: rotate(-4deg) scale(1.03); }
+        .brand-logo-container img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
 
         .brand h2 {
             color: #0f172a;
@@ -227,27 +178,14 @@
             letter-spacing: -0.5px;
             margin: 0;
         }
-
-        .brand p {
-            color: #94a3b8;
-            font-size: 13px;
-            margin: 4px 0 0;
-            letter-spacing: 1.5px;
-        }
-
-        .brand .brand-line {
-            width: 40px;
-            height: 3px;
-            background: linear-gradient(90deg, #4f46e5, #818cf8);
-            border-radius: 4px;
-            margin: 12px auto 0;
-        }
+        .brand h2 span { color: #0ea5e9; }
+        .brand p { color: #94a3b8; font-size: 13px; margin: 4px 0 0; letter-spacing: 1.5px; }
+        .brand .brand-line { width: 40px; height: 3px; background: linear-gradient(90deg, #0ea5e9, #38bdf8); border-radius: 4px; margin: 10px auto 0; }
+        .school-name { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 6px; letter-spacing: 0.5px; }
+        .school-name strong { color: #0f172a; }
 
         /* Form */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        .form-group { margin-bottom: 20px; }
         .form-group label {
             color: #64748b;
             font-size: 12px;
@@ -257,11 +195,7 @@
             margin-bottom: 8px;
             display: block;
         }
-
-        .form-group .input-wrapper {
-            position: relative;
-        }
-
+        .form-group .input-wrapper { position: relative; }
         .form-group .input-wrapper .input-icon {
             position: absolute;
             left: 16px;
@@ -272,7 +206,6 @@
             transition: all 0.3s ease;
             pointer-events: none;
         }
-
         .form-group .input-wrapper input {
             width: 100%;
             padding: 15px 16px 15px 48px;
@@ -284,23 +217,15 @@
             color: #0f172a;
             transition: all 0.3s ease;
         }
-
         .form-group .input-wrapper input:focus {
             outline: none;
-            border-color: #4f46e5;
+            border-color: #0ea5e9;
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(79,70,229,0.06);
+            box-shadow: 0 0 0 4px rgba(14,165,233,0.06);
         }
-
         .form-group .input-wrapper input:focus + .input-icon,
-        .form-group .input-wrapper input:focus ~ .input-icon {
-            color: #4f46e5;
-        }
-
-        .form-group .input-wrapper input::placeholder {
-            color: #b0b8c8;
-        }
-
+        .form-group .input-wrapper input:focus ~ .input-icon { color: #0ea5e9; }
+        .form-group .input-wrapper input::placeholder { color: #b0b8c8; }
         .form-group .input-wrapper .toggle-password {
             position: absolute;
             right: 16px;
@@ -314,10 +239,9 @@
             padding: 8px;
             border-radius: 8px;
         }
-
         .form-group .input-wrapper .toggle-password:hover {
-            color: #4f46e5;
-            background: rgba(79,70,229,0.04);
+            color: #0ea5e9;
+            background: rgba(14,165,233,0.04);
         }
 
         /* Options */
@@ -327,7 +251,6 @@
             align-items: center;
             margin-bottom: 26px;
         }
-
         .form-options .remember {
             display: flex;
             align-items: center;
@@ -337,25 +260,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .form-options .remember:hover {
-            color: #0f172a;
-        }
-
+        .form-options .remember:hover { color: #0f172a; }
         .form-options .remember input[type="checkbox"] {
             width: 18px;
             height: 18px;
-            accent-color: #4f46e5;
+            accent-color: #0ea5e9;
             border-radius: 6px;
             cursor: pointer;
             border: 2px solid #d1d5db;
             transition: all 0.2s ease;
         }
-
-        .form-options .remember input[type="checkbox"]:checked {
-            border-color: #4f46e5;
-        }
-
+        .form-options .remember input[type="checkbox"]:checked { border-color: #0ea5e9; }
         .form-options .forgot-link {
             color: #94a3b8;
             font-size: 13px;
@@ -363,10 +278,7 @@
             transition: all 0.3s ease;
             font-weight: 500;
         }
-
-        .form-options .forgot-link:hover {
-            color: #4f46e5;
-        }
+        .form-options .forgot-link:hover { color: #0ea5e9; }
 
         /* Button Login */
         .btn-login {
@@ -374,7 +286,7 @@
             padding: 16px;
             border: none;
             border-radius: 14px;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
             color: #fff;
             font-size: 15px;
             font-weight: 600;
@@ -383,22 +295,17 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 24px rgba(79,70,229,0.25);
+            box-shadow: 0 4px 24px rgba(14,165,233,0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
-
         .btn-login:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 48px rgba(79,70,229,0.4);
+            box-shadow: 0 8px 48px rgba(14,165,233,0.4);
         }
-
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
+        .btn-login:active { transform: translateY(0); }
         .btn-login .btn-shine {
             position: absolute;
             top: 0;
@@ -408,32 +315,19 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
             animation: shine 3s infinite;
         }
-
         @keyframes shine {
             0% { left: -100%; }
             100% { left: 100%; }
         }
 
-        .btn-login i {
-            font-size: 16px;
-        }
-
         /* Divider */
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 26px 0;
-        }
-
-        .divider::before,
-        .divider::after {
+        .divider { display: flex; align-items: center; gap: 16px; margin: 26px 0; }
+        .divider::before, .divider::after {
             content: '';
             flex: 1;
             height: 1px;
             background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
         }
-
         .divider span {
             color: #94a3b8;
             font-size: 12px;
@@ -450,7 +344,6 @@
             gap: 10px;
             flex-wrap: wrap;
         }
-
         .role-badge {
             padding: 8px 22px;
             border-radius: 24px;
@@ -465,21 +358,18 @@
             align-items: center;
             gap: 8px;
         }
-
         .role-badge:hover {
-            border-color: #4f46e5;
-            color: #4f46e5;
-            background: rgba(79,70,229,0.04);
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+            background: rgba(14,165,233,0.04);
             transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(79,70,229,0.08);
+            box-shadow: 0 4px 20px rgba(14,165,233,0.08);
         }
-
         .role-badge.active {
-            border-color: #4f46e5;
-            color: #4f46e5;
-            background: rgba(79,70,229,0.04);
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+            background: rgba(14,165,233,0.04);
         }
-
         .role-badge .dot {
             display: inline-block;
             width: 8px;
@@ -487,29 +377,13 @@
             border-radius: 50%;
             transition: all 0.3s ease;
         }
-
-        .role-badge .dot.admin { background: #4f46e5; }
+        .role-badge .dot.admin { background: #0ea5e9; }
         .role-badge .dot.pelatih { background: #10b981; }
         .role-badge .dot.anggota { background: #f59e0b; }
 
-        .role-badge .badge-icon {
-            font-size: 14px;
-            opacity: 0.5;
-        }
-
         /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 26px;
-            color: #94a3b8;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .footer span {
-            color: #4f46e5;
-            font-weight: 600;
-        }
+        .footer { text-align: center; margin-top: 26px; color: #94a3b8; font-size: 12px; letter-spacing: 0.5px; }
+        .footer span { color: #0ea5e9; font-weight: 600; }
 
         /* Alert */
         .alert {
@@ -526,11 +400,7 @@
             border-left: 4px solid #dc2626;
             font-weight: 500;
         }
-
-        .alert i {
-            font-size: 18px;
-        }
-
+        .alert i { font-size: 18px; }
         .alert-success {
             background: #d1fae5;
             color: #059669;
@@ -539,40 +409,18 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
-            .login-card {
-                padding: 30px 22px;
-                border-radius: 20px;
-            }
-            .brand .brand-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 26px;
-            }
-            .brand h2 {
-                font-size: 22px;
-            }
-            .form-options {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-            }
-            .role-badges {
-                gap: 6px;
-            }
-            .role-badge {
-                font-size: 12px;
-                padding: 6px 16px;
-            }
-            .sport-icon {
-                font-size: 30px !important;
-            }
+            .login-card { padding: 30px 22px; border-radius: 20px; }
+            .brand-logo-container { width: 72px; height: 72px; padding: 8px; }
+            .brand h2 { font-size: 22px; }
+            .form-options { flex-direction: column; gap: 12px; align-items: flex-start; }
+            .role-badges { gap: 6px; }
+            .role-badge { font-size: 12px; padding: 6px 16px; }
+            .sport-icon { font-size: 30px !important; }
             .orb-1 { width: 250px; height: 250px; }
             .orb-2 { width: 200px; height: 200px; }
             .orb-3 { width: 150px; height: 150px; }
-            .btn-login {
-                padding: 14px;
-                font-size: 14px;
-            }
+            .btn-login { padding: 14px; font-size: 14px; }
+            .school-name { font-size: 11px; }
         }
     </style>
 </head>
@@ -606,12 +454,21 @@
         <div class="login-card">
             <!-- Brand -->
             <div class="brand">
-                <div class="brand-icon">
-                    <i class="fas fa-trophy"></i>
+                <div class="brand-logo-wrapper">
+                    <div class="brand-logo-container">
+                        <img src="{{ asset('images/logo-smk-bppi.png') }}" 
+                             alt="Logo SMK BPPI Baleendah" 
+                             loading="lazy">
+                    </div>
                 </div>
-                <h2>SISMEKUL</h2>
-                <p>Management System</p>
+
+                <h2>SIMSKUL</h2>
+                <p>Sistem Management Ekstrakulikuler</p>
                 <div class="brand-line"></div>
+                
+                <div class="school-name">
+                    <strong>SMK BPPI Baleendah</strong>
+                </div>
             </div>
 
             <!-- Alert -->
@@ -641,9 +498,9 @@
                 @csrf
 
                 <div class="form-group">
-                    <label><i class="fas fa-envelope me-2"></i> Email Address</label>
+                    <label><i class="fas fa-envelope me-2"></i> Alamat Email</label>
                     <div class="input-wrapper">
-                        <input type="email" name="email" value="{{ old('email', 'admin@mail.com') }}" placeholder="Masukkan email" required autofocus>
+                        <input type="email" name="email" placeholder="Masukkan email Anda" required autofocus>
                         <i class="fas fa-envelope input-icon"></i>
                     </div>
                 </div>
@@ -651,7 +508,7 @@
                 <div class="form-group">
                     <label><i class="fas fa-lock me-2"></i> Password</label>
                     <div class="input-wrapper">
-                        <input type="password" name="password" value="password" placeholder="Masukkan password" required id="password">
+                        <input type="password" name="password" placeholder="Masukkan password Anda" required id="password">
                         <i class="fas fa-lock input-icon"></i>
                         <button type="button" class="toggle-password" onclick="togglePassword()">
                             <i class="fas fa-eye" id="passwordToggleIcon"></i>
@@ -664,7 +521,7 @@
                         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                         Ingat Saya
                     </label>
-                    <a href="#" class="forgot-link">Lupa Password?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-link">Lupa Password?</a>
                 </div>
 
                 <button type="submit" class="btn-login">
@@ -682,24 +539,24 @@
             <div class="role-badges">
                 <span class="role-badge" onclick="autoFill('admin')">
                     <span class="dot admin"></span>
-                    <i class="fas fa-shield-alt badge-icon"></i>
+                    <i class="fas fa-shield-alt me-1"></i>
                     Admin
                 </span>
                 <span class="role-badge" onclick="autoFill('pelatih')">
                     <span class="dot pelatih"></span>
-                    <i class="fas fa-chalkboard-user badge-icon"></i>
+                    <i class="fas fa-chalkboard-user me-1"></i>
                     Pelatih
                 </span>
                 <span class="role-badge" onclick="autoFill('anggota')">
                     <span class="dot anggota"></span>
-                    <i class="fas fa-user-graduate badge-icon"></i>
+                    <i class="fas fa-user-graduate me-1"></i>
                     Anggota
                 </span>
             </div>
 
             <!-- Footer -->
             <div class="footer">
-                &copy; {{ date('Y') }} <span>SISMEKUL</span> v3.0
+                &copy; {{ date('Y') }} <span>SIMSKUL</span> v3.0
             </div>
         </div>
     </div>
@@ -732,7 +589,6 @@
                 emailInput.value = credentials[role].email;
                 passInput.value = credentials[role].pass;
                 
-                // Highlight effect
                 const badges = document.querySelectorAll('.role-badge');
                 badges.forEach(b => b.classList.remove('active'));
                 const clickedBadge = document.querySelector(`.role-badge .dot.${role}`)?.closest('.role-badge');

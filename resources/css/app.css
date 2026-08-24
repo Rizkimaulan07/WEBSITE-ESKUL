@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Logo styling */
+.application-logo {
+    transition: all 0.3s ease;
+}
+
+.application-logo:hover {
+    transform: scale(1.05);
+}
+
+/* Untuk logo di sidebar */
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.sidebar-logo .logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-logo .logo-text .title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.sidebar-logo .logo-text .subtitle {
+    font-size: 11px;
+    color: #6b7280;
+};

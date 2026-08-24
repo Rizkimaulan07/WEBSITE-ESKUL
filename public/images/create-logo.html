@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buat Logo SMK BPPI</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .logo-container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 200px;
+            height: 200px;
+            background: #0d47a1;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin: 0 auto 20px;
+        }
+        .logo h1 {
+            font-size: 32px;
+            margin: 0;
+            color: #ffd54f;
+        }
+        .logo h2 {
+            font-size: 24px;
+            margin: 5px 0;
+        }
+        .logo p {
+            font-size: 14px;
+            margin: 5px 0 0;
+            color: #90caf9;
+        }
+        button {
+            background: #0d47a1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        canvas {
+            display: none;
+        }
+        #downloadLink {
+            display: inline-block;
+            margin-top: 10px;
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <h3>Preview Logo SMK BPPI Baleendah</h3>
+        <div class="logo" id="logoPreview">
+            <h1>SMK</h1>
+            <h2>BPPI</h2>
+            <p>Baleendah</p>
+        </div>
+        <button onclick="downloadLogo()">⬇ Download Logo</button>
+        <br>
+        <a id="downloadLink" style="display:none;">Download PNG</a>
+    </div>
+
+    <canvas id="canvas" width="200" height="200"></canvas>
+
+    <script>
+        function downloadLogo() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            const gradient = ctx.createLinearGradient(0, 0, 200, 200);
+            gradient.addColorStop(0, '#0d47a1');
+            gradient.addColorStop(1, '#1565c0');
+            ctx.fillStyle = gradient;
+            roundRect(ctx, 0, 0, 200, 200, 20);
+            ctx.fill();
+            
+            // Text SMK
+            ctx.fillStyle = '#ffd54f';
+            ctx.font = 'bold 36px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('SMK', 100, 65);
+            
+            // Text BPPI
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 32px Arial';
+            ctx.fillText('BPPI', 100, 105);
+            
+            // Text Baleendah
+            ctx.fillStyle = '#90caf9';
+            ctx.font = '16px Arial';
+            ctx.fillText('Baleendah', 100, 140);
+            
+            // Decorative line
+            ctx.strokeStyle = '#ffd54f';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(30, 160);
+            ctx.lineTo(170, 160);
+            ctx.stroke();
+            
+            // Decorative dots
+            ctx.fillStyle = '#ffd54f';
+            ctx.beginPath();
+            ctx.arc(50, 175, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(100, 175, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(150, 175, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Download
+            const link = document.getElementById('downloadLink');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'logo-smk-bppi.png';
+            link.style.display = 'inline-block';
+            link.click();
+        }
+        
+        function roundRect(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+    </script>
+</body>
+</html>

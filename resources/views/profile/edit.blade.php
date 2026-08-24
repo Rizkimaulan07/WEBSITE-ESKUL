@@ -1,84 +1,148 @@
 @extends('layouts.app')
 
-@section('title', 'Profile')
-@section('subtitle', 'Edit profile Anda')
+@section('title', 'Profil')
+@section('subtitle', 'Edit profil Anda')
 
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card-modern">
-            <!-- Header -->
-            <div class="card-header-modern">
+        <div class="card-modern" style="background: #ffffff; border-radius: 16px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);">
+            <!-- Header - Biru Cerah -->
+            <div class="card-header-modern" style="padding: 20px 28px; border-bottom: 1px solid rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe);">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon">
+                    <div class="header-icon" style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; box-shadow: 0 4px 16px rgba(14,165,233,0.25);">
                         <i class="fas fa-user-cog"></i>
                     </div>
                     <div>
-                        <h5 class="fw-bold mb-0">Edit Profile</h5>
-                        <p class="text-muted small mb-0">Ubah informasi profile Anda</p>
+                        <h5 class="fw-bold mb-0" style="color: #0f172a; font-size: 18px;">Edit Profil</h5>
+                        <p class="text-muted small mb-0" style="color: #94a3b8; font-size: 13px;">Ubah informasi profil Anda</p>
                     </div>
                 </div>
                 @php
                     $user = Auth::user();
                 @endphp
                 @if($user->role == 'admin')
-                    <a href="{{ route('admin.dashboard') }}" class="btn-back">
+                    <a href="{{ route('admin.dashboard') }}" class="btn-back" style="padding: 8px 20px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;">
                         <i class="fas fa-arrow-left me-2"></i> Kembali
                     </a>
                 @elseif($user->role == 'pelatih')
-                    <a href="{{ route('pelatih.dashboard') }}" class="btn-back">
+                    <a href="{{ route('pelatih.dashboard') }}" class="btn-back" style="padding: 8px 20px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;">
                         <i class="fas fa-arrow-left me-2"></i> Kembali
                     </a>
                 @elseif($user->role == 'anggota')
-                    <a href="{{ route('anggota.dashboard') }}" class="btn-back">
+                    <a href="{{ route('anggota.dashboard') }}" class="btn-back" style="padding: 8px 20px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;">
                         <i class="fas fa-arrow-left me-2"></i> Kembali
                     </a>
                 @else
-                    <a href="{{ route('dashboard') }}" class="btn-back">
+                    <a href="{{ route('dashboard') }}" class="btn-back" style="padding: 8px 20px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;">
                         <i class="fas fa-arrow-left me-2"></i> Kembali
                     </a>
                 @endif
             </div>
 
             <!-- Body -->
-            <div class="card-body-modern">
+            <div class="card-body-modern" style="padding: 28px 32px;">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
+                                <i class="fas fa-check-circle fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <strong style="color: #065f46;">Berhasil!</strong> 
+                                <span style="color: #047857;">{{ session('success') }}</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
+                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                            </div>
+                            <div>
+                                <strong style="color: #991b1b;">Gagal!</strong> 
+                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
+                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('patch')
 
                     <div class="row g-4">
+                        <!-- Avatar / Foto Profil -->
+                        <div class="col-12">
+                            <div class="text-center">
+                                <div class="position-relative d-inline-block">
+                                    @if($user->avatar)
+                                        <img src="{{ asset($user->avatar) }}" 
+                                             class="rounded-circle border-4 border-white shadow-lg" 
+                                             style="width: 120px; height: 120px; object-fit: cover;"
+                                             id="avatarPreview">
+                                    @else
+                                        <div class="avatar-upload-placeholder rounded-circle d-inline-flex align-items-center justify-content-center"
+                                             style="width: 120px; height: 120px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: 4px solid white; box-shadow: 0 8px 30px rgba(14,165,233,0.2);">
+                                            <i class="fas fa-user fa-4x text-white opacity-75"></i>
+                                        </div>
+                                    @endif
+                                    <label for="avatar" class="btn-upload-avatar" style="position: absolute; bottom: 5px; right: 5px; width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: white; border: 3px solid white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                    <input type="file" class="d-none" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(event)">
+                                </div>
+                                <p class="mt-2" style="color: #64748b; font-size: 13px;">
+                                    <i class="fas fa-info-circle me-1" style="color: #0ea5e9;"></i>
+                                    Klik ikon kamera untuk mengubah foto profil
+                                </p>
+                            </div>
+                        </div>
+
                         <!-- Name -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-user text-primary me-2"></i>Nama Lengkap
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px; display: block;">
+                                    <i class="fas fa-user" style="color: #0ea5e9; margin-right: 8px;"></i>Nama Lengkap
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" 
                                        class="form-control @error('name') is-invalid @enderror" 
                                        name="name" 
                                        value="{{ old('name', $user->name) }}" 
-                                       required>
+                                       required
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; font-size: 13px; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
                                 @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="display: block; font-size: 12px; color: #ef4444; margin-top: 4px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
                         <!-- Email -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px; display: block;">
+                                    <i class="fas fa-envelope" style="color: #0ea5e9; margin-right: 8px;"></i>Email
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="email" 
                                        class="form-control @error('email') is-invalid @enderror" 
                                        name="email" 
                                        value="{{ old('email', $user->email) }}" 
-                                       required>
+                                       required
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; font-size: 13px; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
                                 @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="display: block; font-size: 12px; color: #ef4444; margin-top: 4px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -86,16 +150,17 @@
                         <!-- Kelas (untuk anggota) -->
                         @if($user->role == 'anggota')
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-graduation-cap text-primary me-2"></i>Kelas
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px; display: block;">
+                                    <i class="fas fa-graduation-cap" style="color: #0ea5e9; margin-right: 8px;"></i>Kelas
                                 </label>
                                 <input type="text" 
                                        class="form-control @error('kelas') is-invalid @enderror" 
                                        name="kelas" 
-                                       value="{{ old('kelas', $user->kelas) }}">
+                                       value="{{ old('kelas', $user->kelas) }}"
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; font-size: 13px; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
                                 @error('kelas')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="display: block; font-size: 12px; color: #ef4444; margin-top: 4px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -103,76 +168,79 @@
 
                         <!-- No HP -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-phone text-primary me-2"></i>No HP
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px; display: block;">
+                                    <i class="fas fa-phone" style="color: #0ea5e9; margin-right: 8px;"></i>No HP
                                 </label>
                                 <input type="text" 
                                        class="form-control @error('no_hp') is-invalid @enderror" 
                                        name="no_hp" 
-                                       value="{{ old('no_hp', $user->no_hp) }}">
+                                       value="{{ old('no_hp', $user->no_hp) }}"
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; font-size: 13px; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
                                 @error('no_hp')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="display: block; font-size: 12px; color: #ef4444; margin-top: 4px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
                         <!-- Password -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-lock text-primary me-2"></i>Password Baru
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px; display: block;">
+                                    <i class="fas fa-lock" style="color: #0ea5e9; margin-right: 8px;"></i>Password Baru
                                 </label>
                                 <input type="password" 
                                        class="form-control @error('password') is-invalid @enderror" 
                                        name="password" 
-                                       placeholder="Kosongkan jika tidak ingin mengubah">
+                                       placeholder="Kosongkan jika tidak ingin mengubah"
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; font-size: 13px; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
                                 @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="display: block; font-size: 12px; color: #ef4444; margin-top: 4px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>Konfirmasi Password
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 6px; display: block;">
+                                    <i class="fas fa-check-circle" style="color: #0ea5e9; margin-right: 8px;"></i>Konfirmasi Password
                                 </label>
                                 <input type="password" 
                                        class="form-control @error('password_confirmation') is-invalid @enderror" 
                                        name="password_confirmation" 
-                                       placeholder="Konfirmasi password baru">
+                                       placeholder="Konfirmasi password baru"
+                                       style="width: 100%; padding: 10px 16px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; font-size: 13px; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
                                 @error('password_confirmation')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="display: block; font-size: 12px; color: #ef4444; margin-top: 4px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Tombol Aksi -->
+                        <!-- Divider -->
                         <div class="col-12">
-                            <hr class="form-divider">
+                            <hr class="form-divider" style="border: none; border-top: 1px solid rgba(0,0,0,0.02); margin: 8px 0 16px;">
                             <div class="d-flex gap-3 justify-content-end">
                                 @php
                                     $user = Auth::user();
                                 @endphp
                                 @if($user->role == 'admin')
-                                    <a href="{{ route('admin.dashboard') }}" class="btn-cancel">
+                                    <a href="{{ route('admin.dashboard') }}" class="btn-cancel" style="padding: 10px 32px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                                         <i class="fas fa-times me-2"></i>Batal
                                     </a>
                                 @elseif($user->role == 'pelatih')
-                                    <a href="{{ route('pelatih.dashboard') }}" class="btn-cancel">
+                                    <a href="{{ route('pelatih.dashboard') }}" class="btn-cancel" style="padding: 10px 32px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                                         <i class="fas fa-times me-2"></i>Batal
                                     </a>
                                 @elseif($user->role == 'anggota')
-                                    <a href="{{ route('anggota.dashboard') }}" class="btn-cancel">
+                                    <a href="{{ route('anggota.dashboard') }}" class="btn-cancel" style="padding: 10px 32px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                                         <i class="fas fa-times me-2"></i>Batal
                                     </a>
                                 @else
-                                    <a href="{{ route('dashboard') }}" class="btn-cancel">
+                                    <a href="{{ route('dashboard') }}" class="btn-cancel" style="padding: 10px 32px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                                         <i class="fas fa-times me-2"></i>Batal
                                     </a>
                                 @endif
-                                <button type="submit" class="btn-submit">
+                                <button type="submit" class="btn-submit" style="padding: 10px 40px; border: none; border-radius: 10px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 14px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; cursor: pointer; box-shadow: 0 4px 16px rgba(14,165,233,0.25);">
                                     <i class="fas fa-save me-2"></i>Simpan Perubahan
                                 </button>
                             </div>
@@ -185,198 +253,97 @@
 </div>
 
 <style>
-    /* ===== CARD MODERN ===== */
-    .card-modern {
+    .form-control:focus {
+        outline: none;
+        border-color: #0ea5e9 !important;
         background: #ffffff;
-        border-radius: 16px;
-        border: 1px solid rgba(0,0,0,0.02);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.06);
     }
-
-    .card-modern:hover {
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+    .form-control.is-invalid {
+        border-color: #ef4444;
     }
-
-    /* ===== HEADER ===== */
-    .card-header-modern {
-        padding: 20px 28px;
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        background: rgba(248, 250, 252, 0.3);
+    .form-control.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.04);
     }
-
-    .header-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 20px;
-        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+    .form-control::placeholder {
+        color: #94a3b8;
     }
-
-    .btn-back {
-        padding: 8px 20px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        background: transparent;
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-    }
-
     .btn-back:hover {
         background: #f8fafc;
         transform: translateY(-2px);
         color: #0f172a;
         text-decoration: none;
     }
-
-    /* ===== BODY ===== */
-    .card-body-modern {
-        padding: 28px 32px;
-    }
-
-    /* ===== FORM GROUP ===== */
-    .form-group {
-        margin-bottom: 0;
-    }
-
-    .form-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 6px;
-        display: block;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px 16px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        font-size: 13px;
-        font-family: 'Inter', sans-serif;
-        background: #f8fafc;
-        color: #0f172a;
-        transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #6366f1;
-        background: #ffffff;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.04);
-    }
-
-    .form-control.is-invalid {
-        border-color: #ef4444;
-    }
-
-    .form-control.is-invalid:focus {
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.04);
-    }
-
-    .form-control::placeholder {
-        color: #94a3b8;
-    }
-
-    .invalid-feedback {
-        display: block;
-        font-size: 12px;
-        color: #ef4444;
-        margin-top: 4px;
-    }
-
-    /* ===== DIVIDER ===== */
-    .form-divider {
-        border: none;
-        border-top: 1px solid rgba(0,0,0,0.02);
-        margin: 8px 0 16px;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn-cancel {
-        padding: 10px 32px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        background: transparent;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-    }
-
     .btn-cancel:hover {
         background: #f8fafc;
         transform: translateY(-2px);
         color: #0f172a;
         text-decoration: none;
     }
-
-    .btn-submit {
-        padding: 10px 40px;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
     .btn-submit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
+        box-shadow: 0 8px 30px rgba(14, 165, 233, 0.35);
     }
-
-    /* ===== RESPONSIVE ===== */
+    .btn-upload-avatar:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 24px rgba(14, 165, 233, 0.5);
+    }
+    .avatar-upload-placeholder {
+        transition: all 0.3s ease;
+    }
+    .avatar-upload-placeholder:hover {
+        transform: scale(1.02);
+    }
     @media (max-width: 768px) {
         .card-header-modern {
             padding: 16px 18px;
             flex-direction: column;
             align-items: stretch;
         }
-
         .card-body-modern {
             padding: 18px;
         }
-
         .btn-back {
             justify-content: center;
         }
-
-        .btn-cancel,
-        .btn-submit {
+        .btn-cancel, .btn-submit {
             width: 100%;
             justify-content: center;
         }
-
         .d-flex.gap-3 {
             flex-direction: column;
         }
     }
 </style>
+
+<script>
+    function previewAvatar(event) {
+        const input = event.target;
+        const reader = new FileReader();
+        reader.onload = function() {
+            const preview = document.getElementById('avatarPreview');
+            if (preview) {
+                preview.src = reader.result;
+            } else {
+                const container = input.closest('.position-relative');
+                const img = document.createElement('img');
+                img.id = 'avatarPreview';
+                img.className = 'rounded-circle border-4 border-white shadow-lg';
+                img.style.cssText = 'width: 120px; height: 120px; object-fit: cover;';
+                img.src = reader.result;
+                
+                const placeholder = container.querySelector('.avatar-upload-placeholder');
+                if (placeholder) placeholder.remove();
+                
+                const existingImg = container.querySelector('#avatarPreview');
+                if (existingImg) existingImg.remove();
+                
+                container.insertBefore(img, container.querySelector('.btn-upload-avatar'));
+            }
+        };
+        if (input.files && input.files[0]) {
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 @endsection

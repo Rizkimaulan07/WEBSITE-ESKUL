@@ -6,26 +6,62 @@
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card-modern">
-            <!-- Header -->
-            <div class="card-header-modern">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon">
-                        <i class="fas fa-file-edit"></i>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
+            <!-- Header - Biru Cerah -->
+            <div class="card-header border-0 py-4 px-5" 
+                 style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 40%, #7dd3fc 80%, #bae6fd 100%);">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="bg-white bg-opacity-25 rounded-circle p-3">
+                        <i class="fas fa-file-edit fa-2x text-white"></i>
                     </div>
                     <div>
-                        <h5 class="fw-bold mb-0">Edit Template Surat</h5>
-                        <p class="text-muted small mb-0">Ubah data template surat</p>
+                        <h4 class="text-white fw-bold mb-0" style="font-size: 22px; letter-spacing: -0.5px;">Edit Template Surat</h4>
+                        <p class="text-white-50 mb-0 small" style="font-weight: 400;">Ubah data template surat</p>
+                    </div>
+                    <div class="ms-auto">
+                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-4 py-2" style="font-weight: 500;">
+                            <i class="fas fa-id-card me-2"></i>ID: #{{ str_pad($templateSurat->id, 4, '0', STR_PAD_LEFT) }}
+                        </span>
                     </div>
                 </div>
-                <a href="{{ route('admin.template-surat.index') }}" class="btn-back">
-                    <i class="fas fa-arrow-left me-2"></i> Kembali
-                </a>
             </div>
 
-            <!-- Body Form -->
-            <div class="card-body-modern">
-                {{-- PERBAIKAN UTAMA: Gunakan route dengan prefix admin. --}}
+            <div class="card-body p-5">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
+                                <i class="fas fa-check-circle fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <strong style="color: #065f46;">Berhasil!</strong> 
+                                <span style="color: #047857;">{{ session('success') }}</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
+                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                            </div>
+                            <div>
+                                <strong style="color: #991b1b;">Gagal!</strong> 
+                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
+                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
                 <form action="{{ route('admin.template-surat.update', $templateSurat->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -33,110 +69,98 @@
                     <div class="row g-4">
                         <!-- Judul Template -->
                         <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-heading text-primary me-2"></i>Judul Template
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-heading" style="color: #0ea5e9; margin-right: 8px;"></i>Judul Template
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" 
-                                       class="form-control @error('judul_template') is-invalid @enderror" 
-                                       name="judul_template" 
-                                       value="{{ old('judul_template', $templateSurat->judul_template) }}" 
-                                       placeholder="Contoh: Surat Izin Kegiatan, Surat Keterangan Aktif" 
-                                       required>
-                                <small class="form-text">Masukkan judul template surat</small>
+                                <input type="text" class="form-control form-control-modern @error('judul_template') is-invalid @enderror" 
+                                       name="judul_template" value="{{ old('judul_template', $templateSurat->judul_template) }}" 
+                                       placeholder="Contoh: Surat Izin Kegiatan, Surat Keterangan Aktif" required>
                                 @error('judul_template')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
                         <!-- File Template -->
                         <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-file-upload text-primary me-2"></i>File Template
-                                    <span class="text-muted small">(Kosongkan jika tidak ingin mengubah)</span>
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-file-upload" style="color: #0ea5e9; margin-right: 8px;"></i>File Template
+                                    <span class="text-muted" style="font-weight: 400; font-size: 12px;">(Kosongkan jika tidak ingin mengubah)</span>
                                 </label>
                                 
                                 @if($templateSurat->file_template)
-                                    <div class="current-file mb-2">
-                                        <div class="file-info-card">
-                                            <i class="fas fa-file-word me-2" style="color: #6366f1;"></i>
-                                            <span class="file-name">{{ $templateSurat->file_template }}</span>
+                                    <div class="mb-2 p-3 rounded-3" style="background: #f0f9ff; border: 1px solid #7dd3fc;">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <i class="fas fa-file-word fa-2x" style="color: #0ea5e9;"></i>
+                                            <div class="flex-grow-1">
+                                                <span style="font-size: 13px; color: #0f172a; font-weight: 500;">{{ $templateSurat->file_template }}</span>
+                                            </div>
                                             <a href="{{ route('admin.template-surat.download', $templateSurat->id) }}" 
-                                               class="btn-download-small">
+                                               class="btn btn-sm" style="background: rgba(16,185,129,0.06); color: #10b981; border-radius: 8px; padding: 4px 14px; text-decoration: none; font-weight: 500; font-size: 12px;">
                                                 <i class="fas fa-download me-1"></i> Download
                                             </a>
                                         </div>
                                     </div>
                                 @endif
 
-                                <div class="file-upload-wrapper">
-                                    <div class="file-upload-zone" onclick="document.getElementById('fileInput').click()">
-                                        <div class="file-upload-icon">
-                                            <i class="fas fa-cloud-upload-alt"></i>
-                                        </div>
-                                        <div class="file-upload-text">
-                                            <span class="file-upload-main">Klik untuk upload file baru</span>
-                                            <span class="file-upload-sub">atau drag and drop file disini</span>
-                                        </div>
-                                        <div class="file-upload-hint">
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            Format: .doc, .docx, .pdf | Maks: 2MB
-                                        </div>
-                                    </div>
-                                    <input type="file" 
-                                           class="d-none @error('file_template') is-invalid @enderror" 
-                                           id="fileInput" 
-                                           name="file_template" 
-                                           accept=".doc,.docx,.pdf"
-                                           onchange="previewFile(this)">
-                                    <div id="filePreviewContainer" style="display: none;">
-                                        <div class="file-preview-card">
-                                            <i class="fas fa-file-alt file-preview-icon"></i>
-                                            <div class="file-preview-info">
-                                                <span class="file-preview-name" id="previewFileName"></span>
-                                                <span class="file-preview-size" id="previewFileSize"></span>
-                                            </div>
-                                            <button type="button" class="file-preview-remove" onclick="removeFile()">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    @error('file_template')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
+                                <div class="upload-area" id="uploadArea" style="border: 2px dashed #7dd3fc; border-radius: 16px; padding: 40px 20px; text-align: center; transition: all 0.3s ease; background: #f0f9ff; cursor: pointer;">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #0ea5e9; opacity: 0.6;"></i>
+                                    <p class="mt-3 mb-0 fw-bold" style="color: #0f172a;">Klik untuk ganti file</p>
+                                    <small class="text-muted" style="font-size: 12px;">Format: .doc, .docx, .pdf | Maks: 2MB</small>
+                                    <input type="file" class="d-none" name="file_template" id="fileInput" accept=".doc,.docx,.pdf">
                                 </div>
+                                <div id="filePreview" class="mt-3 d-none">
+                                    <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #f0f9ff; border: 1px solid #7dd3fc;">
+                                        <i class="fas fa-file-word fa-2x" style="color: #0ea5e9;"></i>
+                                        <div>
+                                            <p class="mb-0 fw-bold" id="fileName" style="color: #0f172a;">file.docx</p>
+                                            <small class="text-muted" id="fileSize">0 KB</small>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-danger ms-auto" id="removeFile">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                @error('file_template')
+                                    <div class="invalid-feedback d-block" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
                         <!-- Keterangan -->
                         <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-align-left text-primary me-2"></i>Keterangan
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-align-left" style="color: #0ea5e9; margin-right: 8px;"></i>Keterangan
                                 </label>
-                                <textarea class="form-control @error('keterangan') is-invalid @enderror" 
-                                          name="keterangan" 
-                                          rows="4" 
-                                          placeholder="Masukkan keterangan template surat...">{{ old('keterangan', $templateSurat->keterangan) }}</textarea>
-                                <small class="form-text">Deskripsi singkat tentang template surat</small>
+                                <textarea class="form-control form-control-modern @error('keterangan') is-invalid @enderror" 
+                                          name="keterangan" rows="4" placeholder="Masukkan keterangan template surat...">{{ old('keterangan', $templateSurat->keterangan) }}</textarea>
                                 @error('keterangan')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="col-12">
+                            <div class="divider-custom">
+                                <span style="background: #ffffff; padding: 0 16px; color: #0ea5e9;">
+                                    <i class="fas fa-save"></i>
+                                </span>
                             </div>
                         </div>
 
                         <!-- Tombol Aksi -->
                         <div class="col-12">
-                            <hr class="form-divider">
                             <div class="d-flex gap-3 justify-content-end">
-                                <a href="{{ route('admin.template-surat.index') }}" class="btn-cancel">
-                                    <i class="fas fa-times me-2"></i>Batal
+                                <a href="{{ route('admin.template-surat.index') }}" class="btn-outline-secondary-custom" style="padding: 12px 32px; border-radius: 12px; border: 2px solid #e2e8f0; background: transparent; color: #64748b; font-weight: 500; transition: all 0.3s ease; text-decoration: none;">
+                                    <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn-submit">
-                                    <i class="fas fa-save me-2"></i>Update
+                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                    <i class="fas fa-save me-2"></i>Perbarui
                                 </button>
                             </div>
                         </div>
@@ -147,455 +171,76 @@
     </div>
 </div>
 
-{{-- Tambahkan style yang sama seperti di create.blade.php --}}
 <style>
-    /* ===== CARD MODERN ===== */
-    .card-modern {
-        background: #ffffff;
-        border-radius: 16px;
-        border: 1px solid rgba(0,0,0,0.02);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .card-modern:hover {
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
-    }
-
-    /* ===== HEADER ===== */
-    .card-header-modern {
-        padding: 20px 28px;
-        border-bottom: 1px solid rgba(0,0,0,0.02);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        background: rgba(248, 250, 252, 0.3);
-    }
-
-    .header-icon {
-        width: 44px;
-        height: 44px;
+    .form-group-modern { margin-bottom: 0; }
+    .form-group-modern label { font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px; }
+    .form-control-modern {
+        padding: 12px 20px;
+        border: 2px solid #e2e8f0;
         border-radius: 12px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 20px;
-        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
-    }
-
-    .btn-back {
-        padding: 8px 20px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        background: transparent;
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        text-decoration: none;
         transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-back:hover {
-        background: #f8fafc;
-        transform: translateY(-2px);
+        font-size: 14px;
+        background: #fafbfc;
         color: #0f172a;
-        text-decoration: none;
-    }
-
-    /* ===== BODY ===== */
-    .card-body-modern {
-        padding: 28px 32px;
-    }
-
-    /* ===== FORM GROUP ===== */
-    .form-group {
-        margin-bottom: 0;
-    }
-
-    .form-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 6px;
-        display: block;
-    }
-
-    .form-control {
+        font-weight: 500;
         width: 100%;
-        padding: 10px 16px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        font-size: 13px;
-        font-family: 'Inter', sans-serif;
-        background: #f8fafc;
-        color: #0f172a;
-        transition: all 0.3s ease;
     }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #6366f1;
+    .form-control-modern:focus {
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
         background: #ffffff;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.04);
     }
-
-    .form-control.is-invalid {
-        border-color: #ef4444;
+    .form-control-modern.is-invalid {
+        border-color: #dc2626;
+        background: #fef2f2;
     }
-
-    .form-control.is-invalid:focus {
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.04);
+    .divider-custom { text-align: center; position: relative; margin: 8px 0; }
+    .divider-custom::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
     }
-
-    .form-control::placeholder {
-        color: #94a3b8;
-    }
-
-    .form-text {
-        display: block;
-        font-size: 11px;
-        color: #94a3b8;
-        margin-top: 4px;
-    }
-
-    .invalid-feedback {
-        display: block;
-        font-size: 12px;
-        color: #ef4444;
-        margin-top: 4px;
-    }
-
-    textarea.form-control {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    /* ===== FILE UPLOAD ===== */
-    .file-upload-wrapper {
-        position: relative;
-    }
-
-    .file-upload-zone {
-        border: 2px dashed rgba(0,0,0,0.04);
-        border-radius: 12px;
-        padding: 32px 24px;
-        text-align: center;
-        background: #f8fafc;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-height: 140px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .file-upload-zone:hover {
-        border-color: #6366f1;
-        background: rgba(99, 102, 241, 0.02);
-        transform: scale(1.01);
-    }
-
-    .file-upload-icon {
-        font-size: 40px;
-        color: #94a3b8;
-        margin-bottom: 12px;
-        transition: all 0.3s ease;
-    }
-
-    .file-upload-zone:hover .file-upload-icon {
-        color: #6366f1;
-        transform: translateY(-4px);
-    }
-
-    .file-upload-main {
-        display: block;
-        font-weight: 600;
-        font-size: 14px;
-        color: #0f172a;
-    }
-
-    .file-upload-sub {
-        display: block;
-        font-size: 12px;
-        color: #94a3b8;
-    }
-
-    .file-upload-hint {
-        font-size: 11px;
-        color: #94a3b8;
-        margin-top: 8px;
-    }
-
-    /* ===== CURRENT FILE ===== */
-    .current-file {
-        margin-bottom: 12px;
-    }
-
-    .file-info-card {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 16px;
-        background: rgba(99, 102, 241, 0.04);
-        border-radius: 8px;
-        border: 1px solid rgba(99, 102, 241, 0.06);
-    }
-
-    .file-info-card .file-name {
-        flex: 1;
-        font-size: 13px;
-        color: #0f172a;
-        font-weight: 500;
-    }
-
-    .btn-download-small {
-        padding: 4px 14px;
-        border: none;
-        border-radius: 6px;
-        background: rgba(16, 185, 129, 0.06);
-        color: #10b981;
-        font-size: 12px;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-download-small:hover {
-        background: rgba(16, 185, 129, 0.12);
-        transform: translateY(-1px);
-        color: #10b981;
-        text-decoration: none;
-    }
-
-    /* ===== FILE PREVIEW ===== */
-    .file-preview-card {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        background: rgba(99, 102, 241, 0.04);
-        border-radius: 10px;
-        border: 1px solid rgba(99, 102, 241, 0.06);
-        margin-top: 12px;
-        animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .file-preview-icon {
-        font-size: 28px;
-        color: #6366f1;
-    }
-
-    .file-preview-info {
-        flex: 1;
-    }
-
-    .file-preview-name {
-        display: block;
-        font-size: 13px;
-        font-weight: 500;
-        color: #0f172a;
-    }
-
-    .file-preview-size {
-        display: block;
-        font-size: 11px;
-        color: #94a3b8;
-    }
-
-    .file-preview-remove {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(239, 68, 68, 0.06);
-        color: #ef4444;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .file-preview-remove:hover {
-        background: rgba(239, 68, 68, 0.12);
-        transform: scale(1.1);
-    }
-
-    /* ===== DIVIDER ===== */
-    .form-divider {
-        border: none;
-        border-top: 1px solid rgba(0,0,0,0.02);
-        margin: 8px 0 16px;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn-cancel {
-        padding: 10px 32px;
-        border: 1px solid rgba(0,0,0,0.04);
-        border-radius: 10px;
-        background: transparent;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-cancel:hover {
-        background: #f8fafc;
-        transform: translateY(-2px);
-        color: #0f172a;
-        text-decoration: none;
-    }
-
-    .btn-submit {
-        padding: 10px 40px;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-        .card-header-modern {
-            padding: 16px 18px;
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .card-body-modern {
-            padding: 18px;
-        }
-
-        .btn-back {
-            justify-content: center;
-        }
-
-        .btn-cancel,
-        .btn-submit {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .d-flex.gap-3 {
-            flex-direction: column;
-        }
-
-        .file-upload-zone {
-            padding: 24px 16px;
-            min-height: 120px;
-        }
-
-        .file-upload-icon {
-            font-size: 32px;
-        }
-
-        .file-info-card {
-            flex-wrap: wrap;
-        }
-
-        .file-info-card .file-name {
-            width: 100%;
-            margin-bottom: 4px;
-        }
-    }
+    .divider-custom span { background: #ffffff; padding: 0 16px; position: relative; color: #0ea5e9; font-size: 16px; }
+    .btn-outline-secondary-custom:hover { border-color: #0ea5e9; background: rgba(14,165,233,0.04); transform: translateY(-3px); color: #0f172a; }
+    .btn-primary-gradient:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(14,165,233,0.4); color: #fff; }
+    .upload-area:hover { border-color: #0ea5e9; background: #e0f2fe; }
+    .upload-area.dragover { border-color: #0ea5e9; background: #bae6fd; }
 </style>
 
 <script>
-    function previewFile(input) {
-        const file = input.files[0];
-        if (!file) return;
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const removeFile = document.getElementById('removeFile');
 
-        const validExtensions = ['.doc', '.docx', '.pdf'];
-        const fileExt = '.' + file.name.split('.').pop().toLowerCase();
-
-        if (!validExtensions.includes(fileExt)) {
-            alert('Format file tidak didukung. Gunakan .doc, .docx, atau .pdf');
-            input.value = '';
-            return;
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+    uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            updateFilePreview(e.dataTransfer.files[0]);
         }
-
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran file maksimal 2MB');
-            input.value = '';
-            return;
-        }
-
-        const fileSize = (file.size / 1024).toFixed(1) + ' KB';
-        document.getElementById('previewFileName').textContent = file.name;
-        document.getElementById('previewFileSize').textContent = fileSize;
-        document.getElementById('filePreviewContainer').style.display = 'block';
-        document.querySelector('.file-upload-zone').style.display = 'none';
+    });
+    fileInput.addEventListener('change', function() { if (this.files.length) updateFilePreview(this.files[0]); });
+    function updateFilePreview(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+        filePreview.classList.remove('d-none');
+        uploadArea.querySelector('p').textContent = '📄 ' + file.name;
     }
-
-    function removeFile() {
-        document.getElementById('fileInput').value = '';
-        document.getElementById('filePreviewContainer').style.display = 'none';
-        document.querySelector('.file-upload-zone').style.display = 'flex';
-    }
-
-    // Drag and drop
-    document.addEventListener('DOMContentLoaded', function() {
-        const dropZone = document.querySelector('.file-upload-zone');
-        if (dropZone) {
-            dropZone.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.classList.add('dragover');
-            });
-
-            dropZone.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                this.classList.remove('dragover');
-            });
-
-            dropZone.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    document.getElementById('fileInput').files = files;
-                    previewFile(document.getElementById('fileInput'));
-                }
-            });
-        }
+    removeFile.addEventListener('click', function() {
+        fileInput.value = '';
+        filePreview.classList.add('d-none');
+        uploadArea.querySelector('p').textContent = 'Klik untuk ganti file';
     });
 </script>
 @endsection

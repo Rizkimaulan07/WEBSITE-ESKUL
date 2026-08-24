@@ -6,24 +6,23 @@
 @section('content')
 @php
     $user = Auth::user();
-    // Ambil semua ekskul dari database
     $allEkskuls = App\Models\Ekstrakurikuler::all();
     $selectedEkskul = old('ekskul_id') ? $allEkskuls->firstWhere('id', old('ekskul_id')) : null;
 @endphp
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            <!-- Header -->
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
+            <!-- Header - Biru Cerah -->
             <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #312e81 60%, #4f46e5 100%);">
+                 style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
                 <div class="d-flex align-items-center gap-4">
-                    <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                    <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-camera fa-2x text-white"></i>
                     </div>
                     <div>
-                        <h4 class="text-white fw-bold mb-0">Tambah Dokumentasi</h4>
-                        <p class="text-white-50 mb-0 small">Tambahkan dokumentasi kegiatan ekstrakurikuler</p>
+                        <h4 class="text-white fw-bold mb-0" style="font-size: 22px; letter-spacing: -0.5px;">Tambah Dokumentasi</h4>
+                        <p class="text-white-50 mb-0 small" style="font-weight: 400;">Tambahkan dokumentasi kegiatan ekstrakurikuler</p>
                     </div>
                 </div>
             </div>
@@ -31,13 +30,14 @@
             <div class="card-body p-5">
                 <!-- Alert Error -->
                 @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-danger bg-opacity-10 rounded-circle p-2">
                                 <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
                             </div>
                             <div>
-                                <strong>Gagal!</strong> {{ session('error') }}
+                                <strong style="color: #991b1b;">Gagal!</strong> 
+                                <span style="color: #7f1d1d;">{{ session('error') }}</span>
                             </div>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -46,13 +46,14 @@
 
                 <!-- Alert Success -->
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-success bg-opacity-10 rounded-circle p-2">
                                 <i class="fas fa-check-circle fa-2x text-success"></i>
                             </div>
                             <div>
-                                <strong>Berhasil!</strong> {{ session('success') }}
+                                <strong style="color: #065f46;">Berhasil!</strong> 
+                                <span style="color: #047857;">{{ session('success') }}</span>
                             </div>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -61,14 +62,15 @@
 
                 <!-- Validation Errors -->
                 @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
                         <div class="d-flex align-items-start gap-3">
                             <div class="bg-danger bg-opacity-10 rounded-circle p-2">
                                 <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
                             </div>
                             <div>
-                                <strong>Gagal!</strong> Silakan periksa data berikut:
-                                <ul class="mb-0 mt-1">
+                                <strong style="color: #991b1b;">Gagal!</strong> 
+                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
+                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
                                     @foreach($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
@@ -83,52 +85,11 @@
                     @csrf
 
                     <div class="row g-4">
-                        <!-- ===== INFO EKSKUL ===== -->
-                        <div class="col-12">
-                            <div class="info-ekskul">
-                                <div class="d-flex align-items-center gap-3 p-3" 
-                                     style="background: rgba(79,70,229,0.03); border-radius: 12px; border: 1px solid rgba(79,70,229,0.06);">
-                                    <div class="ekskul-icon" 
-                                         style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #818cf8); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; flex-shrink: 0;">
-                                        <i class="fas fa-trophy"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted small text-uppercase" style="letter-spacing: 0.5px; font-weight: 600;">
-                                            <i class="fas fa-building me-1"></i> Ekstrakurikuler
-                                        </div>
-                                        <h5 class="fw-bold mb-0" style="color: #0f172a;">
-                                            @if($selectedEkskul)
-                                                {{ $selectedEkskul->nama_ekskul }}
-                                            @else
-                                                Pilih dari dropdown di bawah
-                                            @endif
-                                        </h5>
-                                        @if($selectedEkskul)
-                                            <small class="text-muted">
-                                                <i class="fas fa-user-tie me-1"></i>
-                                                {{ $selectedEkskul->pembina }}
-                                                <span class="mx-2">•</span>
-                                                <i class="fas fa-calendar-day me-1"></i>
-                                                {{ $selectedEkskul->hari_latihan }}
-                                            </small>
-                                        @endif
-                                    </div>
-                                    @if($selectedEkskul)
-                                        <div class="ms-auto">
-                                            <span class="badge" style="background: rgba(16,185,129,0.08); color: #10b981; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 500;">
-                                                <i class="fas fa-check-circle me-1"></i> Aktif
-                                            </span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Pilih Ekskul Dropdown -->
                         <div class="col-12">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-trophy text-primary me-2"></i>Ekstrakurikuler
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-trophy" style="color: #0ea5e9; margin-right: 8px;"></i>Ekstrakurikuler
                                     <span class="text-danger">*</span>
                                 </label>
                                 <select class="form-select form-select-modern @error('ekskul_id') is-invalid @enderror" 
@@ -142,7 +103,7 @@
                                     @endforeach
                                 </select>
                                 @error('ekskul_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                                 @if($allEkskuls->count() == 0)
                                     <small class="text-danger">
@@ -156,15 +117,15 @@
                         <!-- Judul -->
                         <div class="col-12">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-heading text-primary me-2"></i>Judul Dokumentasi
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-heading" style="color: #0ea5e9; margin-right: 8px;"></i>Judul Dokumentasi
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-modern @error('judul') is-invalid @enderror" 
                                        name="judul" value="{{ old('judul') }}" 
                                        placeholder="Contoh: Kegiatan Latihan Paskibra" required>
                                 @error('judul')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -172,60 +133,60 @@
                         <!-- Deskripsi -->
                         <div class="col-12">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-align-left text-primary me-2"></i>Deskripsi
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-align-left" style="color: #0ea5e9; margin-right: 8px;"></i>Deskripsi
                                 </label>
                                 <textarea class="form-control form-control-modern @error('deskripsi') is-invalid @enderror" 
                                           name="deskripsi" rows="4" 
                                           placeholder="Tuliskan deskripsi kegiatan...">{{ old('deskripsi') }}</textarea>
                                 @error('deskripsi')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Upload Foto -->
+                        <!-- Multiple Foto Upload -->
                         <div class="col-12">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-image text-primary me-2"></i>Foto
+                                <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
+                                    <i class="fas fa-images" style="color: #0ea5e9; margin-right: 8px;"></i>Foto Dokumentasi
                                     <span class="text-danger">*</span>
+                                    <span class="text-muted" style="font-weight: 400; font-size: 12px;">(Bisa upload lebih dari 1 foto)</span>
                                 </label>
-                                <div class="upload-zone border-2 border-dashed rounded-4 p-5 text-center" 
-                                     style="border-color: #e5e7eb; background: #fafbfc; cursor: pointer; transition: all 0.3s ease;"
-                                     onclick="document.getElementById('foto').click()"
-                                     ondragover="event.preventDefault(); this.style.borderColor='#4f46e5'; this.style.background='rgba(79,70,229,0.05)';"
-                                     ondrop="event.preventDefault(); this.style.borderColor='#e5e7eb'; this.style.background='#fafbfc';">
-                                    <div id="uploadPreview">
-                                        <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
-                                        <p class="text-muted mb-0">
-                                            <strong class="text-primary">Klik untuk upload</strong> atau drag and drop
-                                        </p>
-                                        <small class="text-muted">Format: jpeg, png, jpg, webp | Maks: 2MB</small>
-                                    </div>
-                                    <div id="uploadNewPreview" style="display: none;">
-                                        <img id="fotoPreview" src="#" alt="Preview" class="img-fluid rounded-3" style="max-height: 200px;">
-                                        <br>
-                                        <small class="text-muted">Klik untuk mengganti</small>
-                                    </div>
+                                <div class="upload-area-multiple" id="uploadAreaMultiple" 
+                                     style="border: 2px dashed #7dd3fc; border-radius: 16px; padding: 30px 20px; text-align: center; transition: all 0.3s ease; background: #f0f9ff; cursor: pointer;">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #0ea5e9; opacity: 0.6;"></i>
+                                    <p class="mt-2 mb-0 fw-bold" style="color: #0f172a;">Klik atau seret foto ke sini</p>
+                                    <small class="text-muted" style="font-size: 12px;">Format: jpeg, png, jpg, webp | Maks: 5MB per foto</small>
+                                    <input type="file" class="d-none" name="fotos[]" id="fileInputMultiple" accept="image/*" multiple required>
                                 </div>
-                                <input type="file" class="d-none @error('foto') is-invalid @enderror" 
-                                       id="foto" name="foto" accept="image/*"
-                                       onchange="previewFoto(event)" required>
-                                @error('foto')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                
+                                <!-- Preview Multiple Foto -->
+                                <div id="fotoPreviewContainer" class="mt-3">
+                                    <div class="row g-2" id="fotoPreviewGrid"></div>
+                                </div>
+                                @error('fotos.*')
+                                    <div class="invalid-feedback d-block" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="col-12">
+                            <div class="divider-custom">
+                                <span style="background: #ffffff; padding: 0 16px; color: #0ea5e9;">
+                                    <i class="fas fa-camera"></i>
+                                </span>
                             </div>
                         </div>
 
                         <!-- Tombol Aksi -->
                         <div class="col-12">
-                            <hr>
                             <div class="d-flex gap-3 justify-content-end">
-                                <a href="{{ route('pelatih.dokumentasi') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2">
+                                <a href="{{ route('pelatih.dokumentasi') }}" class="btn-outline-secondary-custom" style="padding: 12px 32px; border-radius: 12px; border: 2px solid #e2e8f0; background: transparent; color: #64748b; font-weight: 500; transition: all 0.3s ease; text-decoration: none;">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 btn-gradient">
+                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
                                     <i class="fas fa-save me-2"></i>Simpan Dokumentasi
                                 </button>
                             </div>
@@ -238,230 +199,195 @@
 </div>
 
 <style>
-    .info-ekskul {
-        animation: fadeSlide 0.5s ease;
-    }
-
-    @keyframes fadeSlide {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .form-group-modern {
-        margin-bottom: 0;
-    }
-
-    .form-group-modern label {
-        font-size: 13px;
-        color: #1e293b;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-    }
-
-    .form-control-modern {
+    .form-group-modern { margin-bottom: 0; }
+    .form-group-modern label { font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px; }
+    .form-control-modern, .form-select-modern {
         padding: 12px 20px;
-        border: 2px solid #e5e7eb;
+        border: 2px solid #e2e8f0;
         border-radius: 12px;
         transition: all 0.3s ease;
         font-size: 14px;
         background: #fafbfc;
         color: #0f172a;
+        font-weight: 500;
+        width: 100%;
     }
-
-    .form-control-modern:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+    .form-control-modern:focus, .form-select-modern:focus {
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
         background: #ffffff;
     }
-
-    .form-control-modern.is-invalid {
-        border-color: #ef4444;
+    .form-control-modern.is-invalid, .form-select-modern.is-invalid {
+        border-color: #dc2626;
         background: #fef2f2;
     }
-
-    textarea.form-control-modern {
-        resize: vertical;
-        min-height: 100px;
+    .divider-custom { text-align: center; position: relative; margin: 8px 0; }
+    .divider-custom::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
     }
+    .divider-custom span { background: #ffffff; padding: 0 16px; position: relative; color: #0ea5e9; font-size: 16px; }
+    .btn-outline-secondary-custom:hover { border-color: #0ea5e9; background: rgba(14,165,233,0.04); transform: translateY(-3px); color: #0f172a; }
+    .btn-primary-gradient:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(14,165,233,0.4); color: #fff; }
+    .upload-area-multiple:hover { border-color: #0ea5e9; background: #e0f2fe; }
+    .upload-area-multiple.dragover { border-color: #0ea5e9; background: #bae6fd; }
 
-    .form-select-modern {
-        padding: 12px 20px;
-        border: 2px solid #e5e7eb;
+    .foto-preview-item {
+        position: relative;
         border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #e2e8f0;
         transition: all 0.3s ease;
-        font-size: 14px;
-        background: #fafbfc;
-        color: #0f172a;
-        appearance: auto;
+        aspect-ratio: 1;
+        background: #f8fafc;
     }
-
-    .form-select-modern:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
-        background: #ffffff;
-    }
-
-    .form-select-modern.is-invalid {
-        border-color: #ef4444;
-        background: #fef2f2;
-    }
-
-    .upload-zone {
-        transition: all 0.3s ease;
-        min-height: 180px;
+    .foto-preview-item:hover { border-color: #0ea5e9; transform: scale(1.02); }
+    .foto-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .foto-preview-item .btn-remove-foto {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-
-    .upload-zone:hover {
-        border-color: #4f46e5 !important;
-        background: rgba(79, 70, 229, 0.03) !important;
-        transform: scale(1.01);
-    }
-
-    .btn-gradient {
-        background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4f46e5 100%) !important;
-        border: none !important;
+        cursor: pointer;
         transition: all 0.3s ease;
+        font-size: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-
-    .btn-gradient:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35) !important;
-    }
-
-    .btn-outline-secondary {
-        border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-secondary:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-        background: #f8fafc;
-    }
-
-    .alert {
-        border-radius: 16px;
-        padding: 16px 20px;
-        margin-bottom: 24px;
+    .foto-preview-item .btn-remove-foto:hover { background: #dc2626; transform: scale(1.1); }
+    .foto-preview-item .foto-index {
+        position: absolute;
+        bottom: 6px;
+        left: 6px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+        backdrop-filter: blur(4px);
     }
 
     @media (max-width: 768px) {
-        .card-body {
-            padding: 20px !important;
-        }
-        .card-header {
-            padding: 16px 20px !important;
-        }
-        .btn {
-            width: 100%;
-        }
-        .d-flex.gap-3 {
-            flex-direction: column;
-        }
-        .upload-zone {
-            min-height: 140px;
-            padding: 20px !important;
-        }
-        .info-ekskul .d-flex {
-            flex-wrap: wrap;
-        }
-        .info-ekskul .ms-auto {
-            margin-left: 0 !important;
-            margin-top: 8px;
-        }
+        .card-body { padding: 20px !important; }
+        .card-header { padding: 16px 20px !important; }
+        .btn { width: 100%; }
+        .d-flex.gap-3 { flex-direction: column; }
+        .upload-area-multiple { padding: 20px !important; }
+        .foto-preview-item { aspect-ratio: 4/3; }
     }
 </style>
 
 <script>
-    function previewFoto(event) {
-        const input = event.target;
-        const preview = document.getElementById('fotoPreview');
-        const previewContainer = document.getElementById('uploadPreview');
-        const previewNewContainer = document.getElementById('uploadNewPreview');
-        
-        if (input.files && input.files[0]) {
+    // ===== MULTIPLE FOTO UPLOAD =====
+    const uploadAreaMultiple = document.getElementById('uploadAreaMultiple');
+    const fileInputMultiple = document.getElementById('fileInputMultiple');
+    const fotoPreviewGrid = document.getElementById('fotoPreviewGrid');
+    let fotoFiles = [];
+
+    uploadAreaMultiple.addEventListener('click', () => fileInputMultiple.click());
+    uploadAreaMultiple.addEventListener('dragover', (e) => { e.preventDefault(); uploadAreaMultiple.classList.add('dragover'); });
+    uploadAreaMultiple.addEventListener('dragleave', () => { uploadAreaMultiple.classList.remove('dragover'); });
+    uploadAreaMultiple.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadAreaMultiple.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            addFiles(e.dataTransfer.files);
+        }
+    });
+    fileInputMultiple.addEventListener('change', function() { if (this.files.length) addFiles(this.files); });
+
+    function addFiles(files) {
+        for (let file of files) {
+            if (!file.type.startsWith('image/')) {
+                alert('File ' + file.name + ' bukan gambar!');
+                continue;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File ' + file.name + ' melebihi 5MB!');
+                continue;
+            }
+            fotoFiles.push(file);
+        }
+        renderFotoPreviews();
+        fileInputMultiple.value = '';
+        updateFotoCount();
+    }
+
+    function renderFotoPreviews() {
+        fotoPreviewGrid.innerHTML = '';
+        if (fotoFiles.length === 0) {
+            fotoPreviewGrid.innerHTML = `
+                <div class="col-12 text-center text-muted py-3" style="color: #94a3b8;">
+                    <small>Belum ada foto yang dipilih</small>
+                </div>
+            `;
+            return;
+        }
+        fotoFiles.forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = function(e) {
-                preview.src = e.target.result;
-                previewContainer.style.display = 'none';
-                previewNewContainer.style.display = 'block';
-            }
-            reader.readAsDataURL(input.files[0]);
+                const col = document.createElement('div');
+                col.className = 'col-4 col-md-3 col-lg-2';
+                col.innerHTML = `
+                    <div class="foto-preview-item">
+                        <img src="${e.target.result}" alt="Foto ${index + 1}">
+                        <button type="button" class="btn-remove-foto" onclick="removeFoto(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <span class="foto-index">#${index + 1}</span>
+                    </div>
+                `;
+                fotoPreviewGrid.appendChild(col);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeFoto(index) {
+        fotoFiles.splice(index, 1);
+        renderFotoPreviews();
+        updateFotoCount();
+    }
+
+    function updateFotoCount() {
+        const text = uploadAreaMultiple.querySelector('p');
+        if (fotoFiles.length > 0) {
+            text.textContent = '📸 ' + fotoFiles.length + ' foto dipilih';
+            uploadAreaMultiple.querySelector('small').textContent = 'Klik untuk tambah foto lagi';
+        } else {
+            text.textContent = 'Klik atau seret foto ke sini';
+            uploadAreaMultiple.querySelector('small').textContent = 'Format: jpeg, png, jpg, webp | Maks: 5MB per foto';
         }
     }
 
-    // HAPUS script reload otomatis - hanya update info ekskul saat dropdown berubah
-    document.addEventListener('DOMContentLoaded', function() {
-        const select = document.getElementById('ekskulSelect');
-        const infoEkskul = document.querySelector('.info-ekskul');
+    // Update form submit untuk include multiple files
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const oldInputs = this.querySelectorAll('input[name="fotos[]"]');
+        oldInputs.forEach(input => input.remove());
         
-        if (select && infoEkskul) {
-            // Simpan data ekskul dalam bentuk array
-            const ekskulData = @json($allEkskuls);
-            
-            select.addEventListener('change', function() {
-                const selectedId = this.value;
-                const selectedEkskul = ekskulData.find(e => e.id == selectedId);
-                
-                if (selectedEkskul) {
-                    // Update info ekskul tanpa reload
-                    const nameElement = infoEkskul.querySelector('h5');
-                    const detailElement = infoEkskul.querySelector('small');
-                    const badgeElement = infoEkskul.querySelector('.badge');
-                    const iconElement = infoEkskul.querySelector('.ekskul-icon');
-                    
-                    if (nameElement) {
-                        nameElement.textContent = selectedEkskul.nama_ekskul;
-                    }
-                    
-                    if (detailElement) {
-                        detailElement.innerHTML = `
-                            <i class="fas fa-user-tie me-1"></i>
-                            ${selectedEkskul.pembina}
-                            <span class="mx-2">•</span>
-                            <i class="fas fa-calendar-day me-1"></i>
-                            ${selectedEkskul.hari_latihan}
-                        `;
-                    }
-                    
-                    // Update badge
-                    if (badgeElement) {
-                        badgeElement.style.display = 'inline-block';
-                        badgeElement.innerHTML = `<i class="fas fa-check-circle me-1"></i> Aktif`;
-                    }
-                    
-                    // Update icon background
-                    if (iconElement) {
-                        iconElement.style.background = 'linear-gradient(135deg, #4f46e5, #818cf8)';
-                    }
-                } else {
-                    // Reset jika tidak ada yang dipilih
-                    const nameElement = infoEkskul.querySelector('h5');
-                    if (nameElement) {
-                        nameElement.textContent = 'Pilih dari dropdown di bawah';
-                    }
-                    
-                    const detailElement = infoEkskul.querySelector('small');
-                    if (detailElement) {
-                        detailElement.textContent = '';
-                    }
-                    
-                    const badgeElement = infoEkskul.querySelector('.badge');
-                    if (badgeElement) {
-                        badgeElement.style.display = 'none';
-                    }
-                }
-            });
-        }
+        const dataTransfer = new DataTransfer();
+        fotoFiles.forEach(file => dataTransfer.items.add(file));
+        
+        const newInput = document.createElement('input');
+        newInput.type = 'file';
+        newInput.name = 'fotos[]';
+        newInput.multiple = true;
+        newInput.files = dataTransfer.files;
+        newInput.style.display = 'none';
+        this.appendChild(newInput);
     });
 </script>
 @endsection

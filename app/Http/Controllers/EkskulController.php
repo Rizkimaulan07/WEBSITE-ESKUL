@@ -38,11 +38,8 @@ class EkskulController extends Controller
         ]);
 
         $data = $request->all();
-        
-        // Set slug
         $data['slug'] = Str::slug($request->nama_ekskul);
         
-        // Set status default jika tidak ada
         if (!isset($data['status'])) {
             $data['status'] = 'aktif';
         }
@@ -50,8 +47,10 @@ class EkskulController extends Controller
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $namaLogo = time() . '_' . Str::slug($request->nama_ekskul) . '.' . $logo->getClientOriginalExtension();
-            $logo->storeAs('public/logo-ekskul', $namaLogo);
-            $data['logo'] = 'logo-ekskul/' . $namaLogo;
+            
+            // ✅ Simpan langsung ke public/logo (paling mudah diakses)
+            $logo->move(public_path('logo'), $namaLogo);
+            $data['logo'] = 'logo/' . $namaLogo;
         }
 
         Ekstrakurikuler::create($data);
@@ -83,14 +82,14 @@ class EkskulController extends Controller
         $data['slug'] = Str::slug($request->nama_ekskul);
 
         if ($request->hasFile('logo')) {
-            if ($ekskul->logo && Storage::exists('public/' . $ekskul->logo)) {
-                Storage::delete('public/' . $ekskul->logo);
+            if ($ekskul->logo && file_exists(public_path($ekskul->logo))) {
+                unlink(public_path($ekskul->logo));
             }
             
             $logo = $request->file('logo');
             $namaLogo = time() . '_' . Str::slug($request->nama_ekskul) . '.' . $logo->getClientOriginalExtension();
-            $logo->storeAs('public/logo-ekskul', $namaLogo);
-            $data['logo'] = 'logo-ekskul/' . $namaLogo;
+            $logo->move(public_path('logo'), $namaLogo);
+            $data['logo'] = 'logo/' . $namaLogo;
         }
 
         $ekskul->update($data);
@@ -101,8 +100,8 @@ class EkskulController extends Controller
 
     public function destroy(Ekstrakurikuler $ekskul)
     {
-        if ($ekskul->logo && Storage::exists('public/' . $ekskul->logo)) {
-            Storage::delete('public/' . $ekskul->logo);
+        if ($ekskul->logo && file_exists(public_path($ekskul->logo))) {
+            unlink(public_path($ekskul->logo));
         }
         
         $ekskul->delete();

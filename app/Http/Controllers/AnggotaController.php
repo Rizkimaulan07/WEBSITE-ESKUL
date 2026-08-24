@@ -10,7 +10,7 @@ use App\Models\Dokumentasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage; // ✅ TAMBAHAN PENTING INI
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
@@ -66,10 +66,11 @@ class AnggotaController extends Controller
             }
         }
 
+        // ===== SIMPAN FOTO LANGSUNG KE PUBLIC =====
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $namaAvatar = time() . '_' . $request->name . '.' . $avatar->getClientOriginalExtension();
-            $avatar->storeAs('public/avatar', $namaAvatar);
+            $namaAvatar = time() . '_' . preg_replace('/\s+/', '_', strtolower($request->name)) . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('avatar'), $namaAvatar);
             $data['avatar'] = 'avatar/' . $namaAvatar;
         }
 
@@ -129,10 +130,11 @@ class AnggotaController extends Controller
         $data['role'] = 'anggota';
         $data['pelatih_id'] = $pelatih->id;
 
+        // ===== SIMPAN FOTO LANGSUNG KE PUBLIC =====
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $namaAvatar = time() . '_' . $request->name . '.' . $avatar->getClientOriginalExtension();
-            $avatar->storeAs('public/avatar', $namaAvatar);
+            $namaAvatar = time() . '_' . preg_replace('/\s+/', '_', strtolower($request->name)) . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('avatar'), $namaAvatar);
             $data['avatar'] = 'avatar/' . $namaAvatar;
         }
 
@@ -186,14 +188,15 @@ class AnggotaController extends Controller
             $data['password'] = Hash::make($request->password);
         }
 
+        // ===== UPDATE FOTO LANGSUNG KE PUBLIC =====
         if ($request->hasFile('avatar')) {
-            if ($anggota->avatar && Storage::exists('public/' . $anggota->avatar)) {
-                Storage::delete('public/' . $anggota->avatar);
+            if ($anggota->avatar && file_exists(public_path($anggota->avatar))) {
+                unlink(public_path($anggota->avatar));
             }
             
             $avatar = $request->file('avatar');
-            $namaAvatar = time() . '_' . $request->name . '.' . $avatar->getClientOriginalExtension();
-            $avatar->storeAs('public/avatar', $namaAvatar);
+            $namaAvatar = time() . '_' . preg_replace('/\s+/', '_', strtolower($request->name)) . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('avatar'), $namaAvatar);
             $data['avatar'] = 'avatar/' . $namaAvatar;
         }
 
@@ -219,16 +222,10 @@ class AnggotaController extends Controller
             
             $anggota = User::where('role', 'anggota')->findOrFail($id);
             
-            // 1. Hapus semua data kehadiran terkait (sebagai anggota)
             Kehadiran::where('anggota_id', $id)->delete();
-            
-            // 2. Hapus semua data kehadiran terkait (sebagai pelatih)
             Kehadiran::where('pelatih_id', $id)->delete();
-            
-            // 3. Hapus nilai anggota
             NilaiAnggota::where('anggota_id', $id)->delete();
             
-            // 4. Hapus dokumentasi yang diunggah
             $dokumentasis = Dokumentasi::where('diunggah_oleh', $id)->get();
             foreach ($dokumentasis as $dokumentasi) {
                 if ($dokumentasi->foto_path) {
@@ -237,15 +234,12 @@ class AnggotaController extends Controller
                 $dokumentasi->delete();
             }
             
-            // 5. Hapus avatar
-            if ($anggota->avatar && Storage::exists('public/' . $anggota->avatar)) {
-                Storage::delete('public/' . $anggota->avatar);
+            // Hapus avatar
+            if ($anggota->avatar && file_exists(public_path($anggota->avatar))) {
+                unlink(public_path($anggota->avatar));
             }
             
-            // 6. Hapus relasi many-to-many dengan ekskul
             $anggota->ekskuls()->detach();
-            
-            // 7. Hapus user
             $anggota->delete();
             
             DB::commit();

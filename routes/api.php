@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// ===== IMPORT CONTROLLER API =====
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EkskulController;
+use App\Http\Controllers\Api\NilaiController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +19,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// ===== TESTING HALAMAN LOGIN (GET) - BISA DIBUKA DI BROWSER =====
+Route::get('/login', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Halaman API Login. Silakan gunakan method POST untuk login dengan email dan password.',
+        'example' => [
+            'email' => 'admin@mail.com',
+            'password' => 'password'
+        ]
+    ]);
+});
+
+// ===== AUTH (POST - DIGUNAKAN OLEH MOBILE) =====
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+
+// ===== DATA (PERLU TOKEN) =====
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::get('/ekskul', [EkskulController::class, 'index']);
+    Route::get('/nilai', [NilaiController::class, 'index']);
 });

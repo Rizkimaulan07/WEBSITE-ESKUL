@@ -7,19 +7,19 @@
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            <!-- Header Premium - Warna seperti Login -->
+            <!-- Header Premium - Biru Cerah -->
             <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #312e81 60%, #4f46e5 100%);">
+                 style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 40%, #7dd3fc 80%, #bae6fd 100%);">
                 <div class="d-flex align-items-center gap-4">
-                    <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                    <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-user-edit fa-2x text-white"></i>
                     </div>
                     <div>
-                        <h4 class="text-white fw-bold mb-0">Edit Anggota</h4>
-                        <p class="text-white-50 mb-0 small">Ubah data anggota ekstrakurikuler</p>
+                        <h4 class="text-white fw-bold mb-0" style="font-size: 22px; letter-spacing: -0.5px;">Edit Anggota</h4>
+                        <p class="text-white-50 mb-0 small" style="font-weight: 400;">Ubah data anggota ekstrakurikuler</p>
                     </div>
                     <div class="ms-auto">
-                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-4 py-2">
+                        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-4 py-2" style="font-weight: 500;">
                             <i class="fas fa-id-card me-2"></i>ID: #{{ str_pad($anggota->id, 4, '0', STR_PAD_LEFT) }}
                         </span>
                     </div>
@@ -28,13 +28,14 @@
 
             <div class="card-body p-5">
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
                         <div class="d-flex align-items-center gap-3">
                             <div class="bg-success bg-opacity-10 rounded-circle p-2">
                                 <i class="fas fa-check-circle fa-2x text-success"></i>
                             </div>
                             <div>
-                                <strong>Berhasil!</strong> {{ session('success') }}
+                                <strong style="color: #065f46;">Berhasil!</strong> 
+                                <span style="color: #047857;">{{ session('success') }}</span>
                             </div>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -42,14 +43,15 @@
                 @endif
 
                 @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
                         <div class="d-flex align-items-start gap-3">
                             <div class="bg-danger bg-opacity-10 rounded-circle p-2">
                                 <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
                             </div>
                             <div>
-                                <strong>Gagal!</strong> Silakan periksa data berikut:
-                                <ul class="mb-0 mt-1">
+                                <strong style="color: #991b1b;">Gagal!</strong> 
+                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
+                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
                                     @foreach($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
@@ -70,23 +72,23 @@
                             <div class="text-center">
                                 <div class="position-relative d-inline-block">
                                     @if($anggota->avatar)
-                                        <img src="{{ asset('storage/' . $anggota->avatar) }}" 
+                                        <img src="{{ asset($anggota->avatar) }}" 
                                              class="rounded-circle border-4 border-white shadow-lg" 
                                              style="width: 120px; height: 120px; object-fit: cover;"
                                              id="avatarPreview">
                                     @else
                                         <div class="avatar-upload-placeholder rounded-circle d-inline-flex align-items-center justify-content-center"
-                                             style="width: 120px; height: 120px; background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); border: 4px solid white; box-shadow: 0 8px 30px rgba(99,102,241,0.2);">
+                                             style="width: 120px; height: 120px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: 4px solid white; box-shadow: 0 8px 30px rgba(14,165,233,0.2);">
                                             <i class="fas fa-user fa-4x text-white opacity-75"></i>
                                         </div>
                                     @endif
-                                    <label for="avatar" class="btn-upload-avatar">
+                                    <label for="avatar" class="btn-upload-avatar" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8);">
                                         <i class="fas fa-camera"></i>
                                     </label>
                                     <input type="file" class="d-none" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(event)">
                                 </div>
-                                <p class="text-muted small mt-2">
-                                    <i class="fas fa-info-circle me-1"></i>
+                                <p class="mt-2" style="color: #64748b; font-size: 13px;">
+                                    <i class="fas fa-info-circle me-1" style="color: #0ea5e9;"></i>
                                     Klik ikon kamera untuk mengubah foto
                                 </p>
                             </div>
@@ -95,80 +97,95 @@
                         <!-- Nama -->
                         <div class="col-md-6">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-user text-primary me-2"></i>Nama Lengkap
+                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
+                                    <i class="fas fa-user me-2" style="color: #0ea5e9;"></i>Nama Lengkap
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-modern @error('name') is-invalid @enderror" 
                                        name="name" value="{{ old('name', $anggota->name) }}" placeholder="Masukkan nama lengkap" required>
                                 @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-id-card text-primary me-2"></i>NIS
+                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
+                                    <i class="fas fa-id-card me-2" style="color: #0ea5e9;"></i>NIS
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-modern @error('nis') is-invalid @enderror" 
                                        name="nis" value="{{ old('nis', $anggota->nis) }}" placeholder="Masukkan NIS" required>
                                 @error('nis')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        <!-- Kelas & No HP -->
+                        <!-- Kelas & Jurusan -->
                         <div class="col-md-6">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-graduation-cap text-primary me-2"></i>Kelas
+                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
+                                    <i class="fas fa-graduation-cap me-2" style="color: #0ea5e9;"></i>Kelas
                                     <span class="text-danger">*</span>
                                 </label>
                                 <select class="form-select form-select-modern @error('kelas') is-invalid @enderror" 
                                         name="kelas" required>
                                     <option value="">Pilih Kelas</option>
-                                    <option value="X-A" {{ old('kelas', $anggota->kelas) == 'X-A' ? 'selected' : '' }}>X-A</option>
-                                    <option value="X-B" {{ old('kelas', $anggota->kelas) == 'X-B' ? 'selected' : '' }}>X-B</option>
-                                    <option value="X-C" {{ old('kelas', $anggota->kelas) == 'X-C' ? 'selected' : '' }}>X-C</option>
-                                    <option value="XI-A" {{ old('kelas', $anggota->kelas) == 'XI-A' ? 'selected' : '' }}>XI-A</option>
-                                    <option value="XI-B" {{ old('kelas', $anggota->kelas) == 'XI-B' ? 'selected' : '' }}>XI-B</option>
-                                    <option value="XI-C" {{ old('kelas', $anggota->kelas) == 'XI-C' ? 'selected' : '' }}>XI-C</option>
-                                    <option value="XII-A" {{ old('kelas', $anggota->kelas) == 'XII-A' ? 'selected' : '' }}>XII-A</option>
-                                    <option value="XII-B" {{ old('kelas', $anggota->kelas) == 'XII-B' ? 'selected' : '' }}>XII-B</option>
-                                    <option value="XII-C" {{ old('kelas', $anggota->kelas) == 'XII-C' ? 'selected' : '' }}>XII-C</option>
+                                    <option value="10" {{ old('kelas', $anggota->kelas) == '10' ? 'selected' : '' }}>10</option>
+                                    <option value="11" {{ old('kelas', $anggota->kelas) == '11' ? 'selected' : '' }}>11</option>
+                                    <option value="12" {{ old('kelas', $anggota->kelas) == '12' ? 'selected' : '' }}>12</option>
                                 </select>
                                 @error('kelas')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-phone text-primary me-2"></i>No HP
+                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
+                                    <i class="fas fa-building me-2" style="color: #0ea5e9;"></i>Jurusan
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select form-select-modern @error('jurusan') is-invalid @enderror" 
+                                        name="jurusan" required>
+                                    <option value="">Pilih Jurusan</option>
+                                    <option value="PPPLG" {{ old('jurusan', $anggota->jurusan) == 'PPPLG' ? 'selected' : '' }}>PPPLG</option>
+                                    <option value="TJKT" {{ old('jurusan', $anggota->jurusan) == 'TJKT' ? 'selected' : '' }}>TJKT</option>
+                                    <option value="AKL" {{ old('jurusan', $anggota->jurusan) == 'AKL' ? 'selected' : '' }}>AKL</option>
+                                    <option value="AXIO" {{ old('jurusan', $anggota->jurusan) == 'AXIO' ? 'selected' : '' }}>AXIO</option>
+                                </select>
+                                @error('jurusan')
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- No HP -->
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
+                                    <i class="fas fa-phone me-2" style="color: #0ea5e9;"></i>No HP
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-modern @error('no_hp') is-invalid @enderror" 
                                        name="no_hp" value="{{ old('no_hp', $anggota->no_hp) }}" placeholder="Masukkan no HP" required>
                                 @error('no_hp')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
                         <!-- Informasi Login Otomatis -->
                         <div class="col-12">
-                            <div class="alert alert-light border-0 rounded-4 shadow-sm">
+                            <div class="alert border-0 rounded-4 shadow-sm" style="background: #f0f9ff; border-left: 4px solid #0ea5e9;">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2">
-                                        <i class="fas fa-info-circle text-primary"></i>
+                                    <div class="bg-blue-500 bg-opacity-10 rounded-circle p-2" style="background: rgba(14,165,233,0.08);">
+                                        <i class="fas fa-info-circle" style="color: #0ea5e9;"></i>
                                     </div>
                                     <div>
-                                        <strong>Informasi login otomatis:</strong>
-                                        <div class="small text-muted mt-1">
+                                        <strong style="color: #0369a1;">Informasi login otomatis:</strong>
+                                        <div class="mt-1" style="color: #475569; font-size: 13px;">
                                             Email dan password anggota dibuat otomatis dari NIS, jadi admin tidak perlu mengisi manual saat menambah data.
                                         </div>
                                     </div>
@@ -179,8 +196,8 @@
                         <!-- Ekskul -->
                         <div class="col-md-12">
                             <div class="form-group-modern">
-                                <label class="fw-semibold mb-2">
-                                    <i class="fas fa-trophy text-primary me-2"></i>Ekstrakurikuler
+                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
+                                    <i class="fas fa-trophy me-2" style="color: #0ea5e9;"></i>Ekstrakurikuler
                                     <span class="text-danger">*</span>
                                 </label>
                                 <select class="form-select form-select-modern @error('ekskul_id') is-invalid @enderror" 
@@ -189,12 +206,12 @@
                                     @foreach($ekskuls ?? [] as $ekskul)
                                         <option value="{{ $ekskul->id }}" 
                                             {{ old('ekskul_id', optional($anggota->ekskuls->first())->id ?? '') == $ekskul->id ? 'selected' : '' }}>
-                                            <i class="fas fa-trophy me-2"></i>{{ $ekskul->nama_ekskul }}
+                                            {{ $ekskul->nama_ekskul }}
                                         </option>
                                     @endforeach
                                 </select>
                                 @error('ekskul_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -202,18 +219,20 @@
                         <!-- Divider -->
                         <div class="col-12">
                             <div class="divider-custom">
-                                <span><i class="fas fa-edit text-primary"></i></span>
+                                <span style="background: #ffffff; padding: 0 16px; color: #0ea5e9;">
+                                    <i class="fas fa-edit"></i>
+                                </span>
                             </div>
                         </div>
 
                         <!-- Tombol Aksi -->
                         <div class="col-12">
                             <div class="d-flex gap-3 justify-content-end">
-                                <a href="{{ route('admin.anggota.index') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2">
+                                <a href="{{ route('admin.anggota.index') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2" style="border-color: #e2e8f0; color: #64748b; font-weight: 500;">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 btn-gradient">
-                                    <i class="fas fa-save me-2"></i>Update Anggota
+                                <button type="submit" class="btn rounded-pill px-5 py-2 text-white" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; font-weight: 600; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                    <i class="fas fa-save me-2"></i>Perbarui
                                 </button>
                             </div>
                         </div>
@@ -231,7 +250,7 @@
     }
 
     .form-group-modern label {
-        font-size: 13px;
+        font-size: 14px;
         color: #1e293b;
         font-weight: 600;
         letter-spacing: 0.3px;
@@ -239,55 +258,28 @@
 
     .form-control-modern, .form-select-modern {
         padding: 12px 20px;
-        border: 2px solid #e5e7eb;
+        border: 2px solid #e2e8f0;
         border-radius: 12px;
         transition: all 0.3s ease;
         font-size: 14px;
         background: #fafbfc;
         color: #0f172a;
+        font-weight: 500;
     }
 
     .form-control-modern:focus, .form-select-modern:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
         background: #ffffff;
     }
 
     .form-control-modern.is-invalid, .form-select-modern.is-invalid {
-        border-color: #ef4444;
+        border-color: #dc2626;
         background: #fef2f2;
     }
 
     .form-control-modern.is-invalid:focus, .form-select-modern.is-invalid:focus {
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08);
-    }
-
-    /* ===== PASSWORD TOGGLE ===== */
-    .password-wrapper {
-        position: relative;
-    }
-
-    .password-wrapper .form-control {
-        padding-right: 50px;
-    }
-
-    .btn-toggle-password {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: #94a3b8;
-        cursor: pointer;
-        padding: 8px;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-    }
-
-    .btn-toggle-password:hover {
-        background: #f1f5f9;
-        color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08);
     }
 
     /* ===== AVATAR UPLOAD ===== */
@@ -298,7 +290,7 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        background: linear-gradient(135deg, #0ea5e9, #38bdf8);
         color: white;
         border: 3px solid white;
         display: flex;
@@ -306,12 +298,12 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
     }
 
     .btn-upload-avatar:hover {
         transform: scale(1.1);
-        box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+        box-shadow: 0 6px 24px rgba(14, 165, 233, 0.5);
     }
 
     /* ===== DIVIDER ===== */
@@ -328,60 +320,34 @@
         top: 50%;
         width: 100%;
         height: 2px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+        background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
     }
 
     .divider-custom span {
         background: #ffffff;
         padding: 0 16px;
         position: relative;
-        color: #6366f1;
+        color: #0ea5e9;
         font-size: 16px;
     }
 
-    /* ===== BUTTON GRADIENT ===== */
-    .btn-gradient {
-        background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4f46e5 100%) !important;
-        border: none !important;
-        transition: all 0.3s ease;
-    }
-
-    .btn-gradient:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35) !important;
-    }
-
-    .btn-outline-secondary {
-        border: 2px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
     .btn-outline-secondary:hover {
-        transform: translateY(-3px);
+        transform: translateY(-2px);
         box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         background: #f8fafc;
         border-color: #94a3b8;
     }
 
-    /* ===== ALERT ===== */
-    .alert {
-        border-radius: 16px;
-        padding: 16px 20px;
-        margin-bottom: 24px;
+    .btn-primary-submit {
+        background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+        border: none !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
     }
 
-    .alert-success {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        border: none;
-    }
-
-    .alert-danger {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        border: none;
-    }
-
-    .text-primary {
-        color: #4f46e5 !important;
+    .btn-primary-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4) !important;
     }
 
     /* ===== RESPONSIVE ===== */
@@ -406,22 +372,6 @@
             height: 32px;
             font-size: 12px;
         }
-    }
-
-    /* ===== ANIMATION ===== */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .card {
-        animation: fadeInUp 0.6s ease;
     }
 </style>
 
@@ -452,18 +402,6 @@
         };
         if (input.files && input.files[0]) {
             reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const icon = document.getElementById('passwordIcon');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.className = 'fas fa-eye-slash';
-        } else {
-            passwordInput.type = 'password';
-            icon.className = 'fas fa-eye';
         }
     }
 </script>
