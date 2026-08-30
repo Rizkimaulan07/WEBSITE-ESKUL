@@ -23,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* ===== BACKGROUND ANIMATION - BIRU CERAH ===== */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -101,7 +100,6 @@
             75% { transform: translate(40px, 10px) rotate(3deg) scale(1.05); }
         }
 
-        /* ===== LOGIN CARD ===== */
         .login-wrapper {
             position: relative;
             z-index: 1;
@@ -136,7 +134,6 @@
             box-shadow: 0 40px 120px rgba(14,165,233,0.15);
         }
 
-        /* Brand */
         .brand { text-align: center; margin-bottom: 28px; position: relative; }
         .brand-logo-wrapper { display: flex; justify-content: center; align-items: center; margin-bottom: 14px; }
         .brand-logo-container {
@@ -179,12 +176,11 @@
             margin: 0;
         }
         .brand h2 span { color: #0ea5e9; }
-        .brand p { color: #94a3b8; font-size: 13px; margin: 4px 0 0; letter-spacing: 1.5px; }
+        .brand p { color: #64748b; font-size: 13px; margin: 4px 0 0; letter-spacing: 1.5px; }
         .brand .brand-line { width: 40px; height: 3px; background: linear-gradient(90deg, #0ea5e9, #38bdf8); border-radius: 4px; margin: 10px auto 0; }
-        .school-name { font-size: 13px; color: #94a3b8; font-weight: 500; margin-top: 6px; letter-spacing: 0.5px; }
+        .school-name { font-size: 13px; color: #64748b; font-weight: 500; margin-top: 6px; letter-spacing: 0.5px; }
         .school-name strong { color: #0f172a; }
 
-        /* Form */
         .form-group { margin-bottom: 20px; }
         .form-group label {
             color: #64748b;
@@ -201,7 +197,7 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #94a3b8;
+            color: #64748b;
             font-size: 16px;
             transition: all 0.3s ease;
             pointer-events: none;
@@ -225,7 +221,7 @@
         }
         .form-group .input-wrapper input:focus + .input-icon,
         .form-group .input-wrapper input:focus ~ .input-icon { color: #0ea5e9; }
-        .form-group .input-wrapper input::placeholder { color: #b0b8c8; }
+        .form-group .input-wrapper input::placeholder { color: #94a3b8; }
         .form-group .input-wrapper .toggle-password {
             position: absolute;
             right: 16px;
@@ -233,7 +229,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #94a3b8;
+            color: #64748b;
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 8px;
@@ -244,7 +240,6 @@
             background: rgba(14,165,233,0.04);
         }
 
-        /* Options */
         .form-options {
             display: flex;
             justify-content: space-between;
@@ -272,7 +267,7 @@
         }
         .form-options .remember input[type="checkbox"]:checked { border-color: #0ea5e9; }
         .form-options .forgot-link {
-            color: #94a3b8;
+            color: #64748b;
             font-size: 13px;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -280,7 +275,6 @@
         }
         .form-options .forgot-link:hover { color: #0ea5e9; }
 
-        /* Button Login */
         .btn-login {
             width: 100%;
             padding: 16px;
@@ -320,7 +314,6 @@
             100% { left: 100%; }
         }
 
-        /* Divider */
         .divider { display: flex; align-items: center; gap: 16px; margin: 26px 0; }
         .divider::before, .divider::after {
             content: '';
@@ -329,7 +322,7 @@
             background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
         }
         .divider span {
-            color: #94a3b8;
+            color: #64748b;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -337,7 +330,6 @@
             font-weight: 600;
         }
 
-        /* Role Badges */
         .role-badges {
             display: flex;
             justify-content: center;
@@ -370,22 +362,15 @@
             color: #0ea5e9;
             background: rgba(14,165,233,0.04);
         }
-        .role-badge .dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
+        .role-badge .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; }
         .role-badge .dot.admin { background: #0ea5e9; }
         .role-badge .dot.pelatih { background: #10b981; }
         .role-badge .dot.anggota { background: #f59e0b; }
 
-        /* Footer */
-        .footer { text-align: center; margin-top: 26px; color: #94a3b8; font-size: 12px; letter-spacing: 0.5px; }
+        .footer { text-align: center; margin-top: 26px; color: #64748b; font-size: 12px; letter-spacing: 0.5px; }
         .footer span { color: #0ea5e9; font-weight: 600; }
 
-        /* Alert */
+        /* ===== ALERT - BAHASA INDONESIA ===== */
         .alert {
             border-radius: 14px;
             padding: 14px 18px;
@@ -395,19 +380,21 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #fee2e2;
-            color: #dc2626;
-            border-left: 4px solid #dc2626;
             font-weight: 500;
         }
-        .alert i { font-size: 18px; }
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #dc2626;
+        }
+        .alert-danger i { color: #dc2626; }
         .alert-success {
             background: #d1fae5;
-            color: #059669;
-            border-left: 4px solid #059669;
+            color: #065f46;
+            border-left: 4px solid #10b981;
         }
+        .alert-success i { color: #10b981; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .login-card { padding: 30px 22px; border-radius: 20px; }
             .brand-logo-container { width: 72px; height: 72px; padding: 8px; }
@@ -426,13 +413,11 @@
 </head>
 <body>
 
-    <!-- ===== BACKGROUND ANIMATION ===== -->
     <div class="bg-animation">
         <div class="bg-gradient-animation"></div>
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
-
         <div class="sport-icons">
             <i class="fas fa-futbol sport-icon"></i>
             <i class="fas fa-basketball-ball sport-icon"></i>
@@ -449,7 +434,6 @@
         </div>
     </div>
 
-    <!-- ===== LOGIN CARD ===== -->
     <div class="login-wrapper">
         <div class="login-card">
             <!-- Brand -->
@@ -463,44 +447,51 @@
                 </div>
 
                 <h2>SIMSKUL</h2>
-                <p>Sistem Management Ekstrakulikuler</p>
+                <p>Sistem Manajemen Ekstrakurikuler</p>
                 <div class="brand-line"></div>
-                
                 <div class="school-name">
                     <strong>SMK BPPI Baleendah</strong>
                 </div>
             </div>
 
-            <!-- Alert -->
+            <!-- ===== ALERT ERROR - BAHASA INDONESIA ===== -->
             @if(session('error'))
-                <div class="alert">
+                <div class="alert alert-danger">
                     <i class="fas fa-exclamation-circle"></i>
-                    {{ session('error') }}
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             @if(session('success'))
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle"></i>
-                    {{ session('success') }}
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="alert">
+                <div class="alert alert-danger">
                     <i class="fas fa-exclamation-circle"></i>
-                    {{ $errors->first() }}
+                    <span>
+                        @if($errors->has('email'))
+                            {{ $errors->first('email') }}
+                        @elseif($errors->has('password'))
+                            {{ $errors->first('password') }}
+                        @else
+                            {{ $errors->first() }}
+                        @endif
+                    </span>
                 </div>
             @endif
 
             <!-- Form -->
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" autocomplete="off">
                 @csrf
 
                 <div class="form-group">
                     <label><i class="fas fa-envelope me-2"></i> Alamat Email</label>
                     <div class="input-wrapper">
-                        <input type="email" name="email" placeholder="Masukkan email Anda" required autofocus>
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="Masukkan alamat email Anda" required autofocus autocomplete="off">
                         <i class="fas fa-envelope input-icon"></i>
                     </div>
                 </div>
@@ -508,7 +499,7 @@
                 <div class="form-group">
                     <label><i class="fas fa-lock me-2"></i> Password</label>
                     <div class="input-wrapper">
-                        <input type="password" name="password" placeholder="Masukkan password Anda" required id="password">
+                        <input type="password" name="password" placeholder="Masukkan password Anda" required id="password" autocomplete="new-password">
                         <i class="fas fa-lock input-icon"></i>
                         <button type="button" class="toggle-password" onclick="togglePassword()">
                             <i class="fas fa-eye" id="passwordToggleIcon"></i>
@@ -530,31 +521,25 @@
                 </button>
             </form>
 
-            <!-- Divider -->
             <div class="divider">
                 <span>Login sebagai</span>
             </div>
 
-            <!-- Role Badges -->
             <div class="role-badges">
                 <span class="role-badge" onclick="autoFill('admin')">
                     <span class="dot admin"></span>
-                    <i class="fas fa-shield-alt me-1"></i>
-                    Admin
+                    <i class="fas fa-shield-alt me-1"></i> Admin
                 </span>
                 <span class="role-badge" onclick="autoFill('pelatih')">
                     <span class="dot pelatih"></span>
-                    <i class="fas fa-chalkboard-user me-1"></i>
-                    Pelatih
+                    <i class="fas fa-chalkboard-user me-1"></i> Pelatih
                 </span>
                 <span class="role-badge" onclick="autoFill('anggota')">
                     <span class="dot anggota"></span>
-                    <i class="fas fa-user-graduate me-1"></i>
-                    Anggota
+                    <i class="fas fa-user-graduate me-1"></i> Anggota
                 </span>
             </div>
 
-            <!-- Footer -->
             <div class="footer">
                 &copy; {{ date('Y') }} <span>SIMSKUL</span> v3.0
             </div>
@@ -562,6 +547,22 @@
     </div>
 
     <script>
+        (function() {
+            const oldEmail = @json(old('email'));
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const emailInput = document.querySelector('input[name="email"]');
+                    const passInput = document.querySelector('input[name="password"]');
+                    if (emailInput && emailInput.value !== oldEmail) {
+                        emailInput.value = '';
+                    }
+                    if (passInput) {
+                        passInput.value = '';
+                    }
+                }, 50);
+            });
+        })();
+
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const icon = document.getElementById('passwordToggleIcon');

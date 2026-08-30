@@ -11,13 +11,13 @@
 @endphp
 
 <!-- ===== WELCOME BANNER - Biru Cerah ===== -->
-<div class="welcome-banner" style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%); border-radius: 24px; padding: 36px 44px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(14,165,233,0.25);">
+<div class="welcome-banner hero-gradient" style="border-radius: 24px; padding: 36px 44px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(14,165,233,0.25);">
     <div class="row align-items-center">
         <div class="col-lg-7">
             <div class="d-flex align-items-center gap-4">
-                <div class="avatar-ring" style="padding: 4px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc); animation: spin 6s linear infinite; flex-shrink: 0;">
-                    <div class="avatar-circle" style="width: 64px; height: 64px; border-radius: 50%; background: #0c4a6e; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 24px; border: 2px solid rgba(255,255,255,0.1);">
-                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                <div class="avatar-ring" style="padding: 4px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                    <div class="avatar-circle" style="width: 64px; height: 64px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.1); overflow: hidden;">
+                        <img src="{{ asset('images/logo-smk-bppi.png') }}" alt="SMK BPPI Baleendah" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
                     </div>
                 </div>
                 <div>
@@ -39,8 +39,8 @@
                     <i class="fas fa-shield-alt me-2"></i>
                     {{ ucfirst($user->role) }}
                 </span>
-                <span class="badge-status" style="background: rgba(16,185,129,0.15); color: #34d399; padding: 4px 18px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(16,185,129,0.1); backdrop-filter: blur(12px);">
-                    <span class="dot" style="width: 7px; height: 7px; background: #34d399; border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+                <span class="badge-status" style="background: #ffffff; color: #10b981; padding: 4px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.95); box-shadow: 0 2px 12px rgba(0,0,0,0.15);">
+                    <span class="dot" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 3px rgba(16,185,129,0.25);"></span>
                     Online
                 </span>
             </div>
@@ -62,7 +62,7 @@
                 <i class="fas fa-trophy"></i>
             </div>
             <div class="stat-body" style="flex: 1;">
-                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Ekskul</span>
+                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Ekskul</span>
                 <h3 class="stat-number" style="font-size: 30px; font-weight: 800; color: #0f172a; margin: 2px 0; letter-spacing: -1px;">{{ $data['total_ekskul'] ?? 0 }}</h3>
                 <span class="stat-trend up" style="background: rgba(16,185,129,0.06); color: #10b981; font-size: 11px; font-weight: 600; padding: 2px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
                     <i class="fas fa-arrow-up me-1"></i> Aktif
@@ -78,7 +78,7 @@
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-body" style="flex: 1;">
-                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Anggota</span>
+                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Anggota</span>
                 <h3 class="stat-number" style="font-size: 30px; font-weight: 800; color: #0f172a; margin: 2px 0; letter-spacing: -1px;">{{ $data['total_anggota'] ?? 0 }}</h3>
                 <span class="stat-trend up" style="background: rgba(16,185,129,0.06); color: #10b981; font-size: 11px; font-weight: 600; padding: 2px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
                     <i class="fas fa-user-plus me-1"></i> Terdaftar
@@ -94,7 +94,7 @@
                 <i class="fas fa-chalkboard-teacher"></i>
             </div>
             <div class="stat-body" style="flex: 1;">
-                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Pelatih</span>
+                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Pelatih</span>
                 <h3 class="stat-number" style="font-size: 30px; font-weight: 800; color: #0f172a; margin: 2px 0; letter-spacing: -1px;">{{ $data['total_pelatih'] ?? 0 }}</h3>
                 <span class="stat-trend up" style="background: rgba(16,185,129,0.06); color: #10b981; font-size: 11px; font-weight: 600; padding: 2px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
                     <i class="fas fa-star me-1"></i> Profesional
@@ -110,7 +110,7 @@
                 <i class="fas fa-check-circle"></i>
             </div>
             <div class="stat-body" style="flex: 1;">
-                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kehadiran Hari Ini</span>
+                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kehadiran Hari Ini</span>
                 <h3 class="stat-number" style="font-size: 30px; font-weight: 800; color: #0f172a; margin: 2px 0; letter-spacing: -1px;">{{ $data['total_kehadiran_hari_ini'] ?? 0 }}</h3>
                 <span class="stat-trend {{ ($data['total_kehadiran_hari_ini'] ?? 0) > 0 ? 'up' : 'down' }}" style="{{ ($data['total_kehadiran_hari_ini'] ?? 0) > 0 ? 'background: rgba(16,185,129,0.06); color: #10b981;' : 'background: rgba(239,68,68,0.06); color: #ef4444;' }} font-size: 11px; font-weight: 600; padding: 2px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;">
                     <i class="fas {{ ($data['total_kehadiran_hari_ini'] ?? 0) > 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"></i>
@@ -131,8 +131,8 @@
                 <i class="fas fa-trophy fa-2x"></i>
             </div>
             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 2px; font-size: 14px; position: relative; z-index: 1;">Kelola Ekskul</h6>
-            <p class="quick-desc" style="color: #94a3b8; font-size: 12px; margin-bottom: 0; position: relative; z-index: 1;">Tambah & edit ekskul</p>
-            <span class="quick-arrow" style="position: absolute; top: 16px; right: 16px; color: #94a3b8; font-size: 12px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
+            <p class="quick-desc" style="color: #64748b; font-size: 12px; margin-bottom: 0; position: relative; z-index: 1;">Tambah & edit ekskul</p>
+            <span class="quick-arrow" style="position: absolute; top: 16px; right: 16px; color: #64748b; font-size: 12px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
                 <i class="fas fa-arrow-right"></i>
             </span>
         </a>
@@ -143,8 +143,8 @@
                 <i class="fas fa-users fa-2x"></i>
             </div>
             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 2px; font-size: 14px; position: relative; z-index: 1;">Kelola Anggota</h6>
-            <p class="quick-desc" style="color: #94a3b8; font-size: 12px; margin-bottom: 0; position: relative; z-index: 1;">Tambah & edit anggota</p>
-            <span class="quick-arrow" style="position: absolute; top: 16px; right: 16px; color: #94a3b8; font-size: 12px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
+            <p class="quick-desc" style="color: #64748b; font-size: 12px; margin-bottom: 0; position: relative; z-index: 1;">Tambah & edit anggota</p>
+            <span class="quick-arrow" style="position: absolute; top: 16px; right: 16px; color: #64748b; font-size: 12px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
                 <i class="fas fa-arrow-right"></i>
             </span>
         </a>
@@ -155,8 +155,8 @@
                 <i class="fas fa-file-alt fa-2x"></i>
             </div>
             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 2px; font-size: 14px; position: relative; z-index: 1;">Template Surat</h6>
-            <p class="quick-desc" style="color: #94a3b8; font-size: 12px; margin-bottom: 0; position: relative; z-index: 1;">Kelola template surat</p>
-            <span class="quick-arrow" style="position: absolute; top: 16px; right: 16px; color: #94a3b8; font-size: 12px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
+            <p class="quick-desc" style="color: #64748b; font-size: 12px; margin-bottom: 0; position: relative; z-index: 1;">Kelola template surat</p>
+            <span class="quick-arrow" style="position: absolute; top: 16px; right: 16px; color: #64748b; font-size: 12px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
                 <i class="fas fa-arrow-right"></i>
             </span>
         </a>
@@ -183,7 +183,7 @@
             </div>
             <div class="card-body" style="padding: 20px 24px;">
                 <form method="GET" action="{{ route('admin.dashboard') }}" class="mb-4">
-                    <label class="form-label small fw-semibold text-muted mb-2" style="font-size: 12px; font-weight: 600; color: #94a3b8;">Pilih Ekskul</label>
+                    <label class="form-label small fw-semibold text-muted mb-2" style="font-size: 12px; font-weight: 600; color: #64748b;">Pilih Ekskul</label>
                     <select name="ekskul_id" class="form-select" onchange="this.form.submit()" style="max-width: 320px; padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 13px;">
                         <option value="">Semua Ekskul</option>
                         @foreach(App\Models\Ekstrakurikuler::orderBy('nama_ekskul')->get() as $ekskulOption)
@@ -208,7 +208,7 @@
                                     @else
                                         <div class="dokumentasi-placeholder" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #d1d5db; background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
                                             <i class="fas fa-image fa-3x"></i>
-                                            <small class="text-muted d-block mt-2" style="color: #94a3b8;">Tidak ada gambar</small>
+                                            <small class="text-muted d-block mt-2" style="color: #64748b;">Tidak ada gambar</small>
                                         </div>
                                     @endif
                                     <div class="dokumentasi-overlay" onclick="showDetail({{ $dok->id }})" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.4s ease;">
@@ -250,7 +250,7 @@
                                 <i class="fas fa-camera"></i>
                             </div>
                             <h6 class="mt-3" style="color: #64748b;">Belum Ada Dokumentasi</h6>
-                            <p class="text-muted small" style="color: #94a3b8;">Dokumentasi akan muncul setelah pelatih mengunggah foto kegiatan</p>
+                            <p class="text-muted small" style="color: #64748b;">Dokumentasi akan muncul setelah pelatih mengunggah foto kegiatan</p>
                         </div>
                     </div>
                 @endif
@@ -302,7 +302,7 @@
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $ekskul->pembina }}</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
                             <span class="badge-day" style="background: rgba(14,165,233,0.06); color: #0ea5e9; padding: 2px 12px; border-radius: 10px; font-size: 12px; font-weight: 500;">{{ $ekskul->hari_latihan }}</span>
-                            <div class="small text-muted" style="font-size: 12px; color: #94a3b8;">
+                            <div class="small text-muted" style="font-size: 12px; color: #64748b;">
                                 {{ \Carbon\Carbon::parse($ekskul->jam_mulai)->format('H:i') }} - 
                                 {{ \Carbon\Carbon::parse($ekskul->jam_selesai)->format('H:i') }}
                             </div>
@@ -320,17 +320,17 @@
                         </td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center;">
                             <div class="action-group" style="display: flex; gap: 4px; justify-content: center;">
-                                <a href="{{ route('admin.ekskul.show', $ekskul->id) }}" class="btn-action view" title="Detail" style="width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.ekskul.show', $ekskul->id) }}" class="btn-action view" title="Detail" style="width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.ekskul.edit', $ekskul->id) }}" class="btn-action edit" title="Edit" style="width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.ekskul.edit', $ekskul->id) }}" class="btn-action edit" title="Edit" style="width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <form action="{{ route('admin.ekskul.destroy', $ekskul->id) }}" method="POST" class="d-inline"
                                       onsubmit="return confirm('Yakin ingin menghapus ekskul ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #94a3b8;">
+                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 32px; height: 32px; border-radius: 8px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #64748b;">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -339,13 +339,13 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5 text-muted" style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center; color: #94a3b8;">
+                        <td colspan="6" class="text-center py-5 text-muted" style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center; color: #64748b;">
                             <div class="empty-state" style="padding: 30px 0;">
                                 <div class="empty-icon" style="font-size: 48px; color: #d1d5db; margin-bottom: 12px;">
                                     <i class="fas fa-inbox"></i>
                                 </div>
                                 <h6 style="color: #64748b; margin-bottom: 4px;">Belum ada data</h6>
-                                <p class="small" style="color: #94a3b8;">Tambahkan ekstrakurikuler pertama Anda</p>
+                                <p class="small" style="color: #64748b;">Tambahkan ekstrakurikuler pertama Anda</p>
                             </div>
                         </td>
                     </tr>
@@ -362,7 +362,7 @@
 <div class="modal fade" id="dokumentasiModal{{ $dok->id }}" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg" style="background: #ffffff;">
-            <div class="modal-header border-0" style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%); padding: 20px 24px;">
+            <div class="modal-header border-0 hero-gradient" style="padding: 20px 24px;">
                 <h5 class="text-white fw-bold mb-0" style="font-size: 18px;">
                     <i class="fas fa-image me-2"></i>
                     {{ $dok->judul }}
@@ -388,26 +388,26 @@
                     <div class="col-md-5">
                         <div class="dokumentasi-info">
                             <div class="info-item" style="margin-bottom: 16px;">
-                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #94a3b8;">📌 Ekskul</label>
+                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #64748b;">📌 Ekskul</label>
                                 <p class="fw-semibold mb-0" style="font-size: 14px; color: #0f172a;">{{ $dok->ekskul->nama_ekskul ?? '-' }}</p>
                             </div>
                             <div class="info-item" style="margin-bottom: 16px;">
-                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #94a3b8;">📅 Tanggal Kegiatan</label>
+                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #64748b;">📅 Tanggal Kegiatan</label>
                                 <p class="fw-semibold mb-0" style="font-size: 14px; color: #0f172a;">{{ isset($dok->tanggal_kegiatan) ? \Carbon\Carbon::parse($dok->tanggal_kegiatan)->format('d F Y') : '-' }}</p>
                             </div>
                             <div class="info-item" style="margin-bottom: 16px;">
-                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #94a3b8;">👤 Diunggah Oleh</label>
+                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #64748b;">👤 Diunggah Oleh</label>
                                 <p class="fw-semibold mb-0" style="font-size: 14px; color: #0f172a;">{{ $dok->user->name ?? 'Unknown' }}</p>
                             </div>
                             @if($dok->deskripsi)
                             <div class="info-item" style="margin-bottom: 16px;">
-                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #94a3b8;">📝 Deskripsi</label>
+                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #64748b;">📝 Deskripsi</label>
                                 <p class="mb-0" style="color: #475569; font-size: 14px;">{{ $dok->deskripsi }}</p>
                             </div>
                             @endif
                             <div class="info-item mt-3 pt-3 border-top" style="margin-bottom: 0; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #94a3b8;">🕐 Diunggah</label>
-                                <p class="small text-muted mb-0" style="font-size: 12px; color: #94a3b8;">{{ $dok->created_at->diffForHumans() }}</p>
+                                <label class="text-muted small text-uppercase fw-semibold" style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 2px; color: #64748b;">🕐 Diunggah</label>
+                                <p class="small text-muted mb-0" style="font-size: 12px; color: #64748b;">{{ $dok->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
                     </div>
@@ -426,11 +426,6 @@
 
 <style>
     /* ===== ANIMATIONS ===== */
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
     @keyframes pulse {
         0%, 100% { opacity: 1; transform: scale(1); }
         50% { opacity: 0.3; transform: scale(0.7); }

@@ -19,6 +19,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 
+    @php
+        $__hotFile = file_exists(public_path('hot'));
+        $__manifestFile = file_exists(public_path('build/manifest.json'));
+    @endphp
+    @if($__hotFile || $__manifestFile)
+        @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+    @endif
+
     <style>
         * {
             margin: 0;
@@ -34,6 +42,10 @@
             justify-content: center;
             background: #0a0a1a;
             overflow: hidden;
+        }
+
+        .text-muted {
+            color: #475569 !important;
         }
 
         /* ===== BACKGROUND ANIMATION - BIRU CERAH ===== */
@@ -251,7 +263,7 @@
         }
 
         .brand p {
-            color: #94a3b8;
+            color: #475569;
             font-size: 13px;
             margin: 4px 0 0;
             letter-spacing: 1.5px;
@@ -267,7 +279,7 @@
 
         .school-name {
             font-size: 13px;
-            color: #94a3b8;
+            color: #475569;
             font-weight: 500;
             margin-top: 6px;
             letter-spacing: 0.5px;
@@ -283,7 +295,7 @@
         }
 
         .form-group label {
-            color: #64748b;
+            color: #475569;
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
@@ -301,7 +313,7 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #94a3b8;
+            color: #64748b;
             font-size: 16px;
             transition: all 0.3s ease;
             pointer-events: none;
@@ -332,7 +344,7 @@
         }
 
         .form-group .input-wrapper input::placeholder {
-            color: #b0b8c8;
+            color: #94a3b8;
         }
 
         .form-group .input-wrapper .toggle-password {
@@ -342,7 +354,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #94a3b8;
+            color: #64748b;
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 8px;
@@ -435,7 +447,7 @@
         .auth-footer {
             text-align: center;
             margin-top: 20px;
-            color: #94a3b8;
+            color: #475569;
             font-size: 13px;
         }
 
@@ -448,6 +460,8 @@
         .auth-footer a:hover {
             color: #0284c7;
         }
+
+        /* ===== RESPONSIVE ===== */
 
         /* Logo */
         .logo {
@@ -524,6 +538,8 @@
     </style>
 </head>
 <body>
+
+    <div id="loadingOverlayRoot"></div>
 
     <!-- ===== BACKGROUND ANIMATION ===== -->
     <div class="bg-animation">

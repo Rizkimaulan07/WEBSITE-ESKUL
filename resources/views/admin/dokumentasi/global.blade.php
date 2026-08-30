@@ -96,27 +96,6 @@
         border: none;
     }
 
-    .btn-primary-gradient {
-        background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-        border: none;
-        color: white;
-        font-weight: 600;
-        padding: 10px 24px;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
-    }
-    .btn-primary-gradient:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4);
-        color: white;
-        text-decoration: none;
-    }
-
     .stat-card {
         background: #ffffff;
         border-radius: 18px;
@@ -151,8 +130,46 @@
     }
     .stat-label {
         font-size: 13px;
-        color: #94a3b8;
+        color: #64748b;
         font-weight: 500;
+    }
+
+    .filter-select {
+        padding: 10px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 13px;
+        background: #ffffff;
+        color: #0f172a;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-width: 180px;
+    }
+    .filter-select:focus {
+        border-color: #0ea5e9;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+    }
+
+    .selected-eskul-badge {
+        background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+        color: white;
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 16px rgba(14, 165, 233, 0.2);
+    }
+    .selected-eskul-badge a {
+        color: white;
+        opacity: 0.7;
+        text-decoration: none;
+    }
+    .selected-eskul-badge a:hover {
+        opacity: 1;
     }
 </style>
 @endpush
@@ -166,14 +183,42 @@
                 <i class="fas fa-images text-primary fa-lg" style="color: #0ea5e9;"></i>
             </div>
             <div>
-                <h5 class="fw-bold mb-0" style="color: #0f172a; font-size: 20px;">Semua Dokumentasi</h5>
-                <span class="text-muted" style="font-size: 14px;">Total <strong>{{ $dokumentasis->total() }}</strong> dokumentasi dari semua eskul</span>
+                <h5 class="fw-bold mb-0" style="color: #0f172a; font-size: 20px;">
+                    @if(isset($selectedEskul) && $selectedEskul)
+                        Dokumentasi {{ $selectedEskul->nama_ekskul }}
+                    @else
+                        Semua Dokumentasi
+                    @endif
+                </h5>
+                <span class="text-muted" style="font-size: 14px;">
+                    Total <strong>{{ $dokumentasis->total() }}</strong> dokumentasi
+                    @if(isset($selectedEskul) && $selectedEskul)
+                        dari eskul <strong>{{ $selectedEskul->nama_ekskul }}</strong>
+                    @else
+                        dari semua eskul
+                    @endif
+                </span>
             </div>
         </div>
-        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
-            <a href="{{ route('admin.dokumentasi.create', $selectedEskulId ?? 1) }}" class="btn-primary-gradient">
-                <i class="fas fa-plus"></i> Tambah Dokumentasi
-            </a>
+        <div class="d-flex align-items-center gap-3 mt-2 mt-md-0">
+            @if(isset($selectedEskul) && $selectedEskul)
+                <span class="selected-eskul-badge">
+                    <i class="fas fa-trophy"></i> {{ $selectedEskul->nama_ekskul }}
+                    <a href="{{ route('admin.dokumentasi.index') }}" title="Reset filter">
+                        <i class="fas fa-times-circle"></i>
+                    </a>
+                </span>
+            @endif
+            @if(isset($allEskuls) && $allEskuls->isNotEmpty())
+                <select id="filterEskul" class="filter-select">
+                    <option value="">📌 Semua Eskul</option>
+                    @foreach($allEskuls as $eskulItem)
+                        <option value="{{ $eskulItem->id }}" {{ request('eskul') == $eskulItem->id ? 'selected' : '' }}>
+                            {{ $eskulItem->nama_ekskul }}
+                        </option>
+                    @endforeach
+                </select>
+            @endif
         </div>
     </div>
 
@@ -196,7 +241,7 @@
                     <i class="fas fa-trophy"></i>
                 </div>
                 <div>
-                    <div class="stat-number">{{ $totalEskuls ?? 0 }}</div>
+                    <div class="stat-number">{{ isset($allEskuls) ? $allEskuls->count() : 0 }}</div>
                     <div class="stat-label">Total Eskul</div>
                 </div>
             </div>
@@ -234,16 +279,21 @@
                     <div class="empty-icon mb-3" style="font-size: 64px; color: #d1d5db; opacity: 0.6;">
                         <i class="fas fa-images"></i>
                     </div>
-                    <h5 class="text-muted fw-bold">Belum ada dokumentasi.</h5>
-                    <p class="text-muted small">Mulai dokumentasikan kegiatan ekstrakurikuler sekarang!</p>
-                    <a href="{{ route('admin.dokumentasi.create', $selectedEskulId ?? 1) }}" class="btn-primary-gradient mt-3">
-                        <i class="fas fa-plus"></i> Tambah Dokumentasi
-                    </a>
+                    <h5 class="text-muted fw-bold">
+                        @if(isset($selectedEskul) && $selectedEskul)
+                            Belum ada dokumentasi untuk {{ $selectedEskul->nama_ekskul }}
+                        @else
+                            Belum ada dokumentasi.
+                        @endif
+                    </h5>
+                    <p class="text-muted small">
+                        Dokumentasi akan muncul setelah pelatih mengunggah kegiatan
+                    </p>
                 </div>
             @else
-                <div class="row g-4" id="dokumentasiContainer">
+                <div class="row g-4">
                     @foreach($dokumentasis as $dok)
-                    <div class="col-xl-3 col-lg-4 col-md-6 dokumentasi-item" data-eskul-id="{{ $dok->ekskul_id ?? '' }}">
+                    <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="premium-doc-card">
                             
                             <!-- ===== IMAGE ===== -->
@@ -256,7 +306,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted" style="color: #94a3b8;">
+                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted" style="color: #64748b;">
                                         <i class="fas fa-image fa-3x" style="opacity: 0.4;"></i>
                                     </div>
                                 @endif
@@ -307,4 +357,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterSelect = document.getElementById('filterEskul');
+        if (filterSelect) {
+            filterSelect.addEventListener('change', function() {
+                const url = new URL(window.location.href);
+                if (this.value) {
+                    url.searchParams.set('eskul', this.value);
+                } else {
+                    url.searchParams.delete('eskul');
+                }
+                window.location.href = url.toString();
+            });
+        }
+    });
+</script>
 @endsection

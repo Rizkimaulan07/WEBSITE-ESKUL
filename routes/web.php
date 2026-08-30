@@ -13,6 +13,7 @@ use App\Http\Controllers\Pelatih\KehadiranPelatihController;
 use App\Http\Controllers\Pelatih\RekapController;
 use App\Http\Controllers\Anggota\KehadiranController as AnggotaKehadiranController;
 use App\Http\Controllers\Anggota\NilaiController as AnggotaNilaiController;
+use App\Http\Controllers\Admin\NilaiController as AdminNilaiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -52,30 +53,30 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('template-surat', TemplateSuratController::class);
     Route::get('template-surat/{templateSurat}/download', [TemplateSuratController::class, 'download'])->name('template-surat.download');
     Route::get('/kehadiran-pelatih', [KehadiranPelatihController::class, 'adminIndex'])->name('kehadiran_pelatih');
+    Route::get('/kehadiran-pelatih/export', [KehadiranPelatihController::class, 'adminExport'])->name('kehadiran_pelatih.export');
     Route::get('/kehadiran-anggota', [KehadiranController::class, 'adminIndex'])->name('kehadiran_anggota');
+    Route::get('/kehadiran-anggota/export', [KehadiranController::class, 'adminExport'])->name('kehadiran_anggota.export');
+    Route::get('/nilai-anggota', [AdminNilaiController::class, 'index'])->name('nilai.index');
+    Route::get('/nilai-anggota/export', [AdminNilaiController::class, 'export'])->name('nilai.export');
     
     // ===== ROUTE DOKUMENTASI ADMIN =====
     Route::get('/dokumentasi', [DokumentasiController::class, 'adminIndex'])->name('dokumentasi.index');
-    
-    Route::get('/dokumentasi/{eskul}', [DokumentasiController::class, 'indexByEskul'])->name('dokumentasi.eskul')->whereNumber('eskul');
-    Route::get('/dokumentasi/{eskul}/create', [DokumentasiController::class, 'adminCreate'])->name('dokumentasi.create')->whereNumber('eskul');
-    Route::post('/dokumentasi/{eskul}', [DokumentasiController::class, 'adminStore'])->name('dokumentasi.store')->whereNumber('eskul');
-    
+    Route::get('/dokumentasi/eskul/{eskul}', [DokumentasiController::class, 'indexByEskul'])->name('dokumentasi.eskul')->whereNumber('eskul');
+    Route::get('/dokumentasi/create/{eskul}', [DokumentasiController::class, 'adminCreate'])->name('dokumentasi.create')->whereNumber('eskul');
+    Route::post('/dokumentasi/store/{eskul}', [DokumentasiController::class, 'adminStore'])->name('dokumentasi.store')->whereNumber('eskul');
     Route::get('/dokumentasi/edit/{dokumentasi}', [DokumentasiController::class, 'adminEdit'])->name('dokumentasi.edit')->whereNumber('dokumentasi');
-    Route::put('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'adminUpdate'])->name('dokumentasi.update')->whereNumber('dokumentasi');
-    Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'adminDestroy'])->name('dokumentasi.destroy')->whereNumber('dokumentasi');
+    Route::put('/dokumentasi/update/{dokumentasi}', [DokumentasiController::class, 'adminUpdate'])->name('dokumentasi.update')->whereNumber('dokumentasi');
     Route::get('/dokumentasi/show/{dokumentasi}', [DokumentasiController::class, 'adminShow'])->name('dokumentasi.show')->whereNumber('dokumentasi');
+    Route::delete('/dokumentasi/destroy/{dokumentasi}', [DokumentasiController::class, 'adminDestroy'])->name('dokumentasi.destroy')->whereNumber('dokumentasi');
 
     // ===== ROUTE DOWNLOAD APK =====
-    // Halaman download (menampilkan daftar APK)
     Route::get('/downloads', function () {
         return view('admin.download.index');
     })->name('downloads.index');
 
-    // Upload APK baru
     Route::post('/downloads/upload', function (Request $request) {
         $request->validate([
-            'apk' => 'required|file|mimes:apk|max:102400' // Max 100MB
+            'apk' => 'required|file|mimes:apk|max:102400'
         ]);
 
         $file = $request->file('apk');
@@ -85,15 +86,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         return back()->with('success', 'APK berhasil diupload!');
     })->name('downloads.upload');
 
-    // Hapus APK
     Route::delete('/downloads/{filename}', function ($filename) {
         $path = public_path('downloads/' . $filename);
-        
         if (file_exists($path)) {
             unlink($path);
             return back()->with('success', 'File berhasil dihapus!');
         }
-
         return back()->with('error', 'File tidak ditemukan!');
     })->name('downloads.delete');
 });
@@ -130,7 +128,6 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::get('/dokumentasi', [DokumentasiController::class, 'indexPelatih'])->name('dokumentasi');
     Route::get('/dokumentasi/create', [DokumentasiController::class, 'createPelatih'])->name('dokumentasi.create');
     Route::post('/dokumentasi', [DokumentasiController::class, 'storePelatih'])->name('dokumentasi.store');
-    
     Route::get('/dokumentasi/edit/{dokumentasi}', [DokumentasiController::class, 'edit'])->name('dokumentasi.edit')->whereNumber('dokumentasi');
     Route::put('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'update'])->name('dokumentasi.update')->whereNumber('dokumentasi');
     Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy')->whereNumber('dokumentasi');

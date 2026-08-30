@@ -45,22 +45,32 @@ class AnggotaController extends Controller
             'jurusan' => 'required|string|max:50',
             'no_hp' => 'required|string|max:15',
             'ekskul_id' => 'nullable|exists:ekstrakurikulers,id',
+            'ekskul_ids' => 'nullable|array',
+            'ekskul_ids.*' => 'exists:ekstrakurikulers,id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
+        unset($data['ekskul_ids']);
 
         $data['email'] = $request->filled('email') ? $request->email : ($request->nis . '@siswa.sch.id');
         $data['password'] = Hash::make($request->filled('password') ? $request->password : $request->nis);
         $data['role'] = 'anggota';
 
-        // Cari pelatih berdasarkan ekskul_id
+        // Kumpulkan id ekskul (multi: ekskul_ids[], legacy: ekskul_id)
+        $ekskulIds = array_values(array_filter((array) $request->input('ekskul_ids', []), fn($id) => $id !== null && $id !== ''));
+        if ($request->filled('ekskul_id') && !in_array($request->ekskul_id, $ekskulIds)) {
+            $ekskulIds[] = $request->ekskul_id;
+        }
+        $data['ekskul_id'] = $ekskulIds[0] ?? null;
+
+        // Cari pelatih berdasarkan ekskul utama (pertama)
         $pelatih = null;
-        if ($request->filled('ekskul_id')) {
+        if (!empty($ekskulIds)) {
             $pelatih = User::where('role', 'pelatih')
-                           ->where('ekskul_id', $request->ekskul_id)
+                           ->where('ekskul_id', $ekskulIds[0])
                            ->first();
-            
+
             if ($pelatih) {
                 $data['pelatih_id'] = $pelatih->id;
             }
@@ -76,8 +86,8 @@ class AnggotaController extends Controller
 
         $user = User::create($data);
 
-        if ($request->filled('ekskul_id')) {
-            $user->ekskuls()->attach($request->ekskul_id);
+        if (!empty($ekskulIds)) {
+            $user->ekskuls()->attach(array_unique($ekskulIds));
         }
 
         $pelatihNama = $pelatih->name ?? 'Belum ada pelatih';
@@ -163,22 +173,28 @@ class AnggotaController extends Controller
             'jurusan' => 'required|string|max:50',
             'no_hp' => 'required|string|max:15',
             'ekskul_id' => 'nullable|exists:ekstrakurikulers,id',
+            'ekskul_ids' => 'nullable|array',
+            'ekskul_ids.*' => 'exists:ekstrakurikulers,id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $data = $request->all();
+        unset($data['ekskul_ids']);
 
-        // Update pelatih_id jika ekskul berubah
-        if ($request->filled('ekskul_id')) {
+        // Kumpulkan id ekskul (multi: ekskul_ids[], legacy: ekskul_id)
+        $ekskulIds = array_values(array_filter((array) $request->input('ekskul_ids', []), fn($id) => $id !== null && $id !== ''));
+        if ($request->filled('ekskul_id') && !in_array($request->ekskul_id, $ekskulIds)) {
+            $ekskulIds[] = $request->ekskul_id;
+        }
+        $data['ekskul_id'] = $ekskulIds[0] ?? null;
+
+        // Update pelatih_id jika ekskul berubah (berdasarkan ekskul utama)
+        if (!empty($ekskulIds)) {
             $pelatih = User::where('role', 'pelatih')
-                           ->where('ekskul_id', $request->ekskul_id)
+                           ->where('ekskul_id', $ekskulIds[0])
                            ->first();
-            
-            if ($pelatih) {
-                $data['pelatih_id'] = $pelatih->id;
-            } else {
-                $data['pelatih_id'] = null;
-            }
+
+            $data['pelatih_id'] = $pelatih->id ?? null;
         } else {
             $data['pelatih_id'] = null;
         }
@@ -202,11 +218,7 @@ class AnggotaController extends Controller
 
         $anggota->update($data);
 
-        if ($request->filled('ekskul_id')) {
-            $anggota->ekskuls()->sync([$request->ekskul_id]);
-        } else {
-            $anggota->ekskuls()->detach();
-        }
+        $anggota->ekskuls()->sync($ekskulIds);
 
         return redirect()->route('admin.anggota.index')
                          ->with('success', '✅ Anggota berhasil diupdate!');

@@ -5,7 +5,7 @@
 
 @section('content')
 <!-- ===== HERO SECTION ===== -->
-<div class="hero-section mb-4" style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 40%, #38bdf8 70%, #7dd3fc 100%); border-radius: 24px; padding: 32px 40px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(14,165,233,0.25);">
+<div class="hero-section mb-4 hero-gradient" style="border-radius: 24px; padding: 32px 40px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(14,165,233,0.25);">
     <div class="row align-items-center">
         <div class="col-lg-7">
             <div class="d-flex align-items-center gap-4">
@@ -23,8 +23,8 @@
                 <span class="hero-badge" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(12px); color: #e2e8f0; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid rgba(255,255,255,0.08);">
                     <i class="fas fa-file me-2"></i>{{ $templates->total() }} Template
                 </span>
-                <span class="hero-badge" style="background: rgba(16,185,129,0.15); backdrop-filter: blur(12px); color: #34d399; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid rgba(16,185,129,0.1);">
-                    <i class="fas fa-check-circle me-2"></i>{{ $templates->whereNotNull('file_template')->count() }} Siap Pakai
+                <span class="hero-badge" style="background: #d1fae5; color: #065f46; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; border: 1px solid #10b981; box-shadow: 0 2px 8px rgba(6,95,70,0.2);">
+                    <i class="fas fa-check-circle me-2" style="color: #065f46;"></i>{{ $templates->whereNotNull('file_template')->count() }} Siap Pakai
                 </span>
             </div>
         </div>
@@ -113,7 +113,7 @@
         <div class="row g-3 align-items-center">
             <div class="col-md-5">
                 <div class="search-wrapper" style="position: relative;">
-                    <i class="fas fa-search search-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                    <i class="fas fa-search search-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 14px;"></i>
                     <input type="text" class="search-input" placeholder="Cari template surat..." id="searchInput" style="width: 100%; padding: 12px 16px 12px 44px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: rgba(255,255,255,0.8); transition: all 0.3s ease; color: #0f172a;">
                 </div>
             </div>
@@ -127,7 +127,7 @@
                     <button class="btn-reset" onclick="resetFilters()" style="padding: 12px 20px; border: 2px solid #e2e8f0; border-radius: 12px; background: rgba(255,255,255,0.8); color: #64748b; font-size: 13px; font-weight: 500; transition: all 0.3s ease; cursor: pointer;">
                         <i class="fas fa-undo me-1"></i> Reset
                     </button>
-                    <a href="{{ route('admin.template-surat.create') }}" class="btn-primary-gradient" style="padding: 12px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 13px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                    <a href="{{ route('admin.template-surat.create') }}" class="btn-primary-gradient" style="padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                         <i class="fas fa-plus me-2"></i> Tambah Template
                     </a>
                 </div>
@@ -145,7 +145,7 @@
             </div>
             <div>
                 <h6 class="mb-0 fw-bold" style="font-weight: 700; font-size: 14px; color: #0f172a;">Daftar Template Surat</h6>
-                <small class="text-muted" style="font-size: 12px; color: #94a3b8;">{{ $templates->total() }} total data</small>
+                <small class="text-muted" style="font-size: 12px; color: #64748b;">{{ $templates->total() }} total data</small>
             </div>
         </div>
         <div>
@@ -179,7 +179,7 @@
                                 </div>
                                 <div>
                                     <span class="fw-bold" style="font-weight: 700; color: #0f172a; font-size: 14px;">{{ $template->judul_template }}</span>
-                                    <span class="template-slug" style="font-size: 11px; color: #94a3b8; display: block;">{{ Str::slug($template->judul_template) }}</span>
+                                    <span class="template-slug" style="font-size: 11px; color: #64748b; display: block;">{{ Str::slug($template->judul_template) }}</span>
                                 </div>
                             </div>
                         </td>
@@ -188,8 +188,9 @@
                         </td>
                         <td>
                             @if($hasFile)
-                                <span class="badge-file ada" style="background: rgba(16,185,129,0.06); color: #10b981; padding: 4px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; display: inline-block;">
-                                    <i class="fas fa-check-circle me-1"></i> Ada File
+                                @php $fileType = $template->file_type; $isPdf = $fileType === 'PDF'; @endphp
+                                <span class="badge-file ada" style="{{ $isPdf ? 'background: rgba(239,68,68,0.08); color: #dc2626;' : 'background: rgba(37,99,235,0.08); color: #2563eb;' }} padding: 5px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fas {{ $isPdf ? 'fa-file-pdf' : 'fa-file-word' }}"></i> {{ $fileType }}
                                 </span>
                             @else
                                 <span class="badge-file tidak" style="background: rgba(239,68,68,0.06); color: #ef4444; padding: 4px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; display: inline-block;">
@@ -200,19 +201,19 @@
                         <td>
                             <div class="date-info" style="display: flex; flex-direction: column;">
                                 <span class="date-human" style="font-size: 13px; color: #0f172a; font-weight: 500;">{{ $template->created_at->diffForHumans() }}</span>
-                                <span class="date-full" style="font-size: 11px; color: #94a3b8;">{{ $template->created_at->format('d M Y H:i') }}</span>
+                                <span class="date-full" style="font-size: 11px; color: #64748b;">{{ $template->created_at->format('d M Y H:i') }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="action-group" style="display: flex; gap: 4px; justify-content: center;">
                                 @if($hasFile)
                                     <a href="{{ route('admin.template-surat.download', $template->id) }}" 
-                                       class="btn-action download" title="Download" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                       class="btn-action download" title="Download" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                         <i class="fas fa-download"></i>
                                     </a>
                                 @endif
                                 <a href="{{ route('admin.template-surat.edit', $template->id) }}" 
-                                   class="btn-action edit" title="Edit" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                   class="btn-action edit" title="Edit" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <form action="{{ route('admin.template-surat.destroy', $template->id) }}" 
@@ -221,7 +222,7 @@
                                       onsubmit="return confirm('Yakin ingin menghapus template {{ $template->judul_template }}?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #94a3b8;">
+                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #64748b;">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -234,8 +235,8 @@
                             <div class="empty-state" style="padding: 50px 0; text-align: center;">
                                 <div class="empty-icon" style="font-size: 56px; color: #d1d5db; margin-bottom: 16px; opacity: 0.5;"><i class="fas fa-file-alt"></i></div>
                                 <h6 class="empty-title" style="color: #64748b; margin-bottom: 4px; font-weight: 600;">Belum ada template</h6>
-                                <p class="empty-desc" style="color: #94a3b8; font-size: 13px;">Tambahkan template surat pertama Anda</p>
-                                <a href="{{ route('admin.template-surat.create') }}" class="btn-primary-gradient mt-3" style="padding: 12px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-block; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                <p class="empty-desc" style="color: #64748b; font-size: 13px;">Tambahkan template surat pertama Anda</p>
+                                <a href="{{ route('admin.template-surat.create') }}" class="btn-primary-gradient mt-3" style="padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-block;">
                                     <i class="fas fa-plus me-2"></i> Tambah Template
                                 </a>
                             </div>
@@ -248,7 +249,7 @@
     </div>
     <div class="card-footer premium-table-footer" style="padding: 14px 24px; border-top: 1px solid rgba(0,0,0,0.02); background: rgba(248,250,252,0.2);">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <span class="footer-info" style="font-size: 12px; color: #94a3b8;">
+            <span class="footer-info" style="font-size: 12px; color: #64748b;">
                 <i class="fas fa-list me-1"></i>
                 Menampilkan {{ $templates->firstItem() }} - {{ $templates->lastItem() }} 
                 dari {{ $templates->total() }} data

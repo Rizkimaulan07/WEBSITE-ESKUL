@@ -29,6 +29,9 @@ class AuthController extends Controller
         // Buat token API untuk mobile
         $token = $user->createToken('mobile-app')->plainTextToken;
 
+        // Muat daftar ekskul yang diikuti (mendukung multi-ekskul)
+        $user->load('ekskuls');
+
         return response()->json([
             'status' => 'success',
             'token' => $token,

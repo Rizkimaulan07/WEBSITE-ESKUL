@@ -158,7 +158,20 @@
                     </div>
 
                     <!-- ===== FOOTER ACTION ===== -->
-                    <div class="d-flex justify-content-end mt-4 pt-3 border-top" style="border-color: #f1f5f9 !important;">
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top flex-wrap gap-2" style="border-color: #f1f5f9 !important;">
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('admin.dokumentasi.edit', $dokumentasi->id) }}" class="btn btn-modern-outline">
+                                <i class="fas fa-edit me-2"></i> Edit
+                            </a>
+                            <form action="{{ route('admin.dokumentasi.destroy', $dokumentasi->id) }}" method="POST"
+                                  onsubmit="return confirm('Yakin ingin menghapus dokumentasi ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-modern" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);">
+                                    <i class="fas fa-trash-alt me-2"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
                         <a href="{{ route('admin.dokumentasi.index') }}" class="btn btn-modern btn-primary">
                             <i class="fas fa-arrow-left me-2"></i> Kembali ke Galeri
                         </a>

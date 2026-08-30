@@ -25,43 +25,65 @@
             <h6 style="font-weight: 600; font-size: 14px; color: #0f172a;">
                 <i class="fas fa-clipboard-list me-2" style="color: #0ea5e9;"></i>Rekap Bulanan Kehadiran Anggota
             </h6>
-            <form method="GET" action="{{ route('admin.kehadiran_anggota') }}" class="d-flex align-items-center gap-2">
+            <form method="GET" action="{{ route('admin.kehadiran_anggota') }}" class="d-flex align-items-center gap-2 flex-wrap">
+                <select name="eskul_id" class="form-control form-control-sm" style="min-width: 180px; border: 2px solid #e2e8f0; border-radius: 10px; padding: 6px 12px; font-size: 13px;">
+                    <option value="">Semua Ekskul</option>
+                    @foreach($allEkskuls ?? [] as $eskul)
+                        <option value="{{ $eskul->id }}" {{ request('eskul_id') == $eskul->id ? 'selected' : '' }}>
+                            {{ $eskul->nama_ekskul }}
+                        </option>
+                    @endforeach
+                </select>
                 <input type="month" name="month" value="{{ $selectedMonth }}" class="form-control form-control-sm" style="min-width: 180px; border: 2px solid #e2e8f0; border-radius: 10px; padding: 6px 12px; font-size: 13px;">
                 <button type="submit" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; padding: 6px 20px; border-radius: 10px; color: #fff; font-weight: 500; font-size: 13px; box-shadow: 0 2px 12px rgba(14,165,233,0.25);">
                     <i class="fas fa-filter me-1"></i> Filter
                 </button>
+                <a href="{{ route('admin.kehadiran_anggota') }}" class="btn btn-secondary btn-sm" style="background: #f1f5f9; border: none; padding: 6px 20px; border-radius: 10px; color: #64748b; font-weight: 500; font-size: 13px;">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </a>
+                <a href="{{ route('admin.kehadiran_anggota.export', ['month' => $selectedMonth, 'eskul_id' => request('eskul_id')]) }}" class="btn btn-success btn-sm" style="background: linear-gradient(135deg, #10b981, #34d399); border: none; padding: 6px 18px; border-radius: 10px; color: #fff; font-weight: 500; font-size: 13px; box-shadow: 0 2px 12px rgba(16,185,129,0.25);">
+                    <i class="fas fa-download me-1"></i> Unduh File
+                </a>
             </form>
         </div>
     </div>
 
     <div class="card-body-modern" style="padding: 20px 24px;">
+        <!-- Stats -->
         <div class="row g-3 mb-3">
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box" style="background: rgba(14,165,233,0.05); border: 1px solid rgba(14,165,233,0.08); border-radius: 12px; padding: 16px;">
                     <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Total Catatan</span>
                     <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['total'] ?? 0 }}</h4>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box success" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.08); border-radius: 12px; padding: 16px;">
                     <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Hadir</span>
                     <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['hadir'] ?? 0 }}</h4>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box warning" style="background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.08); border-radius: 12px; padding: 16px;">
                     <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Izin</span>
                     <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['izin'] ?? 0 }}</h4>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box danger" style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.08); border-radius: 12px; padding: 16px;">
-                    <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Sakit & Alpa</span>
-                    <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ ($statistikBulanan['sakit'] ?? 0) + ($statistikBulanan['alpa'] ?? 0) }}</h4>
+                    <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Sakit</span>
+                    <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['sakit'] ?? 0 }}</h4>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="stat-box secondary" style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.12); border-radius: 12px; padding: 16px;">
+                    <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Alpa</span>
+                    <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['alpa'] ?? 0 }}</h4>
                 </div>
             </div>
         </div>
 
+        <!-- Rekap Per Anggota -->
         <div class="table-responsive">
             <table class="table-modern" style="width: 100%; border-collapse: collapse; font-size: 13px;">
                 <thead>
@@ -124,6 +146,7 @@
     </div>
 </div>
 
+<!-- Detail Kehadiran -->
 <div class="card-modern" style="background: #ffffff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden;">
     <div class="card-header-modern" style="padding: 16px 24px; border-bottom: 1px solid rgba(0,0,0,0.02); background: linear-gradient(135deg, #f0f9ff, #e0f2fe);">
         <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
@@ -197,6 +220,11 @@
     .btn-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 20px rgba(14,165,233,0.35);
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
     }
 </style>
 @endsection

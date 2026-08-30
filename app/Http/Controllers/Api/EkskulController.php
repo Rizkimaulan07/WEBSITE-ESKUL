@@ -16,4 +16,16 @@ class EkskulController extends Controller
             'data' => $ekskuls
         ]);
     }
+
+    public function show($id)
+    {
+        $ekskul = Ekstrakurikuler::find($id);
+        if (!$ekskul) {
+            return response()->json(['status' => 'error', 'message' => 'Ekstrakurikuler tidak ditemukan'], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $ekskul
+        ]);
+    }
 }

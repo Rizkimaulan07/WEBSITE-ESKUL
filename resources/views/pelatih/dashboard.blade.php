@@ -8,21 +8,37 @@
     <div class="col-12">
         <div class="card-modern" style="background: #ffffff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden;">
             <div class="card-body-modern" style="padding: 28px 32px;">
-                <!-- Welcome Section - Biru Cerah -->
+                <!-- Welcome Section - Biru Cerah + Avatar -->
                 <div class="welcome-section mb-4">
-                    <h4 class="fw-bold" style="color: #0f172a;">Selamat Datang, {{ Auth::user()->name }}! 👋</h4>
-                    <p class="text-muted" style="color: #94a3b8;">Anda login sebagai Pelatih Ekstrakurikuler</p>
-                    @if(isset($data['ekskul']) && $data['ekskul'])
-                        <span class="badge-ekskul" style="display: inline-block; padding: 4px 16px; background: rgba(14,165,233,0.06); color: #0ea5e9; border-radius: 20px; font-size: 13px; font-weight: 500;">
-                            <i class="fas fa-trophy me-1"></i>
-                            {{ $data['ekskul']->nama_ekskul ?? 'Ekskul' }}
-                        </span>
-                    @else
-                        <span class="badge-ekskul" style="display: inline-block; padding: 4px 16px; background: rgba(239,68,68,0.06); color: #ef4444; border-radius: 20px; font-size: 13px; font-weight: 500;">
-                            <i class="fas fa-exclamation-triangle me-1"></i>
-                            Belum ada ekskul
-                        </span>
-                    @endif
+                    <div class="d-flex align-items-center gap-4">
+                        <!-- ===== FOTO PROFIL PELATIH ===== -->
+                        <div class="avatar-large" style="position: relative; flex-shrink: 0;">
+                            <img src="{{ Auth::user()->avatar_url }}" 
+                                 alt="{{ Auth::user()->name }}" 
+                                 class="rounded-circle border-4 border-white shadow-lg"
+                                 style="width: 72px; height: 72px; object-fit: cover; background: #f0f9ff;">
+                            <span class="position-absolute bottom-0 end-0 bg-success rounded-circle p-1 border border-white" style="width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
+                                <span class="d-block" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold" style="color: #0f172a;">
+                                Selamat Datang, {{ Auth::user()->name }}! 👋
+                            </h4>
+                            <p class="text-muted" style="color: #64748b;">Anda login sebagai Pelatih Ekstrakurikuler</p>
+                            @if(isset($data['ekskul']) && $data['ekskul'])
+                                <span class="badge-ekskul" style="display: inline-block; padding: 4px 16px; background: rgba(14,165,233,0.06); color: #0ea5e9; border-radius: 20px; font-size: 13px; font-weight: 500;">
+                                    <i class="fas fa-trophy me-1"></i>
+                                    {{ $data['ekskul']->nama_ekskul ?? 'Ekskul' }}
+                                </span>
+                            @else
+                                <span class="badge-ekskul" style="display: inline-block; padding: 4px 16px; background: rgba(239,68,68,0.06); color: #ef4444; border-radius: 20px; font-size: 13px; font-weight: 500;">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Belum ada ekskul
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Alert jika belum punya ekskul -->
@@ -50,7 +66,7 @@
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Anggota</span>
+                                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Anggota</span>
                                 <h3 class="stat-number" style="font-size: 24px; font-weight: 700; color: #0f172a; margin: 2px 0 0;">{{ $data['total_anggota'] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -61,7 +77,7 @@
                                 <i class="fas fa-calendar-check"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kehadiran Hari Ini</span>
+                                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kehadiran Hari Ini</span>
                                 <h3 class="stat-number" style="font-size: 24px; font-weight: 700; color: #0f172a; margin: 2px 0 0;">{{ $data['kehadiran_hari_ini'] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -72,7 +88,7 @@
                                 <i class="fas fa-images"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Dokumentasi</span>
+                                <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Dokumentasi</span>
                                 <h3 class="stat-number" style="font-size: 24px; font-weight: 700; color: #0f172a; margin: 2px 0 0;">{{ $data['total_dokumentasi'] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -87,7 +103,7 @@
                                 <i class="fas fa-clipboard-list"></i>
                             </div>
                             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Kehadiran Anggota</h6>
-                            <p class="text-muted small" style="color: #94a3b8; margin-bottom: 0; font-size: 12px;">Kelola kehadiran anggota</p>
+                            <p class="text-muted small" style="color: #64748b; margin-bottom: 0; font-size: 12px;">Kelola kehadiran anggota</p>
                         </a>
                     </div>
                     <div class="col-md-4">
@@ -96,7 +112,7 @@
                                 <i class="fas fa-star"></i>
                             </div>
                             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Nilai Anggota</h6>
-                            <p class="text-muted small" style="color: #94a3b8; margin-bottom: 0; font-size: 12px;">Kelola nilai anggota</p>
+                            <p class="text-muted small" style="color: #64748b; margin-bottom: 0; font-size: 12px;">Kelola nilai anggota</p>
                         </a>
                     </div>
                     <div class="col-md-4">
@@ -105,7 +121,7 @@
                                 <i class="fas fa-images"></i>
                             </div>
                             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Dokumentasi</h6>
-                            <p class="text-muted small" style="color: #94a3b8; margin-bottom: 0; font-size: 12px;">Kelola dokumentasi kegiatan</p>
+                            <p class="text-muted small" style="color: #64748b; margin-bottom: 0; font-size: 12px;">Kelola dokumentasi kegiatan</p>
                         </a>
                     </div>
                 </div>
@@ -130,7 +146,14 @@
                             <tbody>
                                 @foreach($data['anggota_terbaru'] as $anggota)
                                 <tr style="transition: all 0.3s ease;">
-                                    <td style="padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $anggota->name }}</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="{{ $anggota->avatar_url }}" 
+                                                 alt="{{ $anggota->name }}" 
+                                                 style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                            <span>{{ $anggota->name }}</span>
+                                        </div>
+                                    </td>
                                     <td style="padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $anggota->email }}</td>
                                     <td style="padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $anggota->kelas ?? '-' }}</td>
                                     <td style="padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $anggota->created_at->diffForHumans() }}</td>
@@ -147,14 +170,20 @@
 </div>
 
 <style>
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.3; transform: scale(0.7); }
+    }
     .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(14,165,233,0.06); }
     .menu-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(14,165,233,0.06); text-decoration: none; background: #ffffff; }
     .table-modern tbody tr:hover { background: rgba(14,165,233,0.015); }
+    .avatar-large .border-success { border-color: #10b981 !important; }
     @media (max-width: 768px) {
         .card-body-modern { padding: 18px; }
         .stat-card { padding: 16px 18px; }
         .stat-number { font-size: 20px; }
         .menu-card { padding: 18px; }
+        .avatar-large img { width: 56px !important; height: 56px !important; }
     }
 </style>
 @endsection

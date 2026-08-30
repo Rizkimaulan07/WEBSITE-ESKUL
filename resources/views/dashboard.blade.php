@@ -29,8 +29,8 @@
                 <span class="hero-badge" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(12px); color: #e2e8f0; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid rgba(255,255,255,0.08);">
                     <i class="fas fa-shield-alt me-2"></i>Pelatih
                 </span>
-                <span class="hero-badge" style="background: rgba(16,185,129,0.15); backdrop-filter: blur(12px); color: #34d399; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid rgba(16,185,129,0.1);">
-                    <span class="dot" style="width: 7px; height: 7px; background: #34d399; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; margin-right: 8px;"></span>Online
+                <span class="hero-badge" style="background: #ffffff; color: #10b981; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.95); box-shadow: 0 2px 12px rgba(0,0,0,0.15);">
+                    <span class="dot" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 3px rgba(16,185,129,0.25); margin-right: 8px;"></span>Online
                 </span>
             </div>
         </div>
@@ -52,7 +52,7 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Anggota</span>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Anggota</span>
                     <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $data['total_anggota'] ?? 0 }}</h3>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kehadiran Hari Ini</span>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kehadiran Hari Ini</span>
                     <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $data['kehadiran_hari_ini'] ?? 0 }}</h3>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                     <i class="fas fa-images"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Dokumentasi</span>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Dokumentasi</span>
                     <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $data['total_dokumentasi'] ?? 0 }}</h3>
                 </div>
             </div>
@@ -107,8 +107,8 @@
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 4px; font-size: 15px;">Kehadiran Anggota</h6>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 0;">Kelola kehadiran anggota</p>
-            <div class="menu-arrow" style="position: absolute; bottom: 16px; right: 20px; color: #94a3b8; font-size: 14px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
+            <p style="color: #64748b; font-size: 13px; margin-bottom: 0;">Kelola kehadiran anggota</p>
+            <div class="menu-arrow" style="position: absolute; bottom: 16px; right: 20px; color: #64748b; font-size: 14px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
@@ -119,8 +119,8 @@
                 <i class="fas fa-star"></i>
             </div>
             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 4px; font-size: 15px;">Nilai Anggota</h6>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 0;">Input dan kelola nilai anggota</p>
-            <div class="menu-arrow" style="position: absolute; bottom: 16px; right: 20px; color: #94a3b8; font-size: 14px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
+            <p style="color: #64748b; font-size: 13px; margin-bottom: 0;">Input dan kelola nilai anggota</p>
+            <div class="menu-arrow" style="position: absolute; bottom: 16px; right: 20px; color: #64748b; font-size: 14px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
@@ -131,8 +131,8 @@
                 <i class="fas fa-images"></i>
             </div>
             <h6 style="font-weight: 600; color: #0f172a; margin-bottom: 4px; font-size: 15px;">Dokumentasi</h6>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 0;">Kelola dokumentasi kegiatan</p>
-            <div class="menu-arrow" style="position: absolute; bottom: 16px; right: 20px; color: #94a3b8; font-size: 14px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
+            <p style="color: #64748b; font-size: 13px; margin-bottom: 0;">Kelola dokumentasi kegiatan</p>
+            <div class="menu-arrow" style="position: absolute; bottom: 16px; right: 20px; color: #64748b; font-size: 14px; opacity: 0; transform: translateX(-10px); transition: all 0.4s ease;">
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
@@ -149,7 +149,7 @@
             </div>
             <div>
                 <h6 class="mb-0 fw-bold" style="font-weight: 700; font-size: 14px; color: #0f172a;">Anggota Terbaru</h6>
-                <small class="text-muted" style="font-size: 12px; color: #94a3b8;">Bergabung baru-baru ini</small>
+                <small class="text-muted" style="font-size: 12px; color: #64748b;">Bergabung baru-baru ini</small>
             </div>
         </div>
         <span class="badge-count" style="background: rgba(14,165,233,0.06); color: #0ea5e9; padding: 2px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{ $data['anggota_terbaru']->count() }}</span>
@@ -183,7 +183,7 @@
                             <span class="badge-kelas" style="background: rgba(245,158,11,0.06); color: #f59e0b; padding: 2px 14px; border-radius: 8px; font-size: 12px; font-weight: 500;">{{ $anggota->kelas }}</span>
                         </td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                            <span style="color: #94a3b8; font-size: 13px;">{{ $anggota->created_at->diffForHumans() }}</span>
+                            <span style="color: #64748b; font-size: 13px;">{{ $anggota->created_at->diffForHumans() }}</span>
                         </td>
                     </tr>
                     @endforeach

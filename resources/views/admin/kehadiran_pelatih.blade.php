@@ -9,7 +9,7 @@
         'hadir' => '#10b981',
         'izin' => '#f59e0b',
         'sakit' => '#ef4444',
-        'alpa' => '#94a3b8',
+        'alpa' => '#64748b',
     ];
     $statusLabels = [
         'hadir' => 'Hadir',
@@ -27,37 +27,46 @@
             </h6>
             <form method="GET" action="{{ route('admin.kehadiran_pelatih') }}" class="d-flex align-items-center gap-2">
                 <input type="month" name="month" value="{{ $selectedMonth }}" class="form-control form-control-sm" style="min-width: 180px; border: 2px solid #e2e8f0; border-radius: 10px; padding: 6px 12px; font-size: 13px;">
-                <button type="submit" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; padding: 6px 20px; border-radius: 10px; color: #fff; font-weight: 500; font-size: 13px; box-shadow: 0 2px 12px rgba(14,165,233,0.25);">
+                <button type="submit" class="btn-primary-gradient btn-sm" style="padding: 6px 20px; border-radius: 10px; font-weight: 500; font-size: 13px;">
                     <i class="fas fa-filter me-1"></i> Filter
                 </button>
+                <a href="{{ route('admin.kehadiran_pelatih.export', ['month' => $selectedMonth]) }}" class="btn btn-success btn-sm" style="background: linear-gradient(135deg, #10b981, #34d399); border: none; padding: 6px 18px; border-radius: 10px; color: #fff; font-weight: 500; font-size: 13px; box-shadow: 0 2px 12px rgba(16,185,129,0.25);">
+                    <i class="fas fa-download me-1"></i> Unduh File
+                </a>
             </form>
         </div>
     </div>
 
     <div class="card-body-modern" style="padding: 20px 24px;">
         <div class="row g-3 mb-3">
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box" style="background: rgba(14,165,233,0.05); border: 1px solid rgba(14,165,233,0.08); border-radius: 12px; padding: 16px;">
                     <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Total Catatan</span>
                     <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['total'] ?? 0 }}</h4>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box success" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.08); border-radius: 12px; padding: 16px;">
                     <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Hadir</span>
                     <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['hadir'] ?? 0 }}</h4>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box warning" style="background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.08); border-radius: 12px; padding: 16px;">
                     <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Izin</span>
                     <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['izin'] ?? 0 }}</h4>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md">
                 <div class="stat-box danger" style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.08); border-radius: 12px; padding: 16px;">
-                    <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Sakit & Alpa</span>
-                    <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ ($statistikBulanan['sakit'] ?? 0) + ($statistikBulanan['alpa'] ?? 0) }}</h4>
+                    <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Sakit</span>
+                    <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['sakit'] ?? 0 }}</h4>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="stat-box secondary" style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.12); border-radius: 12px; padding: 16px;">
+                    <span class="stat-label" style="display: block; color: #64748b; font-size: 12px; margin-bottom: 4px;">Alpa</span>
+                    <h4 style="margin: 0; font-weight: 700; color: #0f172a;">{{ $statistikBulanan['alpa'] ?? 0 }}</h4>
                 </div>
             </div>
         </div>
@@ -105,7 +114,7 @@
                                 <span class="badge bg-danger rounded-pill" style="background: #ef4444; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;">{{ $rekap['sakit'] }}</span>
                             </td>
                             <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                                <span class="badge bg-secondary rounded-pill" style="background: #94a3b8; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;">{{ $rekap['alpa'] }}</span>
+                                <span class="badge bg-secondary rounded-pill" style="background: #64748b; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;">{{ $rekap['alpa'] }}</span>
                             </td>
                             <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
                                 <strong style="color: #0f172a;">{{ $rekap['persentase_hadir'] }}%</strong>
@@ -113,7 +122,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-muted" style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center; color: #94a3b8;">
+                            <td colspan="8" class="text-center py-4 text-muted" style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center; color: #64748b;">
                                 <i class="fas fa-inbox me-2"></i>Belum ada data rekap bulanan untuk bulan ini
                             </td>
                         </tr>
@@ -170,7 +179,7 @@
                                 {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d M Y') }}
                             </td>
                             <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                                <span class="badge rounded-pill" style="background: {{ $statusColors[$item->status] ?? '#94a3b8' }}; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                                <span class="badge rounded-pill" style="background: {{ $statusColors[$item->status] ?? '#64748b' }}; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;">
                                     {{ $statusLabels[$item->status] ?? ucfirst($item->status ?? '-') }}
                                 </span>
                             </td>
@@ -178,7 +187,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted" style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center; color: #94a3b8;">
+                            <td colspan="6" class="text-center py-4 text-muted" style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle; text-align: center; color: #64748b;">
                                 <i class="fas fa-inbox me-2"></i>Belum ada data kehadiran pelatih
                             </td>
                         </tr>

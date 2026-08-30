@@ -45,8 +45,7 @@
 
 <!-- Header - Biru Cerah -->
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-    <div class="card-header border-0 py-4 px-5" 
-         style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
+    <div class="card-header border-0 py-4 px-5 hero-gradient">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center gap-4">
                 <div class="bg-white bg-opacity-25 rounded-circle p-3">
@@ -140,7 +139,7 @@
                     <i class="fas fa-trophy me-2" style="color: #0ea5e9;"></i>
                     {{ $ekskul->nama_ekskul ?? 'Ekskul' }}
                 </h6>
-                <small class="text-muted" style="color: #94a3b8;">
+                <small class="text-muted" style="color: #64748b;">
                     <i class="far fa-calendar-alt me-1"></i>
                     {{ $hariIni }}, {{ $tanggal }} {{ $bulanIni }} {{ $tahun }}
                 </small>
@@ -150,7 +149,7 @@
                     <i class="far fa-clock me-1"></i>
                     {{ now()->format('H:i') }} WIB
                 </span>
-                <a href="{{ route('pelatih.kehadiran.rekap') }}" class="btn btn-primary btn-sm rounded-pill" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; box-shadow: 0 4px 16px rgba(14,165,233,0.25);">
+                <a href="{{ route('pelatih.kehadiran.rekap') }}" class="btn btn-primary btn-sm rounded-pill btn-primary-gradient">
                     <i class="fas fa-chart-bar me-1"></i> Rekap
                 </a>
             </div>
@@ -178,32 +177,6 @@
         </div>
     </div>
     <div class="card-body-modern" style="padding: 24px;">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-3 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-check-circle fa-2x me-3 text-success"></i>
-                    <div>
-                        <strong style="color: #065f46;">Berhasil!</strong> 
-                        <span style="color: #047857;">{{ session('success') }}</span>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show rounded-3 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-exclamation-circle fa-2x me-3 text-danger"></i>
-                    <div>
-                        <strong style="color: #991b1b;">Gagal!</strong> 
-                        <span style="color: #7f1d1d;">{{ session('error') }}</span>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
         <form action="{{ route('pelatih.kehadiran.store') }}" method="POST" id="kehadiranForm">
             @csrf
             <input type="hidden" name="tanggal" value="{{ today()->format('Y-m-d') }}">
@@ -237,7 +210,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-semibold" style="color: #0f172a;">{{ $a->name }}</div>
-                                        <small class="text-muted" style="color: #94a3b8;">ID: {{ $a->id }}</small>
+                                        <small class="text-muted" style="color: #64748b;">ID: {{ $a->id }}</small>
                                     </div>
                                 </div>
                             </td>
@@ -276,12 +249,12 @@
                                        placeholder="Contoh: Izin keluarga, Sakit, dll"
                                        value="{{ $kehadiran ? $kehadiran->keterangan : '' }}"
                                        style="padding: 6px 12px; border: 1px solid rgba(0,0,0,0.04); border-radius: 6px; font-size: 12px; background: #f8fafc; transition: all 0.3s ease; width: 100%;">
-                                <small class="text-muted d-block mt-1" style="color: #94a3b8; font-size: 11px;">Keterangan opsional</small>
+                                <small class="text-muted d-block mt-1" style="color: #64748b; font-size: 11px;">Keterangan opsional</small>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center py-4 text-muted" style="padding: 12px 16px; text-align: center; color: #94a3b8;">
+                            <td colspan="5" class="text-center py-4 text-muted" style="padding: 12px 16px; text-align: center; color: #64748b;">
                                 <i class="fas fa-inbox me-2"></i>Belum ada anggota
                             </td>
                         </tr>
@@ -294,7 +267,7 @@
                 <a href="{{ route('pelatih.dashboard') }}" class="btn-cancel" style="padding: 10px 32px; border: 1px solid rgba(0,0,0,0.04); border-radius: 10px; background: transparent; color: #64748b; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                     <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
                 </a>
-                <button type="submit" class="btn-submit" style="padding: 10px 40px; border: none; border-radius: 10px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 14px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; cursor: pointer; box-shadow: 0 4px 16px rgba(14,165,233,0.25);">
+                <button type="submit" class="btn-submit btn-primary-gradient" style="padding: 10px 40px; border-radius: 10px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; cursor: pointer;">
                     <i class="fas fa-save me-2"></i> Simpan Kehadiran
                 </button>
             </div>
@@ -313,7 +286,7 @@
     .stat-card .stat-icon.gold { background: rgba(245,158,11,0.06); color: #f59e0b; }
     .stat-card .stat-icon.green { background: rgba(16,185,129,0.06); color: #10b981; }
     .stat-card .stat-body { flex: 1; }
-    .stat-card .stat-label { font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-label { font-size: 12px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
     .stat-card .stat-number { font-size: 28px; font-weight: 700; color: #0f172a; margin: 2px 0; letter-spacing: -0.5px; }
     .stat-change { font-size: 11px; font-weight: 600; padding: 2px 12px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; }
     .stat-change.up { background: rgba(16,185,129,0.06); color: #10b981; }

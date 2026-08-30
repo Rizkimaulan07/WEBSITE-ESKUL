@@ -82,7 +82,7 @@
         <div class="row g-3 align-items-center">
             <div class="col-md-5">
                 <div class="search-wrapper" style="position: relative;">
-                    <i class="fas fa-search search-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                    <i class="fas fa-search search-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 14px;"></i>
                     <input type="text" class="search-input" placeholder="Cari ekstrakurikuler..." id="searchInput" style="width: 100%; padding: 12px 16px 12px 44px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: rgba(255,255,255,0.8); transition: all 0.3s ease; color: #0f172a;">
                 </div>
             </div>
@@ -96,7 +96,7 @@
                     <button class="btn-reset" onclick="resetFilters()" style="padding: 12px 20px; border: 2px solid #e2e8f0; border-radius: 12px; background: rgba(255,255,255,0.8); color: #64748b; font-size: 13px; font-weight: 500; transition: all 0.3s ease; cursor: pointer;">
                         <i class="fas fa-undo me-1"></i> Reset
                     </button>
-                    <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-gradient" style="padding: 12px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 13px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                    <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-gradient" style="padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center;">
                         <i class="fas fa-plus me-2"></i> Tambah Ekskul
                     </a>
                 </div>
@@ -114,7 +114,7 @@
             </div>
             <div>
                 <h6 class="mb-0 fw-bold" style="font-weight: 700; font-size: 14px; color: #0f172a;">Daftar Ekstrakurikuler</h6>
-                <small class="text-muted" style="font-size: 12px; color: #94a3b8;">{{ $ekskuls->total() }} total data</small>
+                <small class="text-muted" style="font-size: 12px; color: #64748b;">{{ $ekskuls->total() }} total data</small>
             </div>
         </div>
         <div>
@@ -150,7 +150,7 @@
                                      class="logo-img" style="width: 42px; height: 42px; border-radius: 12px; object-fit: cover; border: 2px solid rgba(0,0,0,0.02); transition: all 0.3s ease; cursor: pointer;"
                                      onclick="showLogo('{{ asset($ekskul->logo) }}')">
                             @else
-                                <div class="logo-placeholder" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: center; color: #94a3b8; border: 1px dashed #d1d5db; transition: all 0.3s ease;">
+                                <div class="logo-placeholder" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: center; color: #64748b; border: 1px dashed #d1d5db; transition: all 0.3s ease;">
                                     <i class="fas fa-image"></i>
                                 </div>
                             @endif
@@ -158,7 +158,7 @@
                         <td>
                             <div class="ekskul-name" style="display: flex; flex-direction: column;">
                                 <span class="fw-bold" style="font-weight: 700; color: #0f172a; font-size: 14px;">{{ $ekskul->nama_ekskul }}</span>
-                                <span class="ekskul-slug" style="font-size: 11px; color: #94a3b8;">{{ $ekskul->slug }}</span>
+                                <span class="ekskul-slug" style="font-size: 11px; color: #64748b;">{{ $ekskul->slug }}</span>
                             </div>
                         </td>
                         <td>
@@ -171,8 +171,10 @@
                         </td>
                         <td>
                             <div class="jadwal-wrapper" style="display: flex; flex-direction: column; gap: 2px;">
-                                <span class="badge-day" style="background: rgba(14,165,233,0.08); color: #0ea5e9; padding: 2px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; display: inline-block; width: fit-content;">{{ $ekskul->hari_latihan }}</span>
-                                <span class="time" style="font-size: 12px; color: #94a3b8;">
+                                @foreach(array_map('trim', explode(',', $ekskul->hari_latihan ?? '')) as $day)
+                                    <span class="badge-day" style="background: rgba(14,165,233,0.08); color: #0ea5e9; padding: 2px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; display: inline-block; width: fit-content;">{{ $day }}</span>
+                                @endforeach
+                                <span class="time" style="font-size: 12px; color: #64748b;">
                                     <i class="far fa-clock me-1"></i>
                                     {{ \Carbon\Carbon::parse($ekskul->jam_mulai)->format('H:i') }} - 
                                     {{ \Carbon\Carbon::parse($ekskul->jam_selesai)->format('H:i') }}
@@ -198,13 +200,13 @@
                         </td>
                         <td>
                             <div class="action-group" style="display: flex; gap: 4px; justify-content: center;">
-                                <a href="{{ route('admin.ekskul.show', $ekskul) }}" class="btn-action view" title="Detail" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.ekskul.show', $ekskul) }}" class="btn-action view" title="Detail" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.ekskul.edit', $ekskul) }}" class="btn-action edit" title="Edit" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.ekskul.edit', $ekskul) }}" class="btn-action edit" title="Edit" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-pen"></i>
                                 </a>
-                                <a href="{{ route('admin.dokumentasi.eskul', $ekskul->id) }}" class="btn-action dokumentasi" title="Dokumentasi" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.dokumentasi.eskul', $ekskul->id) }}" class="btn-action dokumentasi" title="Dokumentasi" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-images"></i>
                                 </a>
                                 <form action="{{ route('admin.ekskul.destroy', $ekskul) }}" 
@@ -213,7 +215,7 @@
                                       onsubmit="return confirm('Yakin ingin menghapus ekskul {{ $ekskul->nama_ekskul }}?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #94a3b8;">
+                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #64748b;">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -226,8 +228,8 @@
                             <div class="empty-state" style="padding: 50px 0; text-align: center;">
                                 <div class="empty-icon" style="font-size: 56px; color: #d1d5db; margin-bottom: 16px; opacity: 0.5;"><i class="fas fa-folder-open"></i></div>
                                 <h6 class="empty-title" style="color: #64748b; margin-bottom: 4px; font-weight: 600;">Belum ada data</h6>
-                                <p class="empty-desc" style="color: #94a3b8; font-size: 13px;">Tambahkan ekstrakurikuler pertama Anda</p>
-                                <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-gradient mt-3" style="padding: 12px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-block; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                <p class="empty-desc" style="color: #64748b; font-size: 13px;">Tambahkan ekstrakurikuler pertama Anda</p>
+                                <a href="{{ route('admin.ekskul.create') }}" class="btn-primary-gradient mt-3" style="padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-block;">
                                     <i class="fas fa-plus me-2"></i> Tambah Ekskul
                                 </a>
                             </div>
@@ -240,7 +242,7 @@
     </div>
     <div class="card-footer premium-table-footer" style="padding: 14px 24px; border-top: 1px solid rgba(0,0,0,0.02); background: rgba(248,250,252,0.2);">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <span class="footer-info" style="font-size: 12px; color: #94a3b8;">
+            <span class="footer-info" style="font-size: 12px; color: #64748b;">
                 <i class="fas fa-list me-1"></i>
                 Menampilkan {{ $ekskuls->firstItem() }} - {{ $ekskuls->lastItem() }} 
                 dari {{ $ekskuls->total() }} data

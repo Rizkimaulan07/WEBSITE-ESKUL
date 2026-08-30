@@ -10,7 +10,9 @@ class NilaiController extends Controller
 {
     public function index(Request $request)
     {
-        $nilai = NilaiAnggota::where('anggota_id', $request->user()->id)->get();
+        $nilai = NilaiAnggota::with(['ekskul', 'pelatih'])
+            ->where('anggota_id', $request->user()->id)
+            ->get();
         return response()->json([
             'status' => 'success',
             'data' => $nilai

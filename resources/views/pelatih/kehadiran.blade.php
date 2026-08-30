@@ -9,7 +9,7 @@
         'hadir' => '#10b981',
         'izin' => '#f59e0b',
         'sakit' => '#ef4444',
-        'alpa' => '#94a3b8'
+        'alpa' => '#64748b'
     ];
     $statusLabel = [
         'hadir' => 'Hadir',
@@ -29,8 +29,7 @@
     <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
             <!-- Header - Biru Cerah -->
-            <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
+            <div class="card-header border-0 py-4 px-5 hero-gradient">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="bg-white bg-opacity-25 rounded-circle p-2">
@@ -48,42 +47,12 @@
             </div>
 
             <div class="card-body p-4">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">{{ session('error') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <!-- Info Kegiatan -->
                 <div class="info-card mb-4" style="background: #ffffff; border-radius: 14px; padding: 16px 20px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
                     <div class="row g-3">
                         <div class="col-md-3 col-6">
                             <div class="info-item" style="text-align: center; padding: 6px 0;">
-                                <span class="info-label" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                                <span class="info-label" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                                     <i class="fas fa-trophy me-1" style="color: #0ea5e9;"></i> Ekskul
                                 </span>
                                 <span class="info-value" style="font-size: 15px; font-weight: 600; color: #0f172a;">{{ $ekskul->nama_ekskul ?? 'Belum ada' }}</span>
@@ -91,7 +60,7 @@
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="info-item" style="text-align: center; padding: 6px 0;">
-                                <span class="info-label" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                                <span class="info-label" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                                     <i class="fas fa-calendar-day me-1" style="color: #0ea5e9;"></i> Hari
                                 </span>
                                 <span class="info-value" style="font-size: 15px; font-weight: 600; color: #0f172a;">{{ now()->translatedFormat('l') }}</span>
@@ -99,7 +68,7 @@
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="info-item" style="text-align: center; padding: 6px 0;">
-                                <span class="info-label" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                                <span class="info-label" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                                     <i class="fas fa-calendar-alt me-1" style="color: #0ea5e9;"></i> Tanggal
                                 </span>
                                 <span class="info-value" style="font-size: 15px; font-weight: 600; color: #0f172a;">{{ now()->format('d/m/Y') }}</span>
@@ -107,7 +76,7 @@
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="info-item" style="text-align: center; padding: 6px 0;">
-                                <span class="info-label" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                                <span class="info-label" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                                     <i class="fas fa-clock me-1" style="color: #0ea5e9;"></i> Jam
                                 </span>
                                 <span class="info-value" style="font-size: 15px; font-weight: 600; color: #0f172a;" id="clockDisplay">{{ now()->format('H:i:s') }} WIB</span>
@@ -124,7 +93,7 @@
                                 <i class="fas fa-calendar-alt"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total</span>
+                                <span class="stat-label" style="font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total</span>
                                 <h3 class="stat-number" style="font-size: 22px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.5px;">{{ $statistik['total'] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -135,7 +104,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Hadir</span>
+                                <span class="stat-label" style="font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Hadir</span>
                                 <h3 class="stat-number" style="font-size: 22px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.5px;">{{ $statistik['hadir'] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -146,7 +115,7 @@
                                 <i class="fas fa-pen"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Izin/Sakit</span>
+                                <span class="stat-label" style="font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Izin/Sakit</span>
                                 <h3 class="stat-number" style="font-size: 22px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.5px;">{{ ($statistik['izin'] ?? 0) + ($statistik['sakit'] ?? 0) }}</h3>
                             </div>
                         </div>
@@ -157,7 +126,7 @@
                                 <i class="fas fa-times-circle"></i>
                             </div>
                             <div class="stat-body" style="flex: 1;">
-                                <span class="stat-label" style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Alpa</span>
+                                <span class="stat-label" style="font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Alpa</span>
                                 <h3 class="stat-number" style="font-size: 22px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.5px;">{{ $statistik['alpa'] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -253,24 +222,24 @@
                                            style="padding: 12px 20px; border: 2px solid #e2e8f0; border-radius: 12px; transition: all 0.3s ease; font-size: 14px; background: #fafbfc; width: 100%;">
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill"
-                                            style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; box-shadow: 0 4px 16px rgba(14,165,233,0.25); transition: all 0.3s ease; color: #fff; font-weight: 600; padding: 12px 16px;">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill btn-primary-gradient"
+                                            style="padding: 12px 16px;">
                                         <i class="fas fa-save me-2"></i> Simpan
                                     </button>
                                 </div>
                             </div>
                             
                             <div class="mt-3">
-                                <small class="text-muted" style="color: #94a3b8;">
+                                <small class="text-muted" style="color: #64748b;">
                                     <i class="fas fa-info-circle me-1" style="color: #0ea5e9;"></i>
                                     Status saat ini: 
                                     @if(isset($kehadiranHariIni))
-                                        <span class="badge rounded-pill" style="background: {{ $statusColors[$kehadiranHariIni->status] ?? '#94a3b8' }}; color: white; padding: 4px 12px; font-size: 12px;">
+                                        <span class="badge rounded-pill" style="background: {{ $statusColors[$kehadiranHariIni->status] ?? '#64748b' }}; color: white; padding: 4px 12px; font-size: 12px;">
                                             {{ $statusLabel[$kehadiranHariIni->status] ?? ucfirst($kehadiranHariIni->status) }}
                                         </span>
                                         ({{ $kehadiranHariIni->updated_at->diffForHumans() }})
                                     @else
-                                        <span class="badge rounded-pill" style="background: #94a3b8; color: white; padding: 4px 12px; font-size: 12px;">Belum diisi</span>
+                                        <span class="badge rounded-pill" style="background: #64748b; color: white; padding: 4px 12px; font-size: 12px;">Belum diisi</span>
                                     @endif
                                 </small>
                             </div>
@@ -308,18 +277,18 @@
                                     <tr style="transition: all 0.3s ease;">
                                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $loop->iteration }}</td>
                                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                                            <i class="far fa-calendar-alt me-2 text-muted" style="color: #94a3b8;"></i>
+                                            <i class="far fa-calendar-alt me-2 text-muted" style="color: #64748b;"></i>
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                                         </td>
                                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l') }}</td>
                                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                                            <span class="badge rounded-pill" style="background: {{ $statusColors[$item->status] ?? '#94a3b8' }}; color: white; padding: 4px 12px; font-size: 12px;">
+                                            <span class="badge rounded-pill" style="background: {{ $statusColors[$item->status] ?? '#64748b' }}; color: white; padding: 4px 12px; font-size: 12px;">
                                                 {{ $statusLabel[$item->status] ?? ucfirst($item->status) }}
                                             </span>
                                         </td>
                                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">{{ $item->keterangan ?? '-' }}</td>
                                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                                            <small class="text-muted" style="color: #94a3b8;">
+                                            <small class="text-muted" style="color: #64748b;">
                                                 {{ $item->created_at->diffForHumans() }}
                                             </small>
                                         </td>
@@ -334,7 +303,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted" style="color: #94a3b8;">
+                                        <td colspan="7" class="text-center py-4 text-muted" style="color: #64748b;">
                                             <i class="fas fa-inbox me-2"></i>Belum ada riwayat kehadiran
                                         </td>
                                     </tr>

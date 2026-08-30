@@ -78,7 +78,7 @@
         <div class="row g-3 align-items-center">
             <div class="col-md-5">
                 <div class="search-wrapper">
-                    <i class="fas fa-search search-icon" style="color: #94a3b8;"></i>
+                    <i class="fas fa-search search-icon" style="color: #64748b;"></i>
                     <input type="text" class="search-input" placeholder="Cari anggota berdasarkan nama, email, atau kelas..." id="searchInput" style="border: 2px solid rgba(0,0,0,0.02); border-radius: 12px; padding: 12px 16px 12px 44px; font-size: 14px; background: rgba(255,255,255,0.8);">
                 </div>
             </div>
@@ -99,7 +99,7 @@
                     <button class="btn-reset" onclick="resetFilters()" style="border: 2px solid rgba(0,0,0,0.02); border-radius: 12px; padding: 12px 20px; background: rgba(255,255,255,0.8); color: #64748b; font-size: 13px; font-weight: 500;">
                         <i class="fas fa-undo me-1"></i> Reset
                     </button>
-                    <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient" style="padding: 12px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                    <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient" style="padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; text-decoration: none;">
                         <i class="fas fa-user-plus me-2"></i> Tambah Anggota
                     </a>
                 </div>
@@ -117,7 +117,7 @@
             </div>
             <div>
                 <h6 class="mb-0 fw-bold" style="color: #0f172a; font-size: 14px;">Daftar Anggota</h6>
-                <small class="text-muted" style="color: #94a3b8; font-size: 12px;">{{ $anggotas->total() }} total data</small>
+                <small class="text-muted" style="color: #64748b; font-size: 12px;">{{ $anggotas->total() }} total data</small>
             </div>
         </div>
         <div>
@@ -141,7 +141,7 @@
                 </thead>
                 <tbody>
                     @forelse($anggotas as $index => $anggota)
-                    <tr class="table-row" data-ekskul="{{ $anggota->ekskuls->first()->id ?? '' }}" data-kelas="{{ $anggota->kelas ?? '' }}" style="transition: all 0.3s ease; animation: fadeRow 0.5s ease forwards;">
+                    <tr class="table-row" data-ekskul="{{ $anggota->ekskuls->pluck('id')->implode(' ') }}" data-kelas="{{ $anggota->kelas ?? '' }}" style="transition: all 0.3s ease; animation: fadeRow 0.5s ease forwards;">
                         <td>
                             <span class="number-badge" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: rgba(14,165,233,0.06); color: #0ea5e9; font-weight: 600; font-size: 12px;">{{ $anggotas->firstItem() + $index }}</span>
                         </td>
@@ -159,7 +159,7 @@
                         <td>
                             <div class="user-name" style="display: flex; flex-direction: column;">
                                 <span class="fw-bold" style="font-weight: 700; color: #0f172a; font-size: 14px;">{{ $anggota->name }}</span>
-                                <span class="user-id" style="font-size: 11px; color: #94a3b8;">ID: {{ $anggota->id }}</span>
+                                <span class="user-id" style="font-size: 11px; color: #64748b;">ID: {{ $anggota->id }}</span>
                             </div>
                         </td>
                         <td>
@@ -179,12 +179,16 @@
                         </td>
                         <td>
                             @if($anggota->ekskuls->isNotEmpty())
-                                <span class="badge-ekskul" style="background: rgba(16,185,129,0.06); color: #10b981; padding: 4px 14px; border-radius: 8px; font-size: 12px; font-weight: 500;">
-                                    <i class="fas fa-trophy me-1"></i>
-                                    {{ $anggota->ekskuls->first()->nama_ekskul }}
-                                </span>
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach($anggota->ekskuls as $ekskul)
+                                        <span class="badge-ekskul" style="background: rgba(16,185,129,0.06); color: #10b981; padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;">
+                                            <i class="fas fa-trophy me-1"></i>
+                                            {{ $ekskul->nama_ekskul }}
+                                        </span>
+                                    @endforeach
+                                </div>
                             @else
-                                <span class="badge-ekskul-empty" style="background: rgba(0,0,0,0.02); color: #94a3b8; padding: 4px 14px; border-radius: 8px; font-size: 12px; font-weight: 500;">
+                                <span class="badge-ekskul-empty" style="background: rgba(0,0,0,0.02); color: #64748b; padding: 4px 14px; border-radius: 8px; font-size: 12px; font-weight: 500;">
                                     <i class="fas fa-times me-1"></i>
                                     Belum ada
                                 </span>
@@ -192,10 +196,10 @@
                         </td>
                         <td>
                             <div class="action-group" style="display: flex; gap: 4px; justify-content: center;">
-                                <a href="{{ route('admin.anggota.show', $anggota->id) }}" class="btn-action view" title="Detail" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.anggota.show', $anggota->id) }}" class="btn-action view" title="Detail" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.anggota.edit', $anggota->id) }}" class="btn-action edit" title="Edit" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #94a3b8;">
+                                <a href="{{ route('admin.anggota.edit', $anggota->id) }}" class="btn-action edit" title="Edit" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; background: transparent; color: #64748b;">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <form action="{{ route('admin.anggota.destroy', $anggota->id) }}" 
@@ -204,7 +208,7 @@
                                       onsubmit="return confirm('Yakin ingin menghapus anggota {{ $anggota->name }}?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #94a3b8;">
+                                    <button type="submit" class="btn-action delete" title="Hapus" style="width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.3s ease; cursor: pointer; background: transparent; color: #64748b;">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -217,8 +221,8 @@
                             <div class="empty-state" style="padding: 50px 0; text-align: center;">
                                 <div class="empty-icon" style="font-size: 56px; color: #d1d5db; margin-bottom: 16px; opacity: 0.5;"><i class="fas fa-user-plus"></i></div>
                                 <h6 class="empty-title" style="color: #64748b; margin-bottom: 4px; font-weight: 600;">Belum ada anggota</h6>
-                                <p class="empty-desc" style="color: #94a3b8; font-size: 13px;">Tambahkan anggota pertama Anda</p>
-                                <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient mt-3" style="padding: 12px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(14,165,233,0.3); display: inline-block;">
+                                <p class="empty-desc" style="color: #64748b; font-size: 13px;">Tambahkan anggota pertama Anda</p>
+                                <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient mt-3" style="padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-block;">
                                     <i class="fas fa-user-plus me-2"></i> Tambah Anggota
                                 </a>
                             </div>
@@ -231,7 +235,7 @@
     </div>
     <div class="card-footer premium-table-footer" style="padding: 14px 24px; border-top: 1px solid rgba(0,0,0,0.02); background: rgba(248,250,252,0.2);">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <span class="footer-info" style="font-size: 12px; color: #94a3b8;">
+            <span class="footer-info" style="font-size: 12px; color: #64748b;">
                 <i class="fas fa-list me-1"></i>
                 Menampilkan {{ $anggotas->firstItem() }} - {{ $anggotas->lastItem() }} 
                 dari {{ $anggotas->total() }} data
@@ -314,7 +318,7 @@
         left: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: #94a3b8;
+        color: #64748b;
         font-size: 14px;
     }
     .search-wrapper .search-input:focus {
@@ -419,7 +423,7 @@
             const rowEkskul = row.dataset.ekskul || '';
             const rowKelas = row.dataset.kelas || '';
             const matchSearch = text.includes(search);
-            const matchEkskul = !filterEkskul || rowEkskul == filterEkskul;
+            const matchEkskul = !filterEkskul || (rowEkskul.split(' ').indexOf(filterEkskul) !== -1);
             const matchKelas = !filterKelas || rowKelas.includes(filterKelas);
 
             if (matchSearch && matchEkskul && matchKelas) {

@@ -28,59 +28,6 @@
             </div>
 
             <div class="card-body p-5">
-                <!-- Alert Error -->
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">{{ session('error') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                <!-- Alert Success -->
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                <!-- Validation Errors -->
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('pelatih.dokumentasi.store') }}" method="POST" enctype="multipart/form-data" id="dokumentasiForm">
                     @csrf
 
@@ -330,7 +277,7 @@
         fotoPreviewGrid.innerHTML = '';
         if (fotoFiles.length === 0) {
             fotoPreviewGrid.innerHTML = `
-                <div class="col-12 text-center text-muted py-3" style="color: #94a3b8;">
+                <div class="col-12 text-center text-muted py-3" style="color: #64748b;">
                     <small>Belum ada foto yang dipilih</small>
                 </div>
             `;
@@ -374,20 +321,11 @@
     }
 
     // Update form submit untuk include multiple files
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const oldInputs = this.querySelectorAll('input[name="fotos[]"]');
-        oldInputs.forEach(input => input.remove());
-        
+    document.getElementById('dokumentasiForm').addEventListener('submit', function(e) {
+        const input = document.getElementById('fileInputMultiple');
         const dataTransfer = new DataTransfer();
         fotoFiles.forEach(file => dataTransfer.items.add(file));
-        
-        const newInput = document.createElement('input');
-        newInput.type = 'file';
-        newInput.name = 'fotos[]';
-        newInput.multiple = true;
-        newInput.files = dataTransfer.files;
-        newInput.style.display = 'none';
-        this.appendChild(newInput);
+        input.files = dataTransfer.files;
     });
 </script>
 @endsection

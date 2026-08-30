@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EkskulController;
 use App\Http\Controllers\Api\NilaiController;
+use App\Http\Controllers\Api\KehadiranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,6 @@ Route::get('/login', function () {
 
 // ===== AUTH (POST - DIGUNAKAN OLEH MOBILE) =====
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
 
 // ===== DATA (PERLU TOKEN) =====
 Route::middleware('auth:sanctum')->group(function () {
@@ -41,6 +41,13 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     Route::get('/ekskul', [EkskulController::class, 'index']);
+    Route::get('/ekskul/{id}', [EkskulController::class, 'show']);
     Route::get('/nilai', [NilaiController::class, 'index']);
+
+    // Kehadiran
+    Route::get('/kehadiran', [KehadiranController::class, 'index']);
+    Route::get('/kehadiran/stats', [KehadiranController::class, 'stats']);
 });

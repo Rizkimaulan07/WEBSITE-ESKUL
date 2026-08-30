@@ -97,11 +97,11 @@
         color: #1e293b;
         transition: all 0.2s;
     }
-    .filter-input:hover { border-color: #94a3b8; }
+    .filter-input:hover { border-color: #64748b; }
     .filter-input:focus { border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,0.1); outline: none; }
-    .filter-input::placeholder { color: #94a3b8; font-size: 13px; }
+    .filter-input::placeholder { color: #64748b; font-size: 13px; }
     .filter-input.input-error { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
-    .input-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; display: block; }
+    .input-hint { font-size: 11px; color: #64748b; margin-top: 4px; display: block; }
     .input-hint.error { color: #ef4444; }
 
     .month-grid {
@@ -121,7 +121,7 @@
         transition: all 0.2s;
         text-align: center;
     }
-    .month-grid .btn-month:hover { background: #f1f5f9; border-color: #94a3b8; }
+    .month-grid .btn-month:hover { background: #f1f5f9; border-color: #64748b; }
     .month-grid .btn-month.active { background: #0c4a6e; color: white; border-color: #0c4a6e; }
     .month-grid .btn-month.active:hover { background: #0c4a6e; }
     .month-grid .btn-month.all-month { grid-column: span 4; font-weight: 600; background: #f1f5f9; border-color: #cbd5e1; }
@@ -235,7 +235,7 @@
 
 <!-- Header - Biru Cerah -->
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-    <div class="card-header border-0 py-4 px-5" style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
+    <div class="card-header border-0 py-4 px-5 hero-gradient">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="d-flex align-items-center gap-4">
                 <div class="bg-white bg-opacity-25 rounded-circle p-3">
@@ -295,7 +295,7 @@
                     </div>
                     
                     <div class="filter-group" style="flex: 0 0 auto;">
-                        <button type="submit" class="btn-primary-custom">
+                        <button type="submit" class="btn-primary-gradient">
                             <i class="fas fa-search me-2"></i>Tampilkan
                         </button>
                     </div>
@@ -326,7 +326,7 @@
 
 <!-- Statistics Summary -->
 <div class="row g-4 mb-4">
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md col-sm-6">
         <div class="stat-card">
             <div class="stat-icon blue"><i class="fas fa-users"></i></div>
             <div class="stat-body">
@@ -335,7 +335,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md col-sm-6">
         <div class="stat-card">
             <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
             <div class="stat-body">
@@ -344,7 +344,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md col-sm-6">
         <div class="stat-card">
             <div class="stat-icon gold"><i class="fas fa-notes-medical"></i></div>
             <div class="stat-body">
@@ -353,12 +353,21 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-thermometer-half"></i></div>
+            <div class="stat-body">
+                <span class="stat-label">Sakit</span>
+                <h3 class="stat-number">{{ $statistik['sakit'] ?? 0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md col-sm-6">
         <div class="stat-card">
             <div class="stat-icon red"><i class="fas fa-user-times"></i></div>
             <div class="stat-body">
-                <span class="stat-label">Alpa / Sakit</span>
-                <h3 class="stat-number">{{ ($statistik['alpa'] ?? 0) + ($statistik['sakit'] ?? 0) }}</h3>
+                <span class="stat-label">Alpa</span>
+                <h3 class="stat-number">{{ $statistik['alpa'] ?? 0 }}</h3>
             </div>
         </div>
     </div>
@@ -414,7 +423,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Anggota</th>
-                        <th>Nilai (Avg)</th>
+                        <th>Nilai</th>
                         <th>Hadir</th>
                         <th>Izin</th>
                         <th>Sakit</th>
@@ -437,9 +446,9 @@
                             </td>
                             <td>
                                 @if($r->nilai_avg !== null)
-                                    <span class="fw-semibold" style="color: #0f172a;">{{ number_format($r->nilai_avg, 2) }}</span>
+                                    <span class="fw-semibold" style="color: #0f172a;">{{ $r->nilai_avg }}</span>
                                 @else
-                                    <span class="text-muted" style="color: #94a3b8;">-</span>
+                                    <span class="text-muted" style="color: #64748b;">-</span>
                                 @endif
                             </td>
                             <td><span class="badge" style="background: #10b981; color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px;">{{ $r->hadir ?? 0 }}</span></td>
@@ -457,7 +466,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-4" style="color: #94a3b8;">
+                            <td colspan="9" class="text-center text-muted py-4" style="color: #64748b;">
                                 <i class="fas fa-inbox fa-2x d-block mb-2"></i>
                                 Belum ada data kehadiran untuk periode ini
                             </td>
@@ -469,11 +478,11 @@
         
         @if(count($rekap) > 0)
             <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-color: #e2e8f0;">
-                <small class="text-muted" style="color: #94a3b8;">
+                <small class="text-muted" style="color: #64748b;">
                     <i class="fas fa-users me-1"></i>
                     Total {{ count($rekap) }} anggota
                 </small>
-                <small class="text-muted" style="color: #94a3b8;">
+                <small class="text-muted" style="color: #64748b;">
                     <i class="fas fa-calendar-alt me-1"></i>
                     Periode: {{ $selectedYear }}
                     @if($selectedType == 'monthly' && $selectedMonth != 'all')

@@ -6,56 +6,70 @@
 @section('content')
 <!-- ===== STATISTICS CARDS ===== -->
 <div class="row g-4 mb-4">
-    <div class="col-md-3">
+    <div class="col-md">
         <div class="stat-card-modern" style="background: #ffffff; border-radius: 20px; padding: 22px 24px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 2px 12px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden;">
             <div class="d-flex align-items-center gap-4">
                 <div class="stat-icon-modern" style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); display: flex; align-items: center; justify-content: center; color: #0ea5e9; font-size: 20px; flex-shrink: 0; transition: all 0.4s ease;">
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Kehadiran</span>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Total Kehadiran</span>
                     <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $statistik['total'] ?? 0 }}</h3>
                 </div>
             </div>
             <div class="stat-progress-modern" style="position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0ea5e9, #38bdf8); transform: scaleX(0); transform-origin: left; transition: transform 0.6s ease;"></div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md">
         <div class="stat-card-modern" style="background: #ffffff; border-radius: 20px; padding: 22px 24px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 2px 12px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden;">
             <div class="d-flex align-items-center gap-4">
                 <div class="stat-icon-modern" style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #ecfdf5, #d1fae5); display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 20px; flex-shrink: 0; transition: all 0.4s ease;">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Hadir</span>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Hadir</span>
                     <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $statistik['hadir'] ?? 0 }}</h3>
                 </div>
             </div>
             <div class="stat-progress-modern" style="position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #10b981, #34d399); transform: scaleX(0); transform-origin: left; transition: transform 0.6s ease;"></div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md">
         <div class="stat-card-modern" style="background: #ffffff; border-radius: 20px; padding: 22px 24px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 2px 12px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden;">
             <div class="d-flex align-items-center gap-4">
                 <div class="stat-icon-modern" style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #fffbeb, #fef3c7); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 20px; flex-shrink: 0; transition: all 0.4s ease;">
                     <i class="fas fa-pen"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Izin / Sakit</span>
-                    <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ ($statistik['izin'] ?? 0) + ($statistik['sakit'] ?? 0) }}</h3>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Izin</span>
+                    <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $statistik['izin'] ?? 0 }}</h3>
                 </div>
             </div>
             <div class="stat-progress-modern" style="position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #fbbf24); transform: scaleX(0); transform-origin: left; transition: transform 0.6s ease;"></div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md">
+        <div class="stat-card-modern" style="background: #ffffff; border-radius: 20px; padding: 22px 24px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 2px 12px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden;">
+            <div class="d-flex align-items-center gap-4">
+                <div class="stat-icon-modern" style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #fef2f2, #fecaca); display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 20px; flex-shrink: 0; transition: all 0.4s ease;">
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div style="flex: 1;">
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Sakit</span>
+                    <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $statistik['sakit'] ?? 0 }}</h3>
+                </div>
+            </div>
+            <div class="stat-progress-modern" style="position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ef4444, #f87171); transform: scaleX(0); transform-origin: left; transition: transform 0.6s ease;"></div>
+        </div>
+    </div>
+    <div class="col-md">
         <div class="stat-card-modern" style="background: #ffffff; border-radius: 20px; padding: 22px 24px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 2px 12px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden;">
             <div class="d-flex align-items-center gap-4">
                 <div class="stat-icon-modern" style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #fef2f2, #fecaca); display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 20px; flex-shrink: 0; transition: all 0.4s ease;">
                     <i class="fas fa-times-circle"></i>
                 </div>
                 <div style="flex: 1;">
-                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Alpa</span>
+                    <span class="stat-label-modern" style="display: block; font-size: 11px; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Alpa</span>
                     <h3 class="stat-number-modern" style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -1px;">{{ $statistik['alpa'] ?? 0 }}</h3>
                 </div>
             </div>
@@ -73,7 +87,7 @@
             </div>
             <div>
                 <h6 class="mb-0 fw-bold" style="font-weight: 700; font-size: 14px; color: #0f172a;">Riwayat Kehadiran</h6>
-                <small class="text-muted" style="font-size: 12px; color: #94a3b8;">Semua riwayat kehadiran Anda</small>
+                <small class="text-muted" style="font-size: 12px; color: #64748b;">Semua riwayat kehadiran Anda</small>
             </div>
         </div>
         <span class="badge-count" style="background: rgba(14,165,233,0.06); color: #0ea5e9; padding: 2px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{ $kehadiran->total() }}</span>
@@ -84,6 +98,7 @@
                 <thead>
                     <tr>
                         <th style="background: rgba(248,250,252,0.3); color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.03); text-align: left;">No</th>
+                        <th style="background: rgba(248,250,252,0.3); color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.03); text-align: left;">Ekskul</th>
                         <th style="background: rgba(248,250,252,0.3); color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.03); text-align: left;">Tanggal</th>
                         <th style="background: rgba(248,250,252,0.3); color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.03); text-align: left;">Status</th>
                         <th style="background: rgba(248,250,252,0.3); color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.03); text-align: left;">Keterangan</th>
@@ -94,6 +109,14 @@
                     <tr style="transition: all 0.3s ease; animation: fadeRow 0.5s ease forwards;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
                             <span class="number-badge" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: rgba(14,165,233,0.04); color: #0ea5e9; font-weight: 600; font-size: 12px;">{{ $loop->iteration }}</span>
+                        </td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-icon" style="width: 32px; height: 32px; border-radius: 50%; background: rgba(16,185,129,0.08); display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 14px; flex-shrink: 0;">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <span class="fw-semibold" style="color: #0f172a; font-size: 13px;">{{ $item->ekskul->nama_ekskul ?? '-' }}</span>
+                            </div>
                         </td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
                             <span style="color: #475569;">
@@ -110,13 +133,13 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="text-center py-4 text-muted" style="padding: 12px 16px; text-align: center; color: #94a3b8;">
+                        <td colspan="5" class="text-center py-4 text-muted" style="padding: 12px 16px; text-align: center; color: #64748b;">
                             <div class="empty-state" style="padding: 30px 0;">
                                 <div class="empty-icon" style="font-size: 48px; color: #d1d5db; margin-bottom: 12px;">
                                     <i class="fas fa-inbox"></i>
                                 </div>
                                 <h6 style="color: #64748b; margin-bottom: 4px;">Belum ada riwayat kehadiran</h6>
-                                <p style="color: #94a3b8; font-size: 13px;">Kehadiran Anda akan muncul di sini</p>
+                                <p style="color: #64748b; font-size: 13px;">Kehadiran Anda akan muncul di sini</p>
                             </div>
                         </td>
                     </tr>
@@ -127,7 +150,7 @@
     </div>
     <div class="card-footer premium-table-footer" style="padding: 14px 24px; border-top: 1px solid rgba(0,0,0,0.03); background: rgba(248,250,252,0.2);">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <span class="footer-info" style="font-size: 12px; color: #94a3b8;">
+            <span class="footer-info" style="font-size: 12px; color: #64748b;">
                 <i class="fas fa-list me-1"></i>
                 Menampilkan {{ $kehadiran->firstItem() }} - {{ $kehadiran->lastItem() }} 
                 dari {{ $kehadiran->total() }} data

@@ -1,10 +1,10 @@
 @extends('layouts.guest')
 
-@section('title', 'Verifikasi 2FA')
+@section('title', 'Verifikasi Dua Faktor')
 
 @section('content')
 <div class="logo">
-    <div class="logo-icon" style="background: linear-gradient(135deg, #2563eb, #3b82f6); box-shadow: 0 8px 30px rgba(59,130,246,0.25);">
+    <div class="logo-icon" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); box-shadow: 0 8px 30px rgba(14,165,233,0.25);">
         <i class="bi bi-shield-check"></i>
     </div>
     <h3 style="color: #0f172a;">Verifikasi Dua Faktor</h3>
@@ -35,7 +35,7 @@
                    placeholder="Masukkan 6 digit kode"
                    required
                    style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
-            <i class="bi bi-shield-lock input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
+            <i class="bi bi-shield-lock input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 16px;"></i>
             @error('code')
                 <small class="text-danger" style="color: #dc2626; font-size: 13px; display: block; margin-top: 4px;">{{ $message }}</small>
             @enderror
@@ -43,7 +43,7 @@
     </div>
 
     <div class="text-center mb-3">
-        <small class="text-muted" style="color: #94a3b8;">Atau gunakan salah satu recovery code</small>
+        <small class="text-muted" style="color: #64748b;">Atau gunakan salah satu recovery code</small>
     </div>
 
     <div class="form-group" style="margin-bottom: 20px;">
@@ -56,14 +56,14 @@
                    placeholder="Masukkan recovery code"
                    required
                    style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
-            <i class="bi bi-key input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
+            <i class="bi bi-key input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 16px;"></i>
             @error('recovery_code')
                 <small class="text-danger" style="color: #dc2626; font-size: 13px; display: block; margin-top: 4px;">{{ $message }}</small>
             @enderror
         </div>
     </div>
 
-    <button type="submit" class="btn-auth" style="width: 100%; padding: 16px; border: none; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 4px 24px rgba(59,130,246,0.25);">
+    <button type="submit" class="btn-auth" style="width: 100%; padding: 16px; border: none; border-radius: 14px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; box-shadow: 0 4px 24px rgba(14,165,233,0.25);">
         <span class="btn-text">Verifikasi <i class="bi bi-arrow-right ms-2"></i></span>
         <span class="spinner"></span>
     </button>
@@ -72,7 +72,7 @@
 <div class="auth-footer" style="text-align: center; margin-top: 20px;">
     <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button type="submit" class="btn btn-link text-decoration-none p-0" style="color: #3b82f6; font-weight: 600; border: none; background: none; cursor: pointer;">
+        <button type="submit" class="btn btn-link text-decoration-none p-0" style="color: #0ea5e9; font-weight: 600; border: none; background: none; cursor: pointer;">
             Logout
         </button>
     </form>

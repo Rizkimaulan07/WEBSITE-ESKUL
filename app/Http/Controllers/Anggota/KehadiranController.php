@@ -13,7 +13,8 @@ class KehadiranController extends Controller
     {
         $user = Auth::user();
         
-        $kehadiran = Kehadiran::where('anggota_id', $user->id)
+        $kehadiran = Kehadiran::with('ekskul')
+                              ->where('anggota_id', $user->id)
                               ->orderBy('tanggal', 'desc')
                               ->paginate(10);
         

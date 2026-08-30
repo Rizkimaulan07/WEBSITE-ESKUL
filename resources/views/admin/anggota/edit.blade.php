@@ -8,8 +8,7 @@
     <div class="col-lg-10">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <!-- Header Premium - Biru Cerah -->
-            <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 40%, #7dd3fc 80%, #bae6fd 100%);">
+            <div class="card-header border-0 py-4 px-5 hero-gradient">
                 <div class="d-flex align-items-center gap-4">
                     <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-user-edit fa-2x text-white"></i>
@@ -27,41 +26,6 @@
             </div>
 
             <div class="card-body p-5">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('admin.anggota.update', $anggota->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -193,25 +157,24 @@
                             </div>
                         </div>
 
-                        <!-- Ekskul -->
+                        <!-- Ekskul (boleh lebih dari satu) -->
                         <div class="col-md-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
                                     <i class="fas fa-trophy me-2" style="color: #0ea5e9;"></i>Ekstrakurikuler
-                                    <span class="text-danger">*</span>
+                                    <small style="color: #64748b; font-weight: 400;">(boleh pilih lebih dari satu)</small>
                                 </label>
-                                <select class="form-select form-select-modern @error('ekskul_id') is-invalid @enderror" 
-                                        name="ekskul_id" required>
-                                    <option value="">Pilih Ekstrakurikuler</option>
+                                <div class="ekskul-check-list" style="display: flex; flex-wrap: wrap; gap: 10px;">
                                     @foreach($ekskuls ?? [] as $ekskul)
-                                        <option value="{{ $ekskul->id }}" 
-                                            {{ old('ekskul_id', optional($anggota->ekskuls->first())->id ?? '') == $ekskul->id ? 'selected' : '' }}>
-                                            {{ $ekskul->nama_ekskul }}
-                                        </option>
+                                        <label class="ekskul-check-option" style="flex: 1 1 calc(50% - 10px); min-width: 200px; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; background: #fafbfc; cursor: pointer; transition: all 0.3s ease;">
+                                            <input type="checkbox" name="ekskul_ids[]" value="{{ $ekskul->id }}" class="form-check-input" style="cursor: pointer; margin: 0;"
+                                                {{ is_array(old('ekskul_ids')) ? (in_array($ekskul->id, old('ekskul_ids')) ? 'checked' : '') : ($anggota->ekskuls->contains($ekskul->id) ? 'checked' : '') }}>
+                                            <span style="font-size: 13px; font-weight: 500; color: #1e293b;">{{ $ekskul->nama_ekskul }}</span>
+                                        </label>
                                     @endforeach
-                                </select>
-                                @error('ekskul_id')
-                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
+                                </div>
+                                @error('ekskul_ids')
+                                    <div class="invalid-feedback d-block" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -231,7 +194,7 @@
                                 <a href="{{ route('admin.anggota.index') }}" class="btn btn-outline-secondary rounded-pill px-5 py-2" style="border-color: #e2e8f0; color: #64748b; font-weight: 500;">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn rounded-pill px-5 py-2 text-white" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; font-weight: 600; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                <button type="submit" class="btn-primary-gradient px-5 py-2" style="border-radius: 12px; font-weight: 600; font-size: 14px;">
                                     <i class="fas fa-save me-2"></i>Perbarui
                                 </button>
                             </div>
@@ -335,7 +298,7 @@
         transform: translateY(-2px);
         box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         background: #f8fafc;
-        border-color: #94a3b8;
+        border-color: #64748b;
     }
 
     .btn-primary-submit {

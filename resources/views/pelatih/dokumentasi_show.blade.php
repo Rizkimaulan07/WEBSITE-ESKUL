@@ -44,13 +44,13 @@
                             <i class="fas fa-trophy"></i>
                         </div>
                         <div>
-                            <div class="text-muted small text-uppercase" style="letter-spacing: 0.5px; font-weight: 600; color: #94a3b8;">
+                            <div class="text-muted small text-uppercase" style="letter-spacing: 0.5px; font-weight: 600; color: #64748b;">
                                 <i class="fas fa-building me-1"></i> Ekstrakurikuler
                             </div>
                             <h5 class="fw-bold mb-0" style="color: #0f172a;">
                                 {{ $dokumentasi->ekskul->nama_ekskul ?? 'Ekskul' }}
                             </h5>
-                            <small class="text-muted" style="color: #94a3b8;">
+                            <small class="text-muted" style="color: #64748b;">
                                 <i class="fas fa-user-tie me-1"></i>
                                 {{ $dokumentasi->ekskul->pembina ?? '-' }}
                                 <span class="mx-2">•</span>

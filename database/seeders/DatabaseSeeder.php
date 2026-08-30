@@ -180,6 +180,20 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        // ===== BUAT PELATIH DEMO =====
+        $paskibra = Ekstrakurikuler::where('slug', 'paskibra')->first();
+        User::create([
+            'name' => 'Pelatih Utama',
+            'email' => 'pelatih@mail.com',
+            'password' => Hash::make('password'),
+            'role' => 'pelatih',
+            'kelas' => null,
+            'no_hp' => '081234567891',
+            'ekskul_id' => $paskibra ? $paskibra->id : null,
+            'is_verified' => true,
+            'verified_at' => now(),
+        ]);
+
         // ===== BUAT TEMPLATE SURAT =====
         $templates = [
             [

@@ -88,30 +88,30 @@ class DashboardController extends Controller
             return view('pelatih.dashboard', compact('data', 'user'));
         }
         
-        // Ambil anggota dari ekskul yang sama
-        $anggotaTerbaru = User::where('ekskul_id', $ekskulId)
-                              ->where('role', 'anggota')
+        // Ambil anggota yang mengikuti ekskul yang sama (multi-ekskul via pivot)
+        $anggotaTerbaru = User::where('role', 'anggota')
+                              ->whereHas('ekskuls', function ($query) use ($ekskulId) {
+                                  $query->where('ekstrakurikulers.id', $ekskulId);
+                              })
                               ->orderBy('created_at', 'desc')
                               ->limit(5)
                               ->get();
         
-        $totalAnggota = User::where('ekskul_id', $ekskulId)
-                            ->where('role', 'anggota')
+        $totalAnggota = User::where('role', 'anggota')
+                            ->whereHas('ekskuls', function ($query) use ($ekskulId) {
+                                $query->where('ekstrakurikulers.id', $ekskulId);
+                            })
                             ->count();
         
-        // Kehadiran
-        $totalKehadiran = Kehadiran::whereHas('anggota', function($query) use ($ekskulId) {
-            $query->where('ekskul_id', $ekskulId);
-        })->count();
+        // Kehadiran (ekskul_id tercatat di setiap baris kehadiran)
+        $totalKehadiran = Kehadiran::where('ekskul_id', $ekskulId)->count();
         
-        $kehadiranHariIni = Kehadiran::whereHas('anggota', function($query) use ($ekskulId) {
-            $query->where('ekskul_id', $ekskulId);
-        })->whereDate('tanggal', today())->count();
+        $kehadiranHariIni = Kehadiran::where('ekskul_id', $ekskulId)
+                                     ->whereDate('tanggal', today())
+                                     ->count();
         
         // Kehadiran terbaru
-        $kehadiranTerbaru = Kehadiran::whereHas('anggota', function($query) use ($ekskulId) {
-            $query->where('ekskul_id', $ekskulId);
-        })
+        $kehadiranTerbaru = Kehadiran::where('ekskul_id', $ekskulId)
         ->with('anggota')
         ->orderBy('created_at', 'desc')
         ->limit(5)
@@ -150,13 +150,17 @@ class DashboardController extends Controller
         $sakit = Kehadiran::where('anggota_id', $user->id)->where('status', 'sakit')->count();
         $alpa = Kehadiran::where('anggota_id', $user->id)->where('status', 'alpa')->count();
         
-        $riwayatTerbaru = Kehadiran::where('anggota_id', $user->id)
+        $riwayatTerbaru = Kehadiran::with('ekskul')
+                                   ->where('anggota_id', $user->id)
                                    ->orderBy('tanggal', 'desc')
                                    ->limit(5)
                                    ->get();
         
-        // Nilai rata-rata
-        $nilaiRata = NilaiAnggota::where('anggota_id', $user->id)->avg('nilai_total') ?? 0;
+        // Predikat nilai terakhir anggota
+        $nilaiTerakhir = NilaiAnggota::where('anggota_id', $user->id)
+                                      ->orderBy('created_at', 'desc')
+                                      ->first();
+        $nilaiRata = $nilaiTerakhir ? $nilaiTerakhir->predikat . ' (' . $nilaiTerakhir->predikat_label . ')' : null;
         
         $data = [
             'total_kehadiran' => $totalKehadiran,
@@ -168,6 +172,7 @@ class DashboardController extends Controller
             'riwayat_terbaru' => $riwayatTerbaru,
             'nilai_rata' => $nilaiRata,
             'ekskul' => $user->ekskul,
+            'ekskuls' => $user->ekskuls,
         ];
         
         return view('anggota.dashboard', compact('data', 'user'));

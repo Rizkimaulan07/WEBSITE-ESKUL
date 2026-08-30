@@ -29,7 +29,8 @@ class EkskulController extends Controller
             'nama_ekskul' => 'required|string|max:255|unique:ekstrakurikulers,nama_ekskul',
             'deskripsi' => 'required|string',
             'pembina' => 'required|string|max:255',
-            'hari_latihan' => 'required|string',
+            'hari_latihan' => 'required|array|min:1',
+            'hari_latihan.*' => 'string|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
             'tempat_latihan' => 'required|string|max:255',
@@ -39,6 +40,7 @@ class EkskulController extends Controller
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->nama_ekskul);
+        $data['hari_latihan'] = implode(', ', (array) $request->input('hari_latihan'));
         
         if (!isset($data['status'])) {
             $data['status'] = 'aktif';
@@ -70,7 +72,8 @@ class EkskulController extends Controller
             'nama_ekskul' => 'required|string|max:255|unique:ekstrakurikulers,nama_ekskul,' . $ekskul->id,
             'deskripsi' => 'required|string',
             'pembina' => 'required|string|max:255',
-            'hari_latihan' => 'required|string',
+            'hari_latihan' => 'required|array|min:1',
+            'hari_latihan.*' => 'string|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
             'tempat_latihan' => 'required|string|max:255',
@@ -80,6 +83,7 @@ class EkskulController extends Controller
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->nama_ekskul);
+        $data['hari_latihan'] = implode(', ', (array) $request->input('hari_latihan'));
 
         if ($request->hasFile('logo')) {
             if ($ekskul->logo && file_exists(public_path($ekskul->logo))) {

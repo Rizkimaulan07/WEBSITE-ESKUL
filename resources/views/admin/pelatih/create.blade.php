@@ -8,8 +8,7 @@
     <div class="col-lg-10">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
             <!-- Header Premium - Biru Cerah -->
-            <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 40%, #7dd3fc 80%, #bae6fd 100%);">
+            <div class="card-header border-0 py-4 px-5 hero-gradient">
                 <div class="d-flex align-items-center gap-4">
                     <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-user-plus fa-2x text-white"></i>
@@ -27,41 +26,6 @@
             </div>
 
             <div class="card-body p-5">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('admin.pelatih.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -183,7 +147,7 @@
                                 <a href="{{ route('admin.pelatih.index') }}" class="btn-outline-secondary-custom" style="padding: 12px 32px; border-radius: 12px; border: 2px solid #e2e8f0; background: transparent; color: #64748b; font-weight: 500; transition: all 0.3s ease; text-decoration: none;">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease;">
                                     <i class="fas fa-save me-2"></i>Simpan
                                 </button>
                             </div>

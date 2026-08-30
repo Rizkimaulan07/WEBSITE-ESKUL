@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\KehadiranPelatih;
 use App\Models\Kehadiran;
 use App\Models\Ekstrakurikuler;
+use App\Exports\KehadiranPelatihExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KehadiranPelatihController extends Controller
 {
@@ -105,6 +107,36 @@ class KehadiranPelatihController extends Controller
             'statistikBulanan', 
             'selectedMonth'
         ));
+    }
+
+    public function adminExport(Request $request)
+    {
+        $selectedMonth = $request->get('month', now()->format('Y-m'));
+        [$year, $month] = array_pad(explode('-', $selectedMonth), 2, now()->month);
+
+        $kehadiran = KehadiranPelatih::with(['pelatih', 'ekskul'])
+            ->whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->get();
+
+        $rekap = $kehadiran->groupBy('pelatih_id')->map(function ($items) {
+            $count = $items->count();
+            $first = $items->first();
+            return [
+                'pelatih' => $first->pelatih ?? null,
+                'ekskul' => $first->ekskul ?? null,
+                'hadir' => $items->where('status', 'hadir')->count(),
+                'izin' => $items->where('status', 'izin')->count(),
+                'sakit' => $items->where('status', 'sakit')->count(),
+                'alpa' => $items->where('status', 'alpa')->count(),
+                'total' => $count,
+                'persentase_hadir' => $count > 0 ? round(($items->where('status', 'hadir')->count() / $count) * 100, 1) : 0,
+            ];
+        })->values();
+
+        $filename = 'kehadiran_pelatih_' . $selectedMonth . '.xlsx';
+
+        return Excel::download(new KehadiranPelatihExport($rekap), $filename);
     }
 
     /**

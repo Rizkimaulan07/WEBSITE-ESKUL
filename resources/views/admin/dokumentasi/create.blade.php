@@ -106,7 +106,7 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
             <!-- Header - Biru Cerah -->
             <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 40%, #7dd3fc 80%, #bae6fd 100%);">
+                 style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
                 <div class="d-flex align-items-center gap-4">
                     <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-plus-circle fa-2x text-white"></i>
@@ -124,41 +124,6 @@
             </div>
 
             <div class="card-body p-5">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('admin.dokumentasi.store', $eskul->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="eskul_id" value="{{ $eskul->id }}">
@@ -193,40 +158,19 @@
                             </div>
                         </div>
 
-                        <!-- Pilih Eskul (untuk admin) -->
+                        <!-- Multiple Foto Upload -->
                         <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
-                                    <i class="fas fa-trophy me-2" style="color: #0ea5e9;"></i>Ekstrakurikuler
+                                    <i class="fas fa-images me-2" style="color: #0ea5e9;"></i>Foto Dokumentasi
                                     <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select form-select-modern @error('eskul_id') is-invalid @enderror" 
-                                        name="eskul_id" required>
-                                    <option value="">Pilih Ekstrakurikuler</option>
-                                    @foreach($allEskuls ?? [] as $eskulItem)
-                                        <option value="{{ $eskulItem->id }}" {{ old('eskul_id', $eskul->id ?? '') == $eskulItem->id ? 'selected' : '' }}>
-                                            {{ $eskulItem->nama_ekskul }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('eskul_id')
-                                    <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Foto -->
-                        <div class="col-12">
-                            <div class="form-group-modern">
-                                <label class="fw-semibold mb-2" style="color: #1e293b; font-size: 14px;">
-                                    <i class="fas fa-image me-2" style="color: #0ea5e9;"></i>Foto Dokumentasi
-                                    <span class="text-danger">*</span>
+                                    <span class="text-muted" style="font-weight: 400; font-size: 12px;">(Bisa upload lebih dari 1 foto)</span>
                                 </label>
                                 <div class="upload-area" id="uploadArea">
                                     <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #0ea5e9; opacity: 0.6;"></i>
                                     <p class="mt-3 mb-0 fw-bold" style="color: #0f172a;">Klik atau seret foto ke sini</p>
-                                    <small class="text-muted" style="font-size: 12px;">Format JPG, PNG, WEBP maksimal 5MB</small>
-                                    <input type="file" class="d-none" name="foto_path" id="fileInput" accept="image/*" required>
+                                    <small class="text-muted" style="font-size: 12px;">Format JPG, PNG, WEBP maksimal 5MB per foto</small>
+                                    <input type="file" class="d-none" name="fotos[]" id="fileInput" accept="image/*" multiple required>
                                 </div>
                                 <div id="filePreview" class="mt-3 d-none">
                                     <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #f0f9ff; border: 1px solid #7dd3fc;">
@@ -240,7 +184,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                @error('foto_path')
+                                @error('fotos.*')
                                     <div class="invalid-feedback d-block" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -298,21 +242,24 @@
         uploadArea.classList.remove('dragover');
         if (e.dataTransfer.files.length) {
             fileInput.files = e.dataTransfer.files;
-            updateFilePreview(e.dataTransfer.files[0]);
+            updateFilePreview(e.dataTransfer.files);
         }
     });
 
     fileInput.addEventListener('change', function() {
         if (this.files.length) {
-            updateFilePreview(this.files[0]);
+            updateFilePreview(this.files);
         }
     });
 
-    function updateFilePreview(file) {
-        fileName.textContent = file.name;
-        fileSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
-        filePreview.classList.remove('d-none');
-        uploadArea.querySelector('p').textContent = '📄 ' + file.name;
+    function updateFilePreview(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            fileName.textContent = file.name + (files.length > 1 ? ' + ' + (files.length - 1) + ' file lainnya' : '');
+            fileSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+            filePreview.classList.remove('d-none');
+            uploadArea.querySelector('p').textContent = '📸 ' + files.length + ' foto dipilih';
+        }
     }
 
     removeFile.addEventListener('click', function() {

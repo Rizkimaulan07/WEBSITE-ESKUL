@@ -7,9 +7,8 @@
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
-            <!-- Header - Biru Cerah -->
-            <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
+            <!-- Header - Hijau Tua -->
+            <div class="card-header border-0 py-4 px-5 hero-gradient-green">
                 <div class="d-flex align-items-center gap-4">
                     <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-file-alt fa-2x text-white"></i>
@@ -27,41 +26,6 @@
             </div>
 
             <div class="card-body p-5">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('pelatih.surat.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -70,7 +34,7 @@
                         <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
-                                    <i class="fas fa-heading" style="color: #0ea5e9; margin-right: 8px;"></i>Judul Surat
+                                    <i class="fas fa-heading" style="color: #15803d; margin-right: 8px;"></i>Judul Surat
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-modern @error('judul') is-invalid @enderror" 
@@ -86,7 +50,7 @@
                         <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
-                                    <i class="fas fa-user" style="color: #0ea5e9; margin-right: 8px;"></i>Pilih Anggota
+                                    <i class="fas fa-user" style="color: #15803d; margin-right: 8px;"></i>Pilih Anggota
                                     <span class="text-danger">*</span>
                                 </label>
                                 <select class="form-select form-select-modern @error('anggota_id') is-invalid @enderror" 
@@ -108,7 +72,7 @@
                         <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
-                                    <i class="fas fa-align-left" style="color: #0ea5e9; margin-right: 8px;"></i>Deskripsi
+                                    <i class="fas fa-align-left" style="color: #15803d; margin-right: 8px;"></i>Deskripsi
                                 </label>
                                 <textarea class="form-control form-control-modern @error('deskripsi') is-invalid @enderror" 
                                           name="deskripsi" rows="4" 
@@ -123,18 +87,18 @@
                         <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
-                                    <i class="fas fa-file-upload" style="color: #0ea5e9; margin-right: 8px;"></i>File Surat
+                                    <i class="fas fa-file-upload" style="color: #15803d; margin-right: 8px;"></i>File Surat
                                     <span class="text-danger">*</span>
                                 </label>
-                                <div class="upload-area" id="uploadArea" style="border: 2px dashed #7dd3fc; border-radius: 16px; padding: 40px 20px; text-align: center; transition: all 0.3s ease; background: #f0f9ff; cursor: pointer;">
-                                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #0ea5e9; opacity: 0.6;"></i>
+                                <div class="upload-area" id="uploadArea" style="border: 2px dashed #86efac; border-radius: 16px; padding: 40px 20px; text-align: center; transition: all 0.3s ease; background: #f0fdf4; cursor: pointer;">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #15803d; opacity: 0.6;"></i>
                                     <p class="mt-3 mb-0 fw-bold" style="color: #0f172a;">Klik atau seret file ke sini</p>
                                     <small class="text-muted" style="font-size: 12px;">Format: .doc, .docx, .pdf | Maks: 2MB</small>
                                     <input type="file" class="d-none" name="file_surat" id="fileInput" accept=".doc,.docx,.pdf" required>
                                 </div>
                                 <div id="filePreview" class="mt-3 d-none">
-                                    <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #f0f9ff; border: 1px solid #7dd3fc;">
-                                        <i class="fas fa-file-pdf fa-2x" style="color: #0ea5e9;"></i>
+                                    <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #f0fdf4; border: 1px solid #86efac;">
+                                        <i class="fas fa-file-pdf fa-2x" style="color: #15803d;"></i>
                                         <div>
                                             <p class="mb-0 fw-bold" id="fileName" style="color: #0f172a;">file.pdf</p>
                                             <small class="text-muted" id="fileSize">0 KB</small>
@@ -154,12 +118,12 @@
                         <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b; font-weight: 600; letter-spacing: 0.3px;">
-                                    <i class="fas fa-images" style="color: #0ea5e9; margin-right: 8px;"></i>Foto Pendukung
+                                    <i class="fas fa-images" style="color: #15803d; margin-right: 8px;"></i>Foto Pendukung
                                     <span class="text-muted" style="font-weight: 400; font-size: 12px;">(Bisa upload lebih dari 1 foto)</span>
                                 </label>
                                 <div class="upload-area-multiple" id="uploadAreaMultiple" 
-                                     style="border: 2px dashed #7dd3fc; border-radius: 16px; padding: 30px 20px; text-align: center; transition: all 0.3s ease; background: #f0f9ff; cursor: pointer;">
-                                    <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #0ea5e9; opacity: 0.6;"></i>
+                                     style="border: 2px dashed #86efac; border-radius: 16px; padding: 30px 20px; text-align: center; transition: all 0.3s ease; background: #f0fdf4; cursor: pointer;">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #15803d; opacity: 0.6;"></i>
                                     <p class="mt-2 mb-0 fw-bold" style="color: #0f172a;">Klik atau seret foto ke sini</p>
                                     <small class="text-muted" style="font-size: 12px;">Format: jpeg, png, jpg, webp | Maks: 5MB per foto</small>
                                     <input type="file" class="d-none" name="fotos[]" id="fileInputMultiple" accept="image/*" multiple>
@@ -178,7 +142,7 @@
                         <!-- Divider -->
                         <div class="col-12">
                             <div class="divider-custom">
-                                <span style="background: #ffffff; padding: 0 16px; color: #0ea5e9;">
+                                <span style="background: #ffffff; padding: 0 16px; color: #15803d;">
                                     <i class="fas fa-paper-plane"></i>
                                 </span>
                             </div>
@@ -187,10 +151,10 @@
                         <!-- Tombol Aksi -->
                         <div class="col-12">
                             <div class="d-flex gap-3 justify-content-end">
-                                <a href="{{ route('pelatih.dashboard') }}" class="btn-outline-secondary-custom" style="padding: 12px 32px; border-radius: 12px; border: 2px solid #e2e8f0; background: transparent; color: #64748b; font-weight: 500; transition: all 0.3s ease; text-decoration: none;">
+                                <a href="{{ route('pelatih.dashboard') }}" class="btn-secondary-custom" style="padding: 12px 32px;">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border: none; border-radius: 12px; background: linear-gradient(135deg, #15803d, #22c55e); color: #fff; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(21,128,61,0.3);">
                                     <i class="fas fa-save me-2"></i>Kirim Surat
                                 </button>
                             </div>
@@ -217,8 +181,8 @@
         width: 100%;
     }
     .form-control-modern:focus, .form-select-modern:focus {
-        border-color: #0ea5e9;
-        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+        border-color: #15803d;
+        box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.12);
         background: #ffffff;
     }
     .form-control-modern.is-invalid, .form-select-modern.is-invalid {
@@ -235,12 +199,12 @@
         height: 2px;
         background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
     }
-    .divider-custom span { background: #ffffff; padding: 0 16px; position: relative; color: #0ea5e9; font-size: 16px; }
-    .btn-outline-secondary-custom:hover { border-color: #0ea5e9; background: rgba(14,165,233,0.04); transform: translateY(-3px); color: #0f172a; }
-    .btn-primary-gradient:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(14,165,233,0.4); color: #fff; }
+    .divider-custom span { background: #ffffff; padding: 0 16px; position: relative; color: #15803d; font-size: 16px; }
+    .btn-outline-secondary-custom:hover { border-color: #15803d; background: rgba(21,128,61,0.04); transform: translateY(-3px); color: #0f172a; }
+    .btn-primary-gradient:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(21,128,61,0.4); color: #fff; }
     
-    .upload-area:hover, .upload-area-multiple:hover { border-color: #0ea5e9; background: #e0f2fe; }
-    .upload-area.dragover, .upload-area-multiple.dragover { border-color: #0ea5e9; background: #bae6fd; }
+    .upload-area:hover, .upload-area-multiple:hover { border-color: #15803d; background: #dcfce7; }
+    .upload-area.dragover, .upload-area-multiple.dragover { border-color: #15803d; background: #bbf7d0; }
 
     /* Foto Preview Grid */
     .foto-preview-item {
@@ -252,7 +216,7 @@
         aspect-ratio: 1;
         background: #f8fafc;
     }
-    .foto-preview-item:hover { border-color: #0ea5e9; transform: scale(1.02); }
+    .foto-preview-item:hover { border-color: #15803d; transform: scale(1.02); }
     .foto-preview-item img { width: 100%; height: 100%; object-fit: cover; }
     .foto-preview-item .btn-remove-foto {
         position: absolute;
@@ -386,7 +350,7 @@
         });
         if (fotoFiles.length === 0) {
             fotoPreviewGrid.innerHTML = `
-                <div class="col-12 text-center text-muted py-3" style="color: #94a3b8;">
+                <div class="col-12 text-center text-muted py-3" style="color: #64748b;">
                     <small>Belum ada foto yang dipilih</small>
                 </div>
             `;

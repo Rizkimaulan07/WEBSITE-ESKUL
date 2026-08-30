@@ -38,7 +38,7 @@
                    placeholder="Masukkan email Anda"
                    required
                    style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
-            <i class="bi bi-envelope input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
+            <i class="bi bi-envelope input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 16px;"></i>
             @error('email')
                 <small class="text-danger" style="color: #dc2626; font-size: 13px; display: block; margin-top: 4px;">{{ $message }}</small>
             @enderror
@@ -55,8 +55,8 @@
                    placeholder="Minimal 8 karakter"
                    required
                    style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
-            <i class="bi bi-lock input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
-            <button type="button" class="toggle-password" onclick="togglePassword('password', this)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; padding: 8px;">
+            <i class="bi bi-lock input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 16px;"></i>
+            <button type="button" class="toggle-password" onclick="togglePassword('password', this)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 8px;">
                 <i class="bi bi-eye"></i>
             </button>
             @error('password')
@@ -75,7 +75,7 @@
                    placeholder="Ketik ulang password"
                    required
                    style="width: 100%; padding: 14px 16px 14px 48px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 14px; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; transition: all 0.3s ease;">
-            <i class="bi bi-check-circle input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px;"></i>
+            <i class="bi bi-check-circle input-icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 16px;"></i>
         </div>
     </div>
 
@@ -85,7 +85,7 @@
     </button>
 </form>
 
-<div class="auth-footer" style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 13px;">
+<div class="auth-footer" style="text-align: center; margin-top: 20px; color: #64748b; font-size: 13px;">
     <p>Ingat password? 
         <a href="{{ route('login') }}" style="color: #0ea5e9; text-decoration: none; font-weight: 600;">Kembali Login</a>
     </p>

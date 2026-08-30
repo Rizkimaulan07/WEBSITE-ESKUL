@@ -9,7 +9,7 @@
         'hadir' => '#10b981',
         'izin' => '#f59e0b',
         'sakit' => '#ef4444',
-        'alpa' => '#94a3b8'
+        'alpa' => '#64748b'
     ];
     $statusLabel = [
         'hadir' => 'Hadir',
@@ -23,7 +23,7 @@
     <div class="col-xl-8 col-lg-10">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="background: #ffffff;">
             <!-- Header - Biru Cerah -->
-            <div class="card-header border-0 py-4 px-5" style="background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%);">
+            <div class="card-header border-0 py-4 px-5 hero-gradient">
                 <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-3">
                     <div class="d-flex align-items-center gap-4">
                         <div class="bg-white bg-opacity-25 rounded-circle p-3">
@@ -41,30 +41,6 @@
             </div>
 
             <div class="card-body p-4 p-lg-5">
-                @if(session('success'))
-                    <div class="alert alert-success rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <i class="fas fa-check-circle fa-2x text-success"></i>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-center gap-3">
-                            <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">{{ session('error') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
                 <div class="row g-4 align-items-stretch">
                     <div class="col-md-5">
                         <div class="border rounded-4 p-4 h-100 bg-light-subtle" style="background: #f8fafc; border-color: #e2e8f0;">
@@ -74,14 +50,14 @@
                                 </div>
                                 <div>
                                     <div class="fw-bold" style="color: #0f172a;">{{ Auth::user()->name }}</div>
-                                    <small class="text-muted" style="color: #94a3b8;">Pelatih</small>
+                                    <small class="text-muted" style="color: #64748b;">Pelatih</small>
                                 </div>
                             </div>
-                            <div class="small text-muted mb-2" style="color: #94a3b8;">
+                            <div class="small text-muted mb-2" style="color: #64748b;">
                                 <i class="fas fa-trophy me-2" style="color: #0ea5e9;"></i>
                                 {{ $ekskul->nama_ekskul ?? 'Belum ada ekskul' }}
                             </div>
-                            <div class="small text-muted" style="color: #94a3b8;">
+                            <div class="small text-muted" style="color: #64748b;">
                                 <i class="far fa-calendar me-2" style="color: #0ea5e9;"></i>
                                 {{ now()->translatedFormat('l, d F Y') }}
                             </div>
@@ -112,7 +88,7 @@
                                 </div>
 
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 btn-gradient" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8); border: none; box-shadow: 0 4px 16px rgba(14,165,233,0.25); transition: all 0.3s ease; color: #fff; font-weight: 600; padding: 12px 40px;">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 btn-gradient btn-primary-gradient" style="padding: 12px 40px;">
                                         <i class="fas fa-save me-2"></i>Simpan Kehadiran
                                     </button>
                                 </div>
@@ -129,11 +105,11 @@
                         <div>
                             <strong style="color: #0c4a6e;">Status saat ini:</strong>
                             @if(isset($kehadiranHariIni))
-                                <span class="badge rounded-pill ms-2" style="background: {{ $statusColors[$kehadiranHariIni->status] ?? '#94a3b8' }}; color: white; padding: 4px 14px; font-size: 12px;">
+                                <span class="badge rounded-pill ms-2" style="background: {{ $statusColors[$kehadiranHariIni->status] ?? '#64748b' }}; color: white; padding: 4px 14px; font-size: 12px;">
                                     {{ $statusLabel[$kehadiranHariIni->status] ?? ucfirst($kehadiranHariIni->status) }}
                                 </span>
                             @else
-                                <span class="badge rounded-pill ms-2" style="background: #94a3b8; color: white; padding: 4px 14px; font-size: 12px;">Belum diisi</span>
+                                <span class="badge rounded-pill ms-2" style="background: #64748b; color: white; padding: 4px 14px; font-size: 12px;">Belum diisi</span>
                             @endif
                         </div>
                     </div>

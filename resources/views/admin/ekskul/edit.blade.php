@@ -8,8 +8,7 @@
     <div class="col-lg-10">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: #ffffff;">
             <!-- Header - Biru Cerah -->
-            <div class="card-header border-0 py-4 px-5" 
-                 style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 40%, #7dd3fc 80%, #bae6fd 100%);">
+            <div class="card-header border-0 py-4 px-5 hero-gradient">
                 <div class="d-flex align-items-center gap-4">
                     <div class="bg-white bg-opacity-25 rounded-circle p-3">
                         <i class="fas fa-edit fa-2x text-white"></i>
@@ -27,41 +26,6 @@
             </div>
 
             <div class="card-body p-5">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('admin.ekskul.update', $ekskul->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -138,29 +102,29 @@
                         </div>
 
                         <!-- Hari, Jam, Tempat -->
-                        <div class="col-md-4">
+                        @php $currentDays = old('hari_latihan', array_map('trim', explode(',', $ekskul->hari_latihan ?? ''))); @endphp
+                        <div class="col-12">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b;">
                                     <i class="fas fa-calendar-day me-2" style="color: #0ea5e9;"></i>Hari Latihan
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select class="form-select form-select-modern @error('hari_latihan') is-invalid @enderror" 
-                                        name="hari_latihan" required>
-                                    <option value="">Pilih Hari</option>
-                                    <option value="Senin" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Senin' ? 'selected' : '' }}>Senin</option>
-                                    <option value="Selasa" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                                    <option value="Rabu" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                                    <option value="Kamis" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                                    <option value="Jumat" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Jumat' ? 'selected' : '' }}>Jumat</option>
-                                    <option value="Sabtu" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Sabtu' ? 'selected' : '' }}>Sabtu</option>
-                                    <option value="Minggu" {{ old('hari_latihan', $ekskul->hari_latihan) == 'Minggu' ? 'selected' : '' }}>Minggu</option>
-                                </select>
+                                <div class="day-picker @error('hari_latihan') is-invalid @enderror" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                    @php $days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu']; @endphp
+                                    @foreach($days as $day)
+                                        <label class="day-chip" style="cursor: pointer; user-select: none;">
+                                            <input type="checkbox" name="hari_latihan[]" value="{{ $day }}" class="day-checkbox"
+                                                   {{ in_array($day, $currentDays) ? 'checked' : '' }}>
+                                            <span class="day-label">{{ $day }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
                                 @error('hari_latihan')
                                     <div class="invalid-feedback" style="color: #dc2626; font-size: 13px;">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b;">
                                     <i class="fas fa-clock me-2" style="color: #0ea5e9;"></i>Jam Mulai
@@ -173,7 +137,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group-modern">
                                 <label class="fw-semibold mb-2" style="font-size: 14px; color: #1e293b;">
                                     <i class="fas fa-clock me-2" style="color: #0ea5e9;"></i>Jam Selesai
@@ -233,7 +197,7 @@
                                 <a href="{{ route('admin.ekskul.index') }}" class="btn-outline-secondary-custom" style="padding: 12px 32px; border-radius: 12px; border: 2px solid #e2e8f0; background: transparent; color: #64748b; font-weight: 500; transition: all 0.3s ease; text-decoration: none;">
                                     <i class="fas fa-arrow-left me-2"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(14,165,233,0.3);">
+                                <button type="submit" class="btn-primary-gradient" style="padding: 12px 40px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease;">
                                     <i class="fas fa-save me-2"></i>Perbarui
                                 </button>
                             </div>
@@ -282,6 +246,12 @@
     .btn-outline-secondary-custom:hover { border-color: #0ea5e9; background: rgba(14,165,233,0.04); transform: translateY(-3px); color: #0f172a; }
     .btn-primary-gradient:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(14,165,233,0.4); color: #fff; }
     .btn-upload-logo:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(14,165,233,0.5); }
+    .day-checkbox { display: none; }
+    .day-chip { position: relative; }
+    .day-label { display: inline-block; padding: 10px 22px; border-radius: 12px; font-size: 13px; font-weight: 600; border: 2px solid #e2e8f0; background: #fafbfc; color: #64748b; transition: all 0.2s ease; }
+    .day-chip:hover > .day-label { border-color: #0ea5e9; color: #0c4a6e; }
+    .day-chip.active > .day-label { border-color: #0ea5e9; background: rgba(14,165,233,0.1); color: #0c4a6e; box-shadow: 0 0 0 4px rgba(14,165,233,0.08); }
+    .day-chip.active .day-label::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; margin-left: 8px; font-size: 11px; color: #0ea5e9; }
 </style>
 
 <script>
@@ -309,6 +279,29 @@
         if (input.files && input.files[0]) {
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    // ===== DAY PICKER (pilih beberapa hari) =====
+    function initDayPicker() {
+        document.querySelectorAll('.day-chip').forEach(function(chip) {
+            var checkbox = chip.querySelector('.day-checkbox');
+            if (!checkbox) return;
+            function sync() {
+                if (checkbox.checked) chip.classList.add('active');
+                else chip.classList.remove('active');
+            }
+            sync();
+            chip.addEventListener('click', function(e) {
+                e.preventDefault();
+                checkbox.checked = !checkbox.checked;
+                sync();
+            });
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDayPicker);
+    } else {
+        initDayPicker();
     }
 </script>
 @endsection

@@ -15,7 +15,7 @@
                     </div>
                     <div>
                         <h5 class="fw-bold mb-0" style="color: #0f172a; font-size: 18px;">Edit Profil</h5>
-                        <p class="text-muted small mb-0" style="color: #94a3b8; font-size: 13px;">Ubah informasi profil Anda</p>
+                        <p class="text-muted small mb-0" style="color: #64748b; font-size: 13px;">Ubah informasi profil Anda</p>
                     </div>
                 </div>
                 @php
@@ -42,41 +42,6 @@
 
             <!-- Body -->
             <div class="card-body-modern" style="padding: 28px 32px;">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #d1fae5; border-left: 4px solid #10b981;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #065f46;">Berhasil!</strong> 
-                                <span style="color: #047857;">{{ session('success') }}</span>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert" style="background: #fee2e2; border-left: 4px solid #ef4444;">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-danger bg-opacity-10 rounded-circle p-2">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #991b1b;">Gagal!</strong> 
-                                <span style="color: #7f1d1d;">Silakan periksa data berikut:</span>
-                                <ul class="mb-0 mt-1" style="color: #7f1d1d;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('patch')
@@ -266,7 +231,7 @@
         box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.04);
     }
     .form-control::placeholder {
-        color: #94a3b8;
+        color: #64748b;
     }
     .btn-back:hover {
         background: #f8fafc;

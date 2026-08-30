@@ -366,7 +366,7 @@
 
         .feature-card p {
             font-size: 14px;
-            color: #94a3b8;
+            color: #64748b;
             line-height: 1.6;
             margin-bottom: 0;
         }
@@ -384,7 +384,7 @@
 
         .landing-footer p {
             font-size: 13px;
-            color: #94a3b8;
+            color: #64748b;
         }
 
         .landing-footer .footer-links {
@@ -393,7 +393,7 @@
         }
 
         .landing-footer .footer-links a {
-            color: #94a3b8;
+            color: #64748b;
             text-decoration: none;
             font-size: 13px;
             transition: color 0.3s ease;
