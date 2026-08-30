@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const TRANSITION_FLAG = '__simskul_loading';
 const NAV_EVENT = 'simskul:navigate';
-const MIN_DISPLAY = 900;
+const MIN_DISPLAY = 250;
+const SAFE_MAX = 2500;
 
 function debugLog(...args) {
     try {
@@ -14,19 +15,17 @@ export default function LoadingOverlay() {
     const [visible, setVisible] = useState(true);
     const [fading, setFading] = useState(false);
     const timersRef = useRef([]);
+    const shownRef = useRef(false);
 
     const clearTimers = () => {
         timersRef.current.forEach((t) => clearTimeout(t));
         timersRef.current = [];
     };
 
-    const show = () => {
+    const hide = () => {
+        if (!shownRef.current) return;
+        shownRef.current = false;
         clearTimers();
-        setFading(false);
-        setVisible(true);
-    };
-
-    const finish = () => {
         setFading(true);
         timersRef.current.push(
             setTimeout(() => {
@@ -34,6 +33,14 @@ export default function LoadingOverlay() {
                 setFading(false);
             }, 350)
         );
+    };
+
+    const show = () => {
+        shownRef.current = true;
+        clearTimers();
+        setFading(false);
+        setVisible(true);
+        timersRef.current.push(setTimeout(hide, SAFE_MAX));
     };
 
     useEffect(() => {
@@ -46,14 +53,19 @@ export default function LoadingOverlay() {
 
         const onLoad = () => {
             debugLog('window load fired');
-            finish();
+            hide();
         };
         const onNavigate = () => {
             debugLog('navigate event');
             show();
         };
-        const minTimer = setTimeout(finish, fromTransition ? 400 : MIN_DISPLAY);
-        timersRef.current.push(minTimer);
+
+        // On a direct (non-transition) page load, show the overlay only briefly
+        // so it feels fast and never blocks. On navigation, keep it until the
+        // new page's resources finish loading.
+        shownRef.current = true;
+        setVisible(true);
+        timersRef.current.push(setTimeout(hide, fromTransition ? SAFE_MAX : MIN_DISPLAY));
 
         window.addEventListener('load', onLoad);
         window.addEventListener(NAV_EVENT, onNavigate);
