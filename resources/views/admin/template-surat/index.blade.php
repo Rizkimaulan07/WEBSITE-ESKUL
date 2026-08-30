@@ -121,8 +121,8 @@
                 <div class="d-flex flex-wrap gap-2 justify-content-md-end">
                     <select class="filter-select" id="filterFile" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 13px; background: rgba(255,255,255,0.8); color: #0f172a; transition: all 0.3s ease; cursor: pointer; min-width: 140px;">
                         <option value="">📋 Semua File</option>
-                        <option value="ada">✅ Ada File</option>
-                        <option value="tidak">❌ Tidak Ada File</option>
+                        <option value="Word">📄 Word</option>
+                        <option value="PDF">📝 PDF</option>
                     </select>
                     <button class="btn-reset" onclick="resetFilters()" style="padding: 12px 20px; border: 2px solid #e2e8f0; border-radius: 12px; background: rgba(255,255,255,0.8); color: #64748b; font-size: 13px; font-weight: 500; transition: all 0.3s ease; cursor: pointer;">
                         <i class="fas fa-undo me-1"></i> Reset
@@ -168,7 +168,7 @@
                 <tbody>
                     @forelse($templates as $index => $template)
                     @php $hasFile = $template->file_template ? true : false; @endphp
-                    <tr class="table-row" data-file="{{ $hasFile ? 'ada' : 'tidak' }}" style="transition: all 0.3s ease; animation: fadeRow 0.5s ease forwards;">
+                    <tr class="table-row" data-file="{{ $template->file_template ? $template->file_type : 'tidak' }}" style="transition: all 0.3s ease; animation: fadeRow 0.5s ease forwards;">
                         <td>
                             <span class="number-badge" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: rgba(14,165,233,0.06); color: #0ea5e9; font-weight: 600; font-size: 12px;">{{ $templates->firstItem() + $index }}</span>
                         </td>

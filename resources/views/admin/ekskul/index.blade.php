@@ -87,7 +87,7 @@
                 </div>
             </div>
             <div class="col-md-7">
-                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                <div class="d-flex flex-wrap gap-3 justify-content-md-end">
                     <select class="filter-select" id="filterStatus" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 13px; background: rgba(255,255,255,0.8); color: #0f172a; transition: all 0.3s ease; cursor: pointer; min-width: 140px;">
                         <option value="">Semua Status</option>
                         <option value="aktif">● Aktif</option>

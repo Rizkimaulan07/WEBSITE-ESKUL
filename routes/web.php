@@ -10,7 +10,6 @@ use App\Http\Controllers\Pelatih\NilaiController;
 use App\Http\Controllers\Pelatih\DokumentasiController;
 use App\Http\Controllers\Pelatih\KehadiranController;
 use App\Http\Controllers\Pelatih\KehadiranPelatihController;
-use App\Http\Controllers\Pelatih\RekapController;
 use App\Http\Controllers\Anggota\KehadiranController as AnggotaKehadiranController;
 use App\Http\Controllers\Anggota\NilaiController as AnggotaNilaiController;
 use App\Http\Controllers\Admin\NilaiController as AdminNilaiController;
@@ -110,6 +109,7 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     Route::post('/kehadiran-pelatih', [KehadiranPelatihController::class, 'store'])->name('kehadiran_pelatih.store');
     
     Route::get('/kehadiran/rekap', [KehadiranController::class, 'rekap'])->name('kehadiran.rekap');
+    Route::get('/kehadiran/rekap/export', [KehadiranController::class, 'rekapExport'])->name('kehadiran.rekap.export');
     Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran');
     Route::post('/kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
     Route::get('/kehadiran/{kehadiran}', [KehadiranController::class, 'show'])

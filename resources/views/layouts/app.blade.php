@@ -1043,6 +1043,9 @@
                         <a href="{{ route('pelatih.kehadiran') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran') && !request()->routeIs('pelatih.kehadiran_pelatih*') ? 'active' : '' }}">
                             <i class="fas fa-clipboard-list"></i> Kehadiran Anggota
                         </a>
+                        <a href="{{ route('pelatih.kehadiran.rekap') }}" class="nav-link {{ request()->routeIs('pelatih.kehadiran.rekap*') ? 'active' : '' }}">
+                            <i class="fas fa-chart-bar"></i> Rekap Kehadiran Anggota
+                        </a>
                         <a href="{{ route('pelatih.nilai') }}" class="nav-link {{ request()->routeIs('pelatih.nilai*') ? 'active' : '' }}">
                             <i class="fas fa-star"></i> Nilai Anggota
                         </a>

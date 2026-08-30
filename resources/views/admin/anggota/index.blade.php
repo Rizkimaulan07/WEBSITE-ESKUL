@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="col-md-7">
-                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                <div class="d-flex flex-wrap gap-3 justify-content-md-end">
                     <select class="filter-select" id="filterEkskul" style="border: 2px solid rgba(0,0,0,0.02); border-radius: 12px; padding: 12px 16px; font-size: 13px; background: rgba(255,255,255,0.8);">
                         <option value="">Semua Ekskul</option>
                         @foreach($ekskuls ?? [] as $ekskul)

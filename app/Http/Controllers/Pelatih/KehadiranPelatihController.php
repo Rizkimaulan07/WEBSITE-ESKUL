@@ -56,27 +56,34 @@ class KehadiranPelatihController extends Controller
      */
     public function adminIndex(Request $request)
     {
-        $selectedMonth = $request->get('month', now()->format('Y-m'));
-        [$year, $month] = array_pad(explode('-', $selectedMonth), 2, now()->month);
+        $type = $request->get('type', 'monthly');
+        $year = (int) $request->get('year', now()->year);
+        $month = (int) $request->get('month', now()->month);
+        $semester = in_array($request->get('semester', 'ganjil'), ['ganjil', 'genap'], true) ? $request->get('semester') : 'ganjil';
 
-        // Query kehadiran pelatih dengan relasi pelatih dan ekskul
-        $kehadiranQuery = KehadiranPelatih::with(['pelatih', 'ekskul'])
-            ->whereMonth('tanggal', $month)
-            ->whereYear('tanggal', $year)
-            ->orderBy('tanggal', 'desc');
+        // Bangun filter berdasarkan tipe rekap
+        $query = KehadiranPelatih::with(['pelatih', 'ekskul']);
 
-        $kehadiran = $kehadiranQuery->get();
+        if ($type === 'semester') {
+            $months = $semester === 'genap' ? range(1, 6) : range(7, 12);
+            $query->whereYear('tanggal', $year)->whereIn(\DB::raw('MONTH(tanggal)'), $months);
+            $periodLabel = $semester === 'genap' ? 'Semester Genap (Jan-Jun)' : 'Semester Ganjil (Jul-Des)';
+        } elseif ($type === 'yearly') {
+            $query->whereYear('tanggal', $year);
+            $periodLabel = 'Tahunan ' . $year;
+        } else {
+            $query->whereYear('tanggal', $year)->whereMonth('tanggal', $month);
+            $periodLabel = \Carbon\Carbon::create()->month($month)->translatedFormat('F') . ' ' . $year;
+        }
+
+        $kehadiran = $query->orderBy('tanggal', 'desc')->get();
 
         // Rekap per pelatih
-        $rekapBulanan = KehadiranPelatih::with(['pelatih', 'ekskul'])
-            ->whereMonth('tanggal', $month)
-            ->whereYear('tanggal', $year)
-            ->get()
-            ->groupBy('pelatih_id')
+        $rekapBulanan = $kehadiran->groupBy('pelatih_id')
             ->map(function ($items) {
                 $count = $items->count();
                 $first = $items->first();
-                
+
                 return [
                     'pelatih' => $first->pelatih ?? null,
                     'ekskul' => $first->ekskul ?? null,
@@ -92,7 +99,7 @@ class KehadiranPelatihController extends Controller
             ->sortByDesc('hadir')
             ->values();
 
-        // Statistik bulanan
+        // Statistik
         $statistikBulanan = [
             'total' => $kehadiran->count(),
             'hadir' => $kehadiran->where('status', 'hadir')->count(),
@@ -101,23 +108,104 @@ class KehadiranPelatihController extends Controller
             'alpa' => $kehadiran->where('status', 'alpa')->count(),
         ];
 
+        // Ringkasan per bulan (populer untuk tipe tahunan)
+        $monthlySummary = $this->monthlySummary($year);
+
+        // Ringkasan per semester (tahunan)
+        $semesterSummary = $this->semesterSummary($year);
+
+        $availableYears = $this->availableYears();
+
         return view('admin.kehadiran_pelatih', compact(
-            'kehadiran', 
-            'rekapBulanan', 
-            'statistikBulanan', 
-            'selectedMonth'
+            'kehadiran',
+            'rekapBulanan',
+            'statistikBulanan',
+            'type',
+            'year',
+            'month',
+            'semester',
+            'periodLabel',
+            'monthlySummary',
+            'semesterSummary',
+            'availableYears'
         ));
+    }
+
+    private function availableYears(): array
+    {
+        $years = KehadiranPelatih::selectRaw('YEAR(tanggal) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year')
+            ->map(fn ($y) => (int) $y)
+            ->toArray();
+
+        if (empty($years)) {
+            $years = range(now()->year - 4, now()->year);
+        }
+
+        return array_values(array_unique(array_merge($years, [now()->year])));
+    }
+
+    private function monthlySummary(int $year): array
+    {
+        return KehadiranPelatih::whereYear('tanggal', $year)
+            ->selectRaw('MONTH(tanggal) as bulan')
+            ->selectRaw('COUNT(*) as total')
+            ->selectRaw("SUM(CASE WHEN status = 'hadir' THEN 1 ELSE 0 END) as hadir")
+            ->selectRaw("SUM(CASE WHEN status = 'izin' THEN 1 ELSE 0 END) as izin")
+            ->selectRaw("SUM(CASE WHEN status = 'sakit' THEN 1 ELSE 0 END) as sakit")
+            ->selectRaw("SUM(CASE WHEN status = 'alpa' THEN 1 ELSE 0 END) as alpa")
+            ->groupBy('bulan')
+            ->orderBy('bulan')
+            ->get()
+            ->keyBy('bulan')
+            ->toArray();
+    }
+
+    private function semesterSummary(int $year): array
+    {
+        $monthly = $this->monthlySummary($year);
+
+        $build = function (array $range) use ($monthly) {
+            $hadir = $izin = $sakit = $alpa = 0;
+            foreach ($monthly as $bulanNum => $m) {
+                if (in_array((int) $bulanNum, $range, true)) {
+                    $hadir += (int) $m['hadir'];
+                    $izin += (int) $m['izin'];
+                    $sakit += (int) $m['sakit'];
+                    $alpa += (int) $m['alpa'];
+                }
+            }
+            $total = $hadir + $izin + $sakit + $alpa;
+            return compact('hadir', 'izin', 'sakit', 'alpa', 'total');
+        };
+
+        return [
+            'ganjil' => $build(range(7, 12)),
+            'genap' => $build(range(1, 6)),
+        ];
     }
 
     public function adminExport(Request $request)
     {
-        $selectedMonth = $request->get('month', now()->format('Y-m'));
-        [$year, $month] = array_pad(explode('-', $selectedMonth), 2, now()->month);
+        $type = $request->get('type', 'monthly');
+        $year = (int) $request->get('year', now()->year);
+        $month = (int) $request->get('month', now()->month);
+        $semester = in_array($request->get('semester', 'ganjil'), ['ganjil', 'genap'], true) ? $request->get('semester') : 'ganjil';
 
-        $kehadiran = KehadiranPelatih::with(['pelatih', 'ekskul'])
-            ->whereMonth('tanggal', $month)
-            ->whereYear('tanggal', $year)
-            ->get();
+        $query = KehadiranPelatih::with(['pelatih', 'ekskul']);
+
+        if ($type === 'semester') {
+            $months = $semester === 'genap' ? range(1, 6) : range(7, 12);
+            $query->whereYear('tanggal', $year)->whereIn(\DB::raw('MONTH(tanggal)'), $months);
+        } elseif ($type === 'yearly') {
+            $query->whereYear('tanggal', $year);
+        } else {
+            $query->whereYear('tanggal', $year)->whereMonth('tanggal', $month);
+        }
+
+        $kehadiran = $query->get();
 
         $rekap = $kehadiran->groupBy('pelatih_id')->map(function ($items) {
             $count = $items->count();
@@ -134,7 +222,9 @@ class KehadiranPelatihController extends Controller
             ];
         })->values();
 
-        $filename = 'kehadiran_pelatih_' . $selectedMonth . '.xlsx';
+        $suffix = $type === 'yearly' ? 'tahunan_' . $year : ($type === 'semester' ? 'semester_' . $semester . '_' . $year : sprintf('%04d-%02d', $year, $month));
+
+        $filename = 'kehadiran_pelatih_' . $suffix . '.xlsx';
 
         return Excel::download(new KehadiranPelatihExport($rekap), $filename);
     }
