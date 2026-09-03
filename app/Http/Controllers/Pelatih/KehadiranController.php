@@ -60,6 +60,7 @@ class KehadiranController extends Controller
             'anggota_ids' => 'required|array',
             'anggota_ids.*' => 'exists:users,id',
             'status' => 'nullable|array',
+            'status.*' => 'nullable|in:hadir,izin,sakit,alpa',
             'keterangan' => 'nullable|array',
         ]);
 
@@ -76,6 +77,8 @@ class KehadiranController extends Controller
             return redirect()->back()->with('error', 'Pilih minimal satu anggota untuk mencatat kehadiran.');
         }
 
+        $presensiHadir = $request->input('presensi', []);
+
         foreach ($anggotaIds as $anggotaId) {
             $anggota = User::where('id', $anggotaId)
                 ->where('role', 'anggota')
@@ -88,10 +91,8 @@ class KehadiranController extends Controller
                 continue;
             }
 
-            $status = 'hadir';
-            if ($request->has("status.$anggotaId") && $request->input("status.$anggotaId") !== 'hadir') {
-                $status = $request->input("status.$anggotaId");
-            }
+            // Jika checkbox "Hadir" dicentang -> status hadir, selain itu ambil dari select status.
+            $status = isset($presensiHadir[$anggotaId]) ? 'hadir' : $request->input("status.$anggotaId", 'alpa');
 
             $keterangan = $request->input("keterangan.$anggotaId");
 
@@ -480,6 +481,6 @@ class KehadiranController extends Controller
                               ->with(['anggota', 'pelatih'])
                               ->firstOrFail();
 
-        return view('pelatih.kehadiran.show', compact('kehadiran'));
+        return view('pelatih.kehadiran_detail', compact('kehadiran'));
     }
 }

@@ -9,7 +9,7 @@
     {{-- PWA META TAGS --}}
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0ea5e9">
-    <link rel="apple-touch-icon" href="/images/logo-smk-bppi.png">
+    <link rel="apple-touch-icon" href="/images/logo-simskul.png">
 
     <title>{{ config('app.name', 'SIMSKUL') }} - @yield('title')</title>
 
@@ -18,6 +18,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     @php
         $__hotFile = file_exists(public_path('hot'));
@@ -39,9 +40,12 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
+            align-items: safe center;
             justify-content: center;
-            background: #0a0a1a;
-            overflow: hidden;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6a 30%, #0ea5e9 60%, #38bdf8 100%);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 40px 0;
         }
 
         .text-muted {
@@ -57,7 +61,7 @@
             bottom: 0;
             z-index: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #0a1628 0%, #1a3a6a 30%, #0ea5e9 60%, #38bdf8 100%);
+            background: transparent;
         }
 
         .bg-gradient-animation {
@@ -125,37 +129,178 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            opacity: 0.015;
+            pointer-events: none;
         }
 
         .sport-icon {
             position: absolute;
-            font-size: 80px;
-            color: #fff;
-            animation: sportFloat 25s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: rgba(255,255,255,0.9);
+            border: 1px solid rgba(255,255,255,0.18);
+            background:
+                radial-gradient(circle at 30% 25%, var(--tint, rgba(56,189,248,0.14)), transparent 65%),
+                rgba(255,255,255,0.04);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            animation: sportBob var(--dur, 22s) ease-in-out infinite;
         }
 
-        .sport-icon:nth-child(1) { left: 5%; top: 10%; animation-delay: 0s; font-size: 60px; }
-        .sport-icon:nth-child(2) { left: 15%; top: 30%; animation-delay: -3s; font-size: 100px; }
-        .sport-icon:nth-child(3) { left: 25%; top: 60%; animation-delay: -6s; font-size: 70px; }
-        .sport-icon:nth-child(4) { left: 40%; top: 15%; animation-delay: -9s; font-size: 90px; }
-        .sport-icon:nth-child(5) { left: 50%; top: 45%; animation-delay: -12s; font-size: 60px; }
-        .sport-icon:nth-child(6) { left: 60%; top: 70%; animation-delay: -15s; font-size: 80px; }
-        .sport-icon:nth-child(7) { left: 75%; top: 20%; animation-delay: -18s; font-size: 100px; }
-        .sport-icon:nth-child(8) { left: 85%; top: 55%; animation-delay: -21s; font-size: 70px; }
-        .sport-icon:nth-child(9) { left: 95%; top: 80%; animation-delay: -24s; font-size: 60px; }
-        .sport-icon:nth-child(10) { left: 8%; top: 85%; animation-delay: -2s; font-size: 90px; }
-        .sport-icon:nth-child(11) { left: 32%; top: 90%; animation-delay: -5s; font-size: 70px; }
-        .sport-icon:nth-child(12) { left: 70%; top: 5%; animation-delay: -8s; font-size: 80px; }
+        .sport-icon:nth-child(1) { left: 4%;  top: 12%; width: 78px;  height: 78px;  font-size: 30px; --dur: 20s; --tint: rgba(56,189,248,0.14); }
+        .sport-icon:nth-child(2) { left: 13%; top: 32%; width: 118px; height: 118px; font-size: 46px; --dur: 26s; --tint: rgba(14,165,233,0.16); }
+        .sport-icon:nth-child(3) { left: 24%; top: 62%; width: 88px;  height: 88px;  font-size: 34px; --dur: 18s; --tint: rgba(125,211,252,0.14); }
+        .sport-icon:nth-child(4) { left: 38%; top: 14%; width: 112px; height: 112px; font-size: 44px; --dur: 28s; --tint: rgba(14,165,233,0.15); }
+        .sport-icon:nth-child(5) { left: 49%; top: 44%; width: 78px;  height: 78px;  font-size: 30px; --dur: 21s; --tint: rgba(56,189,248,0.14); }
+        .sport-icon:nth-child(6) { left: 59%; top: 70%; width: 100px; height: 100px; font-size: 40px; --dur: 25s; --tint: rgba(14,165,233,0.15); }
+        .sport-icon:nth-child(7) { left: 73%; top: 18%; width: 120px; height: 120px; font-size: 48px; --dur: 24s; --tint: rgba(125,211,252,0.15); }
+        .sport-icon:nth-child(8) { left: 84%; top: 54%; width: 88px;  height: 88px;  font-size: 34px; --dur: 19s; --tint: rgba(56,189,248,0.14); }
+        .sport-icon:nth-child(9) { left: 92%; top: 78%; width: 78px;  height: 78px;  font-size: 30px; --dur: 23s; --tint: rgba(14,165,233,0.14); }
+        .sport-icon:nth-child(10) { left: 7%;  top: 84%; width: 108px; height: 108px; font-size: 42px; --dur: 27s; --tint: rgba(125,211,252,0.15); }
+        .sport-icon:nth-child(11) { left: 31%; top: 90%; width: 88px;  height: 88px;  font-size: 34px; --dur: 20s; --tint: rgba(56,189,248,0.14); }
+        .sport-icon:nth-child(12) { left: 68%; top: 6%;  width: 100px; height: 100px; font-size: 40px; --dur: 22s; --tint: rgba(14,165,233,0.15); }
 
-        @keyframes sportFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            25% { transform: translate(30px, -30px) rotate(5deg) scale(1.1); }
-            50% { transform: translate(-20px, 20px) rotate(-5deg) scale(0.9); }
-            75% { transform: translate(40px, 10px) rotate(3deg) scale(1.05); }
+        .sport-icon::after {
+            content: '';
+            position: absolute;
+            top: 9%;
+            left: 18%;
+            width: 26%;
+            height: 18%;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.35);
+            filter: blur(1px);
+            pointer-events: none;
+        }
+
+        @keyframes sportBob {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            30% { transform: translateY(-16px) rotate(4deg) scale(1.04); }
+            60% { transform: translateY(8px) rotate(-3deg) scale(0.98); }
+            80% { transform: translateY(-6px) rotate(2deg) scale(1.02); }
+        }
+
+        /* ===== AURORA SHEEN ===== */
+        .aurora {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 25% 35%, rgba(56,189,248,0.28) 0%, transparent 55%),
+                radial-gradient(ellipse at 75% 30%, rgba(14,165,233,0.25) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 85%, rgba(125,211,252,0.2) 0%, transparent 55%);
+            filter: blur(20px);
+            animation: auroraDrift 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes auroraDrift {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.7; }
+            50% { transform: translate(-3%, -2%) scale(1.08) rotate(2deg); opacity: 1; }
+            100% { transform: translate(2%, 3%) scale(1.04) rotate(-2deg); opacity: 0.8; }
+        }
+
+        /* ===== TWINKLING PARTICLES ===== */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 6px 1px rgba(122, 200, 255, 0.6);
+            animation: particleFloat var(--d, 18s) ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            15% { opacity: 1; }
+            50% { transform: translateY(-60px) scale(0.6); opacity: 0.8; }
+            85% { opacity: 1; }
+            100% { transform: translateY(-120px) scale(0.3); opacity: 0; }
+        }
+
+        /* ===== ANIMATED WAVES ===== */
+        .waves {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40vh;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .waves .wave {
+            position: absolute;
+            bottom: 0;
+            height: 120%;
+            width: 240%;
+            background-size: 1000px 100%;
+            background-repeat: repeat-x;
+            opacity: 0.55;
+            animation: waveShift var(--w, 18s) linear infinite;
+        }
+
+        .waves .wave-1 { background-image: radial-gradient(ellipse at 0 100%, rgba(14,165,233,0.35) 0%, transparent 60%); }
+        .waves .wave-2 { background-image: radial-gradient(ellipse at 30% 100%, rgba(56,189,248,0.3) 0%, transparent 55%); animation-duration: 24s; }
+        .waves .wave-3 { background-image: radial-gradient(ellipse at 60% 100%, rgba(7,89,133,0.4) 0%, transparent 60%); animation-duration: 30s; }
+
+        @keyframes waveShift {
+            0% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(-12%) translateY(-12px); }
+            100% { transform: translateX(-24%) translateY(0); }
+        }
+
+        /* ===== KINERJA & AKSESIBILITAS ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .bg-gradient-animation,
+            .aurora,
+            .orb,
+            .sport-icon,
+            .particle,
+            .waves .wave {
+                animation: none !important;
+            }
         }
 
         /* ===== AUTH CARD ===== */
+        /* ===== AUTH WRAPPER BACK ARROW ===== */
+        .auth-back {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #ffffff;
+            font-size: 17px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+        }
+        .auth-back:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(-3px);
+            color: #ffffff;
+            box-shadow: 0 8px 26px rgba(0,0,0,0.3);
+        }
+
         .auth-wrapper {
             position: relative;
             z-index: 1;
@@ -208,15 +353,15 @@
         }
 
         .brand-logo-container {
-            width: 90px;
-            height: 90px;
-            border-radius: 20px;
+            width: 140px;
+            height: 80px;
+            border-radius: 16px;
             background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 40px rgba(14,165,233,0.2);
-            padding: 10px;
+            padding: 6px;
             position: relative;
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 2px solid rgba(14,165,233,0.08);
@@ -226,7 +371,7 @@
             content: '';
             position: absolute;
             inset: -4px;
-            border-radius: 24px;
+            border-radius: 20px;
             background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc);
             opacity: 0.2;
             filter: blur(12px);
@@ -502,15 +647,22 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-height: 640px) {
+            body {
+                align-items: flex-start;
+                padding: 24px 0;
+            }
+        }
+
         @media (max-width: 480px) {
             .auth-card {
                 padding: 30px 22px;
                 border-radius: 20px;
             }
             .brand-logo-container {
-                width: 72px;
-                height: 72px;
-                padding: 8px;
+                width: 112px;
+                height: 64px;
+                padding: 5px;
             }
             .brand h2 {
                 font-size: 22px;
@@ -529,11 +681,63 @@
                 font-size: 13px;
             }
             .sport-icon {
-                font-size: 30px !important;
+                width: 52px !important;
+                height: 52px !important;
+                font-size: 20px !important;
             }
             .orb-1 { width: 250px; height: 250px; }
             .orb-2 { width: 200px; height: 200px; }
             .orb-3 { width: 150px; height: 150px; }
+        }
+
+        /* ===== MOBILE SCROLL INDICATOR ===== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8, #7dd3fc);
+            z-index: 2000;
+            display: none;
+        }
+
+        .mobile-scroll-track {
+            display: none;
+            position: fixed;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 38vh;
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 10px;
+            z-index: 2000;
+            touch-action: none;
+            cursor: pointer;
+        }
+
+        .mobile-scrollbar-thumb {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 18%;
+            background: linear-gradient(180deg, #0ea5e9, #38bdf8);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.4);
+            transition: background 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-progress {
+                display: block;
+            }
+            .mobile-scroll-track {
+                display: block;
+                right: 4px;
+            }
         }
     </style>
 </head>
@@ -544,6 +748,7 @@
     <!-- ===== BACKGROUND ANIMATION ===== -->
     <div class="bg-animation">
         <div class="bg-gradient-animation"></div>
+        <div class="aurora"></div>
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
@@ -562,6 +767,40 @@
             <i class="fas fa-skating sport-icon"></i>
             <i class="fas fa-hiking sport-icon"></i>
         </div>
+
+        <div class="particles">
+            <span class="particle" style="left:6%;top:70%;width:6px;height:6px;--d:16s;"></span>
+            <span class="particle" style="left:14%;top:40%;width:4px;height:4px;--d:20s;"></span>
+            <span class="particle" style="left:22%;top:80%;width:5px;height:5px;--d:14s;"></span>
+            <span class="particle" style="left:31%;top:55%;width:3px;height:3px;--d:22s;"></span>
+            <span class="particle" style="left:42%;top:75%;width:6px;height:6px;--d:18s;"></span>
+            <span class="particle" style="left:55%;top:45%;width:4px;height:4px;--d:15s;"></span>
+            <span class="particle" style="left:64%;top:70%;width:5px;height:5px;--d:23s;"></span>
+            <span class="particle" style="left:74%;top:50%;width:3px;height:3px;--d:17s;"></span>
+            <span class="particle" style="left:84%;top:72%;width:6px;height:6px;--d:21s;"></span>
+            <span class="particle" style="left:93%;top:60%;width:4px;height:4px;--d:19s;"></span>
+            <span class="particle" style="left:12%;top:20%;width:5px;height:5px;--d:25s;"></span>
+            <span class="particle" style="left:48%;top:12%;width:4px;height:4px;--d:13s;"></span>
+            <span class="particle" style="left:78%;top:22%;width:5px;height:5px;--d:26s;"></span>
+            <span class="particle" style="left:33%;top:28%;width:3px;height:3px;--d:28s;"></span>
+        </div>
+
+        <div class="waves">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+        </div>
+    </div>
+
+    <!-- ===== BACK ARROW (KEMBALI TO LOGIN) ===== -->
+    <a href="{{ route('login') }}" class="auth-back" title="Kembali Login" aria-label="Kembali ke halaman login">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <!-- ===== MOBILE SCROLL: GARIS DRAGGABLE + TOP PROGRESS BAR ===== -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="mobile-scroll-track" id="mobileScrollTrack">
+        <div class="mobile-scrollbar-thumb" id="mobileScrollThumb"></div>
     </div>
 
     <!-- ===== AUTH CARD ===== -->
@@ -571,9 +810,10 @@
             <div class="brand">
                 <div class="brand-logo-wrapper">
                     <div class="brand-logo-container">
-                        <img src="{{ asset('images/logo-smk-bppi.png') }}" 
-                             alt="Logo SMK BPPI Baleendah" 
-                             loading="lazy">
+                        <img src="{{ asset('images/logo-simskul.png') }}"
+                             alt="Logo SIMSKUL" 
+                             loading="lazy"
+                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
                     </div>
                 </div>
 
@@ -582,7 +822,7 @@
                 <div class="brand-line"></div>
                 
                 <div class="school-name">
-                    <strong>SMK BPPI Baleendah</strong>
+                    <strong>SIMSKUL</strong>
                 </div>
             </div>
 
@@ -598,6 +838,66 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ===== MOBILE SCROLL: TOP PROGRESS + DRAGGABLE GARIS =====
+        var scrollTrackEl = document.getElementById('mobileScrollTrack');
+        var scrollThumbEl = document.getElementById('mobileScrollThumb');
+        var scrollProgressEl = document.getElementById('scrollProgress');
+        var scrollDragging = false;
+        var scrollDragOffset = 0;
+
+        function updateScrollIndicator() {
+            if (!scrollThumbEl || !scrollTrackEl) return;
+            var total = document.body.scrollHeight - window.innerHeight;
+            if (total <= 0) {
+                scrollThumbEl.style.height = '18%';
+                scrollThumbEl.style.top = '0px';
+                if (scrollProgressEl) scrollProgressEl.style.width = '0%';
+                return;
+            }
+            var frac = Math.min(1, Math.max(0, window.scrollY / total));
+            var trackH = scrollTrackEl.getBoundingClientRect().height;
+            var thumbH = Math.max(36, trackH * (window.innerHeight / document.body.scrollHeight));
+            scrollThumbEl.style.height = thumbH + 'px';
+            scrollThumbEl.style.top = (frac * (trackH - thumbH)) + 'px';
+            if (scrollProgressEl) scrollProgressEl.style.width = (frac * 100) + '%';
+        }
+
+        if (scrollThumbEl && scrollTrackEl) {
+            scrollThumbEl.addEventListener('pointerdown', function(event) {
+                scrollDragging = true;
+                scrollDragOffset = event.clientY - (scrollTrackEl.getBoundingClientRect().top + scrollThumbEl.getBoundingClientRect().top);
+                event.preventDefault();
+            });
+
+            document.addEventListener('pointermove', function(event) {
+                if (!scrollDragging || !scrollTrackEl || !scrollThumbEl) return;
+                var total = document.body.scrollHeight - window.innerHeight;
+                if (total <= 0) { scrollDragging = false; return; }
+                var trackH = scrollTrackEl.getBoundingClientRect().height;
+                var thumbH = scrollThumbEl.getBoundingClientRect().height;
+                var frac = (event.clientY - (scrollTrackEl.getBoundingClientRect().top + scrollDragOffset)) / (trackH - thumbH);
+                window.scrollTo(0, Math.min(1, Math.max(0, frac)) * total);
+            });
+
+            document.addEventListener('pointerup', function() {
+                scrollDragging = false;
+            });
+
+            scrollTrackEl.addEventListener('click', function(event) {
+                if (event.target === scrollThumbEl) return;
+                var total = document.body.scrollHeight - window.innerHeight;
+                if (total <= 0 || !scrollThumbEl) return;
+                var trackH = scrollTrackEl.getBoundingClientRect().height;
+                var thumbH = scrollThumbEl.getBoundingClientRect().height;
+                var frac = (event.clientY - (scrollTrackEl.getBoundingClientRect().top + thumbH / 2)) / (trackH - thumbH);
+                window.scrollTo(0, Math.min(1, Math.max(0, frac)) * total);
+            });
+        }
+
+        document.addEventListener('scroll', updateScrollIndicator);
+        window.addEventListener('resize', updateScrollIndicator);
+        updateScrollIndicator();
+
         // ===== REGISTER SERVICE WORKER =====
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {

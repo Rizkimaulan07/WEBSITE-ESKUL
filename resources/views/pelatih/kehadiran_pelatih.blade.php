@@ -77,6 +77,7 @@
                                         <option value="hadir" {{ isset($kehadiranHariIni) && $kehadiranHariIni->status == 'hadir' ? 'selected' : '' }}>✅ Hadir</option>
                                         <option value="izin" {{ isset($kehadiranHariIni) && $kehadiranHariIni->status == 'izin' ? 'selected' : '' }}>📝 Izin</option>
                                         <option value="sakit" {{ isset($kehadiranHariIni) && $kehadiranHariIni->status == 'sakit' ? 'selected' : '' }}>🏥 Sakit</option>
+                                        <option value="alpa" {{ isset($kehadiranHariIni) && $kehadiranHariIni->status == 'alpa' ? 'selected' : '' }}>❌ Alpa</option>
                                     </select>
                                 </div>
 

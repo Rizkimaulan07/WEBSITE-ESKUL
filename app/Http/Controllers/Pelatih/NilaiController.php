@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\NilaiAnggota;
 use App\Models\Kehadiran;
 use App\Models\User;
-use App\Models\Ekstrakurikuler;
 use App\Exports\NilaiPelatihExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class NilaiController extends Controller
@@ -51,11 +51,6 @@ class NilaiController extends Controller
                                           ->where('pelatih_id', $pelatih->id)
                                           ->where('ekskul_id', $ekskul->id)
                                           ->first();
-            
-            $anggota->kehadiran = Kehadiran::where('anggota_id', $anggota->id)
-                                           ->where('ekskul_id', $ekskul->id)
-                                           ->whereDate('tanggal', today())
-                                           ->first();
         }
 
         // Statistik predikat (huruf S/A/B)
@@ -112,9 +107,14 @@ class NilaiController extends Controller
             return redirect()->back()->with('error', 'Anggota tidak ditemukan atau bukan anggota Anda!');
         }
 
+        $semester = $this->getSemester();
+        $tahunAjaran = date('Y');
+
         $existing = NilaiAnggota::where('anggota_id', $request->anggota_id)
                                 ->where('pelatih_id', $pelatih->id)
                                 ->where('ekskul_id', $ekskul->id)
+                                ->where('semester', $semester)
+                                ->where('tahun_ajaran', $tahunAjaran)
                                 ->first();
 
         if ($existing) {
@@ -132,10 +132,70 @@ class NilaiController extends Controller
                 'predikat' => $request->predikat,
                 'nilai_total' => 0,
                 'catatan' => $request->catatan,
-                'semester' => $this->getSemester(),
-                'tahun_ajaran' => date('Y')
+                'semester' => $semester,
+                'tahun_ajaran' => $tahunAjaran
             ]);
             $message = '✅ Nilai berhasil ditambahkan!';
+        }
+
+        return redirect()->route('pelatih.nilai')->with('success', $message);
+    }
+
+    public function updateCatatan(Request $request)
+    {
+        $request->validate([
+            'anggota_id' => 'required|exists:users,id',
+            'catatan' => 'nullable|string|max:500'
+        ]);
+
+        $pelatih = Auth::user();
+        $ekskul = $pelatih->ekskul;
+
+        if (!$ekskul) {
+            return redirect()->back()->with('error', 'Anda belum memiliki ekskul!');
+        }
+
+        // Cek apakah anggota ini mengikuti ekskul pelatih dan di bawah naungannya
+        $anggota = User::where('id', $request->anggota_id)
+                       ->where('role', 'anggota')
+                       ->whereHas('ekskuls', function ($query) use ($ekskul) {
+                           $query->where('ekstrakurikulers.id', $ekskul->id);
+                       })
+                       ->where(function ($query) use ($pelatih) {
+                           $query->where('pelatih_id', $pelatih->id)
+                                 ->orWhereNull('pelatih_id');
+                       })
+                       ->first();
+
+        if (!$anggota) {
+            return redirect()->back()->with('error', 'Anggota tidak ditemukan atau bukan anggota Anda!');
+        }
+
+        $semester = $this->getSemester();
+        $tahunAjaran = date('Y');
+
+        $existing = NilaiAnggota::where('anggota_id', $request->anggota_id)
+                                ->where('pelatih_id', $pelatih->id)
+                                ->where('ekskul_id', $ekskul->id)
+                                ->where('semester', $semester)
+                                ->where('tahun_ajaran', $tahunAjaran)
+                                ->first();
+
+        if ($existing) {
+            $existing->update(['catatan' => $request->catatan]);
+            $message = '✅ Keterangan berhasil diupdate!';
+        } else {
+            NilaiAnggota::create([
+                'anggota_id' => $request->anggota_id,
+                'pelatih_id' => $pelatih->id,
+                'ekskul_id' => $ekskul->id,
+                'predikat' => 'B',
+                'nilai_total' => 0,
+                'catatan' => $request->catatan,
+                'semester' => $semester,
+                'tahun_ajaran' => $tahunAjaran
+            ]);
+            $message = '✅ Keterangan berhasil disimpan!';
         }
 
         return redirect()->route('pelatih.nilai')->with('success', $message);
@@ -227,7 +287,7 @@ class NilaiController extends Controller
                                           ->first();
         }
 
-        $filename = 'nilai_anggota_' . $ekskul->nama_ekskul . '_' . date('Ymd_His') . '.xlsx';
+        $filename = 'nilai_anggota_' . Str::slug($ekskul->nama_ekskul) . '_' . date('Ymd_His') . '.xlsx';
 
         return Excel::download(new NilaiPelatihExport($anggotas), $filename);
     }

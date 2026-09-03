@@ -9,7 +9,7 @@
     {{-- PWA META TAGS --}}
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0ea5e9">
-    <link rel="apple-touch-icon" href="/images/logo-smk-bppi.png">
+    <link rel="apple-touch-icon" href="/images/logo-simskul.png">
 
     <title>{{ config('app.name', 'SIMSKUL') }} - @yield('title')</title>
 
@@ -70,7 +70,7 @@
         .sidebar {
             width: var(--sidebar-width);
             min-height: 100vh;
-            background: linear-gradient(180deg, #0c4a6e 0%, #0284c7 50%, #0c4a6e 100%);
+            background: #ffffff;
             position: fixed;
             top: 0;
             left: 0;
@@ -79,7 +79,8 @@
             padding: 0;
             overflow-y: auto;
             transition: var(--transition);
-            border-right: 1px solid rgba(255,255,255,0.06);
+            border-right: 1px solid #e2e8f0;
+            box-shadow: 8px 0 30px rgba(15, 23, 42, 0.05);
         }
 
         .sidebar::-webkit-scrollbar {
@@ -99,10 +100,11 @@
         /* ===== SIDEBAR BRAND ===== */
         .sidebar-brand {
             padding: 24px 20px 18px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             position: relative;
             overflow: hidden;
         }
@@ -120,22 +122,22 @@
         }
 
         .sidebar-brand .brand-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.1);
+            width: 180px;
+            height: 86px;
+            border-radius: 12px;
+            background: #f8fafc;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--primary);
             font-size: 20px;
             box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
             transition: var(--transition);
             flex-shrink: 0;
             overflow: hidden;
-            padding: 6px;
+            padding: 4px;
         }
 
         .sidebar-brand .brand-icon img {
@@ -151,19 +153,22 @@
         }
 
         .sidebar-brand .brand-text h5 {
-            color: #ffffff;
+            color: #0f172a;
             font-weight: 800;
             font-size: 18px;
             margin: 0;
             letter-spacing: -0.5px;
             line-height: 1.2;
+            text-align: center;
         }
 
         .sidebar-brand .brand-text small {
-            color: rgba(255,255,255,0.78);
+            color: #64748b;
             font-size: 10px;
             letter-spacing: 1px;
             text-transform: uppercase;
+            display: block;
+            text-align: center;
         }
 
         /* ===== SIDEBAR MENU ===== */
@@ -172,7 +177,7 @@
         }
 
         .sidebar-menu .menu-label {
-            color: rgba(255,255,255,0.72);
+            color: #64748b;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -181,7 +186,7 @@
         }
 
         .sidebar-menu .nav-link {
-            color: rgba(255,255,255,0.92);
+            color: #475569;
             padding: 11px 16px;
             border-radius: var(--radius-sm);
             font-weight: 500;
@@ -203,7 +208,7 @@
             transform: translateY(-50%) scaleX(0);
             width: 3px;
             height: 28px;
-            background: #ffffff;
+            background: var(--primary);
             border-radius: 0 4px 4px 0;
             transition: var(--transition);
         }
@@ -214,14 +219,14 @@
         }
 
         .sidebar-menu .nav-link:hover {
-            color: #ffffff;
-            background: rgba(255,255,255,0.08);
+            color: var(--primary-dark);
+            background: #f0f9ff;
             transform: translateX(4px);
         }
 
         .sidebar-menu .nav-link.active {
-            color: #ffffff;
-            background: rgba(255,255,255,0.1);
+            color: var(--primary-dark);
+            background: #e0f2fe;
         }
 
         .sidebar-menu .nav-link i {
@@ -233,8 +238,8 @@
 
         .sidebar-menu .nav-link .badge {
             margin-left: auto;
-            background: rgba(255,255,255,0.15);
-            color: #ffffff;
+            background: #e0f2fe;
+            color: var(--primary-dark);
             font-size: 9px;
             padding: 2px 10px;
             border-radius: 20px;
@@ -244,9 +249,9 @@
         /* ===== SIDEBAR USER - DENGAN FOTO PROFIL ===== */
         .sidebar-user {
             padding: 16px 20px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid #e2e8f0;
             margin-top: 8px;
-            background: rgba(255,255,255,0.03);
+            background: #f8fafc;
         }
 
         .sidebar-user .avatar {
@@ -264,14 +269,14 @@
         }
 
         .sidebar-user .name {
-            color: #ffffff;
+            color: #0f172a;
             font-weight: 600;
             font-size: 14px;
             margin: 0;
         }
 
         .sidebar-user .role {
-            color: rgba(255,255,255,0.78);
+            color: #64748b;
             font-size: 11px;
             margin: 0;
         }
@@ -298,13 +303,14 @@
             padding: 0;
         }
 
-        /* ===== TOPBAR GLASS ===== */
+        /* ===== TOPBAR BIRU ===== */
         .topbar {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.04) 0%, rgba(56, 189, 248, 0.06) 50%, rgba(14, 165, 233, 0.04) 100%);
+            background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 50%, #0ea5e9 100%);
             backdrop-filter: blur(24px) saturate(1.8);
             -webkit-backdrop-filter: blur(24px) saturate(1.8);
             padding: 14px 36px;
-            border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 4px 24px rgba(12, 74, 110, 0.2);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -317,13 +323,13 @@
         .topbar .page-title h4 {
             font-weight: 800;
             font-size: 20px;
-            color: #0c4a6e;
+            color: #ffffff;
             margin: 0;
             letter-spacing: -0.5px;
         }
 
         .topbar .page-title p {
-            color: #475569;
+            color: rgba(255,255,255,0.72);
             margin: 0;
             font-size: 13px;
             font-weight: 500;
@@ -340,11 +346,11 @@
         }
 
         .topbar .topbar-right .date-display {
-            color: #0c4a6e;
+            color: #ffffff;
             font-size: 13px;
             font-weight: 500;
             padding: 6px 14px;
-            background: rgba(14, 165, 233, 0.06);
+            background: rgba(255,255,255,0.14);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -376,8 +382,8 @@
             padding: 8px 16px;
             border: none;
             border-radius: 10px;
-            background: rgba(239, 68, 68, 0.06);
-            color: #ef4444;
+            background: rgba(255,255,255,0.14);
+            color: #ffffff;
             font-weight: 500;
             font-size: 13px;
             transition: var(--transition);
@@ -399,15 +405,38 @@
             display: none;
             background: none;
             border: none;
-            color: #0c4a6e;
+            color: #ffffff;
             font-size: 22px;
             padding: 0;
             transition: var(--transition);
         }
 
         .sidebar-toggle:hover {
-            color: #0ea5e9;
+            color: #bae6fd;
             transform: scale(1.1);
+        }
+
+        /* ===== BACK ARROW ===== */
+        .btn-back-arrow {
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #ffffff;
+            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            font-size: 16px;
+            padding: 0;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-back-arrow:hover {
+            background: rgba(255,255,255,0.25);
+            color: #ffffff;
+            transform: translateX(-2px);
         }
 
         .sidebar-overlay {
@@ -486,6 +515,15 @@
         @media (max-width: 576px) {
             .topbar {
                 gap: 8px;
+            }
+            .sidebar-toggle {
+                width: 34px;
+                height: 34px;
+            }
+            .btn-back-arrow {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
             }
             .topbar .page-title {
                 min-width: 0;
@@ -957,11 +995,61 @@
         .table-modern tbody tr { transition: background 0.2s ease; }
         .table-modern tbody tr:hover { background: #f8fbff; }
 
+        /* ===== MOBILE SCROLL INDICATOR ===== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8, #7dd3fc);
+            z-index: 2000;
+            display: none;
+        }
+
+        .mobile-scroll-track {
+            display: none;
+            position: fixed;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 38vh;
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 10px;
+            z-index: 2000;
+            touch-action: none;
+            cursor: pointer;
+        }
+
+        .mobile-scrollbar-thumb {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 18%;
+            background: linear-gradient(180deg, #0ea5e9, #38bdf8);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.4);
+            transition: background 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-progress {
+                display: block;
+            }
+            .mobile-scroll-track {
+                display: block;
+                right: 4px;
+            }
+        }
+
     </style>
 
     @stack('styles')
 </head>
-<body>
+<body data-role="{{ auth()->check() ? Auth::user()->role : '' }}">
     <div id="loadingOverlayRoot"></div>
     <div id="toast-container" aria-live="polite"></div>
     @php
@@ -983,7 +1071,7 @@
             <!-- ===== BRAND / LOGO ===== -->
             <div class="sidebar-brand">
                 <div class="brand-icon">
-                    <img src="{{ asset('images/logo-smk-bppi.png') }}" alt="Logo SMK BPPI">
+                    <img src="{{ asset('images/logo-simskul.png') }}" alt="Logo SIMSKUL">
                 </div>
                 <div class="brand-text">
                     <h5>SIMSKUL</h5>
@@ -1126,6 +1214,9 @@
                     <button class="sidebar-toggle" onclick="toggleSidebar()">
                         <i class="fas fa-bars"></i>
                     </button>
+                    <button class="btn-back-arrow" onclick="goBack()" title="Kembali" aria-label="Kembali ke halaman sebelumnya">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
                     <div class="page-title">
                         <h4>@yield('title', 'Dashboard')</h4>
                         <p>@yield('subtitle', '')</p>
@@ -1151,6 +1242,12 @@
                 @yield('content')
             </div>
         </div>
+    </div>
+
+    <!-- ===== MOBILE SCROLL: GARIS DRAGGABLE + TOP PROGRESS BAR ===== -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="mobile-scroll-track" id="mobileScrollTrack">
+        <div class="mobile-scrollbar-thumb" id="mobileScrollThumb"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1180,6 +1277,50 @@
                     overlay.classList.remove('show');
                 }
             }
+        });
+
+        // ===== BACK ARROW: KEMBALI KE MENIMUSI PAKARA APP =====
+        var AUTH_RE = /^\/(login|register|forgot-password|reset-password|confirm-password|verify-email|two-factor-challenge)(\/|$)/;
+
+        function goBack() {
+            var cur = window.location.pathname;
+
+            // Kalau halaman auth — kembali chug dengen ke login.
+            if (AUTH_RE.test(cur)) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // Menimusi sedike dengen dal halaman utama app (seshionStorage).
+            var pending = sessionStorage.getItem('eskskul_back_target');
+            if (pending && pending !== cur && !AUTH_RE.test(pending)) {
+                sessionStorage.removeItem('eskskul_back_target');
+                window.location.href = pending;
+                return;
+            }
+            sessionStorage.removeItem('eskskul_back_target');
+
+            // Kembali via browser history kalau dalam sebenarnya dari halaman app lain.
+            if (document.referrer && document.referrer.indexOf(location.origin) === 0 && history.length > 1) {
+                history.back();
+                return;
+            }
+
+            // Fallback: dashboard peran.
+            var role = (document.body.getAttribute('data-role') || '').toLowerCase();
+            var dash = role === 'admin' ? '/admin'
+                     : role === 'pelatih' ? '/pelatih'
+                     : '/anggota/dashboard';
+            window.location.href = dash;
+        }
+
+        // Tambeh target tarih guna klik kadinom sendirek di halaman app.
+        document.addEventListener('click', function(event) {
+            var a = event.target.closest ? event.target.closest('a[href]') : null;
+            if (!a || !a.href || a.href.indexOf(location.origin) !== 0) return;
+            var path = new URL(a.href).pathname;
+            if (AUTH_RE.test(path)) return;
+            sessionStorage.setItem('eskskul_back_target', window.location.pathname);
         });
 
         // ===== RESPONSIVE: INJEKSI LABEL KOLOM UNTUK TABEL STACK DI HP =====
@@ -1265,6 +1406,66 @@
                 window.__toastData = null;
             }
         });
+
+        // ===== MOBILE SCROLL: TOP PROGRESS + DRAUGGABLE GARIS =====
+        var scrollTrackEl = document.getElementById('mobileScrollTrack');
+        var scrollThumbEl = document.getElementById('mobileScrollThumb');
+        var scrollProgressEl = document.getElementById('scrollProgress');
+        var scrollDragging = false;
+        var scrollDragOffset = 0;
+
+        function updateScrollIndicator() {
+            if (!scrollThumbEl || !scrollTrackEl) return;
+            var total = document.body.scrollHeight - window.innerHeight;
+            if (total <= 0) {
+                scrollThumbEl.style.height = '18%';
+                scrollThumbEl.style.top = '0px';
+                if (scrollProgressEl) scrollProgressEl.style.width = '0%';
+                return;
+            }
+            var frac = Math.min(1, Math.max(0, window.scrollY / total));
+            var trackH = scrollTrackEl.getBoundingClientRect().height;
+            var thumbH = Math.max(36, trackH * (window.innerHeight / document.body.scrollHeight));
+            scrollThumbEl.style.height = thumbH + 'px';
+            scrollThumbEl.style.top = (frac * (trackH - thumbH)) + 'px';
+            if (scrollProgressEl) scrollProgressEl.style.width = (frac * 100) + '%';
+        }
+
+        if (scrollThumbEl && scrollTrackEl) {
+            scrollThumbEl.addEventListener('pointerdown', function(event) {
+                scrollDragging = true;
+                scrollDragOffset = event.clientY - (scrollTrackEl.getBoundingClientRect().top + scrollThumbEl.getBoundingClientRect().top);
+                event.preventDefault();
+            });
+
+            document.addEventListener('pointermove', function(event) {
+                if (!scrollDragging || !scrollTrackEl || !scrollThumbEl) return;
+                var total = document.body.scrollHeight - window.innerHeight;
+                if (total <= 0) { scrollDragging = false; return; }
+                var trackH = scrollTrackEl.getBoundingClientRect().height;
+                var thumbH = scrollThumbEl.getBoundingClientRect().height;
+                var frac = (event.clientY - (scrollTrackEl.getBoundingClientRect().top + scrollDragOffset)) / (trackH - thumbH);
+                window.scrollTo(0, Math.min(1, Math.max(0, frac)) * total);
+            });
+
+            document.addEventListener('pointerup', function() {
+                scrollDragging = false;
+            });
+
+            scrollTrackEl.addEventListener('click', function(event) {
+                if (event.target === scrollThumbEl) return;
+                var total = document.body.scrollHeight - window.innerHeight;
+                if (total <= 0 || !scrollThumbEl) return;
+                var trackH = scrollTrackEl.getBoundingClientRect().height;
+                var thumbH = scrollThumbEl.getBoundingClientRect().height;
+                var frac = (event.clientY - (scrollTrackEl.getBoundingClientRect().top + thumbH / 2)) / (trackH - thumbH);
+                window.scrollTo(0, Math.min(1, Math.max(0, frac)) * total);
+            });
+        }
+
+        document.addEventListener('scroll', updateScrollIndicator);
+        window.addEventListener('resize', updateScrollIndicator);
+        updateScrollIndicator();
 
         // ===== REGISTER SERVICE WORKER (Untuk PWA) =====
         if ('serviceWorker' in navigator) {

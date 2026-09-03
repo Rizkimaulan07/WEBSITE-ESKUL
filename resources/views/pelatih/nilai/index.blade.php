@@ -11,7 +11,7 @@
             <div>
                 <h6 class="fw-bold mb-0" style="color: #0f172a;">
                     <i class="fas fa-trophy me-2" style="color: #0ea5e9;"></i>
-                    {{ $ekskul->nama_ekskul ?? 'Ekskul' }}
+                    {{ $ekskul?->nama_ekskul ?? 'Ekskul' }}
                 </h6>
                 <small class="text-muted" style="color: #64748b;">
                     Semester {{ $semester }} - Tahun Ajaran {{ $tahunAjaran }}
@@ -186,12 +186,9 @@
                             </form>
                         </td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
-                            <form action="{{ route('pelatih.nilai.store') }}" method="POST" class="catatan-form">
+                            <form action="{{ route('pelatih.nilai.catatan') }}" method="POST" class="catatan-form">
                                 @csrf
                                 <input type="hidden" name="anggota_id" value="{{ $item->id }}">
-                                @if($predikat)
-                                    <input type="hidden" name="predikat" value="{{ $predikat }}">
-                                @endif
                                 <div class="d-flex align-items-center gap-2">
                                     <input type="text" name="catatan" class="form-control form-control-sm input-catatan" 
                                            placeholder="Keterangan / catatan (opsional)" value="{{ $catatan }}"
@@ -216,7 +213,7 @@
                                 <div class="empty-icon" style="font-size: 56px; color: #d1d5db; margin-bottom: 16px; opacity: 0.5;"><i class="fas fa-user-plus"></i></div>
                                 <h6 class="empty-title" style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Belum ada anggota</h6>
                                 <p class="empty-desc" style="color: #64748b; font-size: 13px; margin-bottom: 4px;">Tambahkan anggota terlebih dahulu</p>
-                                <a href="{{ route('admin.anggota.create') }}" class="btn-primary-gradient mt-2" target="_blank" 
+                                <a href="{{ route('pelatih.anggota.create') }}" class="btn-primary-gradient mt-2" 
                                    style="padding: 10px 24px; font-size: 13px; font-weight: 600;">
                                     <i class="fas fa-plus me-2"></i> Tambah Anggota
                                 </a>

@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Pelatih;
 
 use App\Http\Controllers\Controller;
-use App\Models\KehadiranPelatih;
-use App\Models\Kehadiran;
-use App\Models\Ekstrakurikuler;
-use App\Exports\KehadiranPelatihExport;
+use App\Models\KehadiranPelatih;use App\Exports\KehadiranPelatihExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -227,102 +224,6 @@ class KehadiranPelatihController extends Controller
         $filename = 'kehadiran_pelatih_' . $suffix . '.xlsx';
 
         return Excel::download(new KehadiranPelatihExport($rekap), $filename);
-    }
-
-    /**
-     * Rekap kehadiran anggota untuk pelatih
-     * Gabungan rekap bulanan dan tahunan
-     */
-    public function rekap(Request $request)
-    {
-        $year = $request->input('year', now()->year);
-        $month = $request->input('month', 'all');
-        
-        // Get user dan ekskul
-        $user = Auth::user();
-        $ekskul = $user->ekskul;
-        
-        if (!$ekskul) {
-            return redirect()->route('pelatih.dashboard')
-                             ->with('error', 'Anda belum memiliki ekskul!');
-        }
-        
-        // Get available years from data
-        $availableYears = Kehadiran::where('ekskul_id', $ekskul->id)
-            ->selectRaw('YEAR(tanggal) as year')
-            ->distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year');
-        
-        if ($availableYears->isEmpty()) {
-            $availableYears = collect(range(now()->year - 4, now()->year));
-        }
-        
-        // Build query untuk rekap per anggota
-        $query = Kehadiran::where('ekskul_id', $ekskul->id)
-            ->whereYear('tanggal', $year);
-        
-        // Jika tidak memilih "Semua Bulan"
-        if ($month != 'all') {
-            $query->whereMonth('tanggal', $month);
-        }
-        
-        // Get rekap data per anggota
-        $rekap = $query->select(
-                'anggota_id',
-                DB::raw('COUNT(*) as total'),
-                DB::raw('SUM(CASE WHEN status = "hadir" THEN 1 ELSE 0 END) as hadir'),
-                DB::raw('SUM(CASE WHEN status = "izin" THEN 1 ELSE 0 END) as izin'),
-                DB::raw('SUM(CASE WHEN status = "sakit" THEN 1 ELSE 0 END) as sakit'),
-                DB::raw('SUM(CASE WHEN status = "alpa" THEN 1 ELSE 0 END) as alpa'),
-                DB::raw('AVG(nilai) as nilai_avg')
-            )
-            ->with('anggota')
-            ->groupBy('anggota_id')
-            ->get()
-            ->map(function($item) {
-                $item->persentase_hadir = $item->total > 0 
-                    ? round(($item->hadir / $item->total) * 100, 2) 
-                    : 0;
-                return $item;
-            });
-        
-        // Statistik
-        $statistik = [
-            'total' => $rekap->sum('total'),
-            'hadir' => $rekap->sum('hadir'),
-            'izin' => $rekap->sum('izin'),
-            'sakit' => $rekap->sum('sakit'),
-            'alpa' => $rekap->sum('alpa'),
-        ];
-        
-        // Monthly summary (jika memilih semua bulan)
-        $monthlySummary = null;
-        if ($month == 'all') {
-            $monthlySummary = Kehadiran::where('ekskul_id', $ekskul->id)
-                ->whereYear('tanggal', $year)
-                ->select(
-                    DB::raw('MONTH(tanggal) as bulan'),
-                    DB::raw('COUNT(*) as total'),
-                    DB::raw('SUM(CASE WHEN status = "hadir" THEN 1 ELSE 0 END) as hadir'),
-                    DB::raw('SUM(CASE WHEN status = "izin" THEN 1 ELSE 0 END) as izin'),
-                    DB::raw('SUM(CASE WHEN status = "sakit" THEN 1 ELSE 0 END) as sakit'),
-                    DB::raw('SUM(CASE WHEN status = "alpa" THEN 1 ELSE 0 END) as alpa')
-                )
-                ->groupBy('bulan')
-                ->orderBy('bulan')
-                ->get();
-        }
-        
-        return view('pelatih.kehadiran.rekap', compact(
-            'year', 
-            'month', 
-            'rekap', 
-            'statistik', 
-            'availableYears', 
-            'ekskul',
-            'monthlySummary'
-        ));
     }
 
     /**

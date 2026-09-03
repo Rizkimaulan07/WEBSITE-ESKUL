@@ -179,8 +179,12 @@
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <span class="footer-info" style="font-size: 12px; color: #64748b;">
                 <i class="fas fa-list me-1"></i>
-                Menampilkan {{ $nilai->firstItem() }} - {{ $nilai->lastItem() }} 
-                dari {{ $nilai->total() }} data
+                @if($nilai->total() > 0)
+                    Menampilkan {{ $nilai->firstItem() }} - {{ $nilai->lastItem() }} 
+                    dari {{ $nilai->total() }} data
+                @else
+                    Tidak ada data
+                @endif
             </span>
             <div>
                 {{ $nilai->links('pagination::bootstrap-5') }}

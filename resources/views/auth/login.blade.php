@@ -18,9 +18,12 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
+            align-items: safe center;
             justify-content: center;
-            background: #0a0a1a;
-            overflow: hidden;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6a 30%, #0ea5e9 60%, #38bdf8 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 40px 0;
         }
 
         .bg-animation {
@@ -31,7 +34,7 @@
             bottom: 0;
             z-index: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #0a1628 0%, #1a3a6a 30%, #0ea5e9 60%, #38bdf8 100%);
+            background: transparent;
         }
         .bg-gradient-animation {
             position: absolute;
@@ -230,15 +233,15 @@
         .brand { text-align: center; margin-bottom: 28px; position: relative; }
         .brand-logo-wrapper { display: flex; justify-content: center; align-items: center; margin-bottom: 14px; }
         .brand-logo-container {
-            width: 90px;
-            height: 90px;
-            border-radius: 20px;
+            width: 140px;
+            height: 80px;
+            border-radius: 16px;
             background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 40px rgba(14,165,233,0.2);
-            padding: 10px;
+            padding: 6px;
             position: relative;
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 2px solid rgba(14,165,233,0.08);
@@ -247,7 +250,7 @@
             content: '';
             position: absolute;
             inset: -4px;
-            border-radius: 24px;
+            border-radius: 20px;
             background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc);
             opacity: 0.2;
             filter: blur(12px);
@@ -407,59 +410,6 @@
             100% { left: 100%; }
         }
 
-        .divider { display: flex; align-items: center; gap: 16px; margin: 26px 0; }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-        }
-        .divider span {
-            color: #64748b;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            white-space: nowrap;
-            font-weight: 600;
-        }
-
-        .role-badges {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .role-badge {
-            padding: 8px 22px;
-            border-radius: 24px;
-            border: 2px solid #e5e7eb;
-            color: #64748b;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            background: #f8fafc;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .role-badge:hover {
-            border-color: #0ea5e9;
-            color: #0ea5e9;
-            background: rgba(14,165,233,0.04);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(14,165,233,0.08);
-        }
-        .role-badge.active {
-            border-color: #0ea5e9;
-            color: #0ea5e9;
-            background: rgba(14,165,233,0.04);
-        }
-        .role-badge .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; }
-        .role-badge .dot.admin { background: #0ea5e9; }
-        .role-badge .dot.pelatih { background: #10b981; }
-        .role-badge .dot.anggota { background: #f59e0b; }
-
         .footer { text-align: center; margin-top: 26px; color: #64748b; font-size: 12px; letter-spacing: 0.5px; }
         .footer span { color: #0ea5e9; font-weight: 600; }
 
@@ -490,11 +440,9 @@
 
         @media (max-width: 480px) {
             .login-card { padding: 30px 22px; border-radius: 20px; }
-            .brand-logo-container { width: 72px; height: 72px; padding: 8px; }
+            .brand-logo-container { width: 112px; height: 64px; padding: 5px; }
             .brand h2 { font-size: 22px; }
             .form-options { flex-direction: column; gap: 12px; align-items: flex-start; }
-            .role-badges { gap: 6px; }
-            .role-badge { font-size: 12px; padding: 6px 16px; }
             .sport-icon { width: 52px !important; height: 52px !important; font-size: 20px !important; }
             .orb-1 { width: 250px; height: 250px; }
             .orb-2 { width: 200px; height: 200px; }
@@ -504,7 +452,13 @@
             .waves { height: 30vh; }
         }
 
-        /* ===== KINERJA & AKSESIBILITAS ===== */
+        /* ===== EKRAN LANDEBAU: KEREPANE KARD CEK HELEA BIAR ENAK SCROLL ===== */
+        @media (max-height: 640px) {
+            body {
+                align-items: flex-start;
+                padding: 24px 0;
+            }
+        }
         @media (prefers-reduced-motion: reduce) {
             .bg-gradient-animation,
             .aurora,
@@ -570,9 +524,10 @@
             <div class="brand">
                 <div class="brand-logo-wrapper">
                     <div class="brand-logo-container">
-                        <img src="{{ asset('images/logo-smk-bppi.png') }}" 
-                             alt="Logo SMK BPPI Baleendah" 
-                             loading="lazy">
+                        <img src="{{ asset('images/logo-simskul.png') }}" 
+                             alt="Logo SIMSKUL" 
+                             loading="lazy"
+                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
                     </div>
                 </div>
 
@@ -580,7 +535,7 @@
                 <p>Sistem Manajemen Ekstrakurikuler</p>
                 <div class="brand-line"></div>
                 <div class="school-name">
-                    <strong>SMK BPPI Baleendah</strong>
+                    <strong>SIMSKUL</strong>
                 </div>
             </div>
 
@@ -651,25 +606,6 @@
                 </button>
             </form>
 
-            <div class="divider">
-                <span>Login sebagai</span>
-            </div>
-
-            <div class="role-badges">
-                <span class="role-badge" onclick="autoFill('admin')">
-                    <span class="dot admin"></span>
-                    <i class="fas fa-shield-alt me-1"></i> Admin
-                </span>
-                <span class="role-badge" onclick="autoFill('pelatih')">
-                    <span class="dot pelatih"></span>
-                    <i class="fas fa-chalkboard-user me-1"></i> Pelatih
-                </span>
-                <span class="role-badge" onclick="autoFill('anggota')">
-                    <span class="dot anggota"></span>
-                    <i class="fas fa-user-graduate me-1"></i> Anggota
-                </span>
-            </div>
-
             <div class="footer">
                 &copy; {{ date('Y') }} <span>SIMSKUL</span> v3.0
             </div>
@@ -706,28 +642,6 @@
             }
         }
 
-        function autoFill(role) {
-            const emailInput = document.querySelector('input[name="email"]');
-            const passInput = document.querySelector('input[name="password"]');
-            
-            const credentials = {
-                admin: { email: 'admin@mail.com', pass: 'password' },
-                pelatih: { email: 'pelatih@mail.com', pass: 'password' },
-                anggota: { email: 'anggota@mail.com', pass: 'password' }
-            };
-
-            if (credentials[role]) {
-                emailInput.value = credentials[role].email;
-                passInput.value = credentials[role].pass;
-                
-                const badges = document.querySelectorAll('.role-badge');
-                badges.forEach(b => b.classList.remove('active'));
-                const clickedBadge = document.querySelector(`.role-badge .dot.${role}`)?.closest('.role-badge');
-                if (clickedBadge) {
-                    clickedBadge.classList.add('active');
-                }
-            }
-        }
-    </script>
+        </script>
 </body>
 </html>

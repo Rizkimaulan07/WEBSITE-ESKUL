@@ -18,6 +18,7 @@ class Ekstrakurikuler extends Model
         'jam_selesai',
         'tempat_latihan',
         'logo',
+        'status',
         'slug'  // Tambahkan ini
     ];
 

@@ -32,10 +32,10 @@ class NilaiController extends Controller
         $ekskuls = Ekstrakurikuler::orderBy('nama_ekskul')->get();
 
         $ringkasan = [
-            'total' => NilaiAnggota::count(),
-            's' => NilaiAnggota::where('predikat', 'S')->count(),
-            'a' => NilaiAnggota::where('predikat', 'A')->count(),
-            'b' => NilaiAnggota::where('predikat', 'B')->count(),
+            'total' => (clone $query)->count(),
+            's' => (clone $query)->where('predikat', 'S')->count(),
+            'a' => (clone $query)->where('predikat', 'A')->count(),
+            'b' => (clone $query)->where('predikat', 'B')->count(),
         ];
 
         return view('admin.nilai.index', compact('nilai', 'ekskuls', 'ringkasan'));

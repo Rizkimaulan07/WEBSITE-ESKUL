@@ -181,7 +181,11 @@
     <div class="card-footer-modern" style="padding: 14px 20px; border-top: 1px solid rgba(0,0,0,0.02); background: rgba(248,250,252,0.2);">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <span style="font-size: 12px; color: #64748b;">
-                Menampilkan {{ $nilai->firstItem() }} - {{ $nilai->lastItem() }} dari {{ $nilai->total() }} data
+                @if($nilai->total() > 0)
+                    Menampilkan {{ $nilai->firstItem() }} - {{ $nilai->lastItem() }} dari {{ $nilai->total() }} data
+                @else
+                    Tidak ada data
+                @endif
             </span>
             <div>{{ $nilai->links('pagination::bootstrap-5') }}</div>
         </div>

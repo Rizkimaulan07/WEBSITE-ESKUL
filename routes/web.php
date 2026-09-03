@@ -26,7 +26,7 @@ Route::get('/', function () {
 
 // ===== DASHBOARD =====
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
 // === ROUTE PROFILE ===
@@ -121,6 +121,7 @@ Route::middleware(['auth', 'role:pelatih'])->prefix('pelatih')->name('pelatih.')
     
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');
+    Route::post('/nilai/catatan', [NilaiController::class, 'updateCatatan'])->name('nilai.catatan');
     Route::post('/nilai/kehadiran', [NilaiController::class, 'storeKehadiran'])->name('nilai.kehadiran');
     Route::get('/nilai/export', [NilaiController::class, 'export'])->name('nilai.export');
     

@@ -15,9 +15,9 @@
     <div class="row align-items-center">
         <div class="col-lg-7">
             <div class="d-flex align-items-center gap-4">
-                <div class="avatar-ring" style="padding: 4px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-                    <div class="avatar-circle" style="width: 64px; height: 64px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.1); overflow: hidden;">
-                        <img src="{{ asset('images/logo-smk-bppi.png') }}" alt="SMK BPPI Baleendah" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+                <div class="avatar-ring" style="padding: 4px; border-radius: 16px; background: linear-gradient(135deg, #0ea5e9, #38bdf8, #7dd3fc); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                    <div class="avatar-circle" style="width: 144px; height: 80px; border-radius: 12px; background: #ffffff; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.1); overflow: hidden;">
+                        <img src="{{ asset('images/logo-simskul.png') }}" alt="SIMSKUL" style="width: 100%; height: 100%; object-fit: contain; padding: 3px;">
                     </div>
                 </div>
                 <div>

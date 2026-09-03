@@ -219,9 +219,11 @@
                             </td>
                             <td style="padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.015); vertical-align: middle;">
                                 <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <input type="hidden" name="anggota_ids[]" value="{{ $a->id }}">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="checkbox" 
-                                               name="anggota_ids[]" value="{{ $a->id }}"
+                                               name="presensi[{{ $a->id }}]"
+                                               value="hadir"
                                                id="hadir_{{ $a->id }}"
                                                {{ $isChecked ? 'checked' : '' }}
                                                data-id="{{ $a->id }}"
@@ -321,7 +323,7 @@
 
 <script>
     function checkAll() {
-        var checkboxes = document.querySelectorAll('input[name="anggota_ids[]"]');
+        var checkboxes = document.querySelectorAll('input[name^="presensi["]');
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = true;
             toggleStatus(checkboxes[i]);
@@ -330,7 +332,7 @@
     }
 
     function uncheckAll() {
-        var checkboxes = document.querySelectorAll('input[name="anggota_ids[]"]');
+        var checkboxes = document.querySelectorAll('input[name^="presensi["]');
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = false;
             toggleStatus(checkboxes[i]);
@@ -354,7 +356,7 @@
     }
 
     function updateHadirCount() {
-        var count = document.querySelectorAll('input[name="anggota_ids[]"]:checked').length;
+        var count = document.querySelectorAll('input[name^="presensi["]:checked').length;
         var hadirElement = document.getElementById('hadirCount');
         if (hadirElement) {
             hadirElement.textContent = count;
@@ -362,7 +364,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var checkboxes = document.querySelectorAll('input[name="anggota_ids[]"]');
+        var checkboxes = document.querySelectorAll('input[name^="presensi["]');
         for (var i = 0; i < checkboxes.length; i++) {
             toggleStatus(checkboxes[i]);
         }

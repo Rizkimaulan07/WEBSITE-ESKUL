@@ -45,6 +45,7 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'no_hp' => ['nullable', 'string', 'max:15'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
 
         if ($user->role == 'anggota') {
@@ -58,6 +59,14 @@ class ProfileController extends Controller
         }
 
         $validated = $request->validate($rules);
+
+        // Upload avatar jika ada file baru
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $path;
+        }
+
+        unset($validated['password']);
 
         $sameEmail = $user->email === $validated['email'];
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sismekul-v2';
+const CACHE_NAME = 'sismekul-v3';
 const CORE_ASSETS = ['/', '/login', '/offline'];
 
 self.addEventListener('install', event => {

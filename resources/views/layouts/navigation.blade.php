@@ -7,12 +7,11 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                        <img src="{{ asset('images/logo-smk-bppi.png') }}" alt="Logo" 
-                             style="height:40px; width:auto; border-radius:10px;"
+                        <img src="{{ asset('images/logo-simskul.png') }}" alt="Logo SIMSKUL"
+                             style="height:40px; width:auto; object-fit:contain; border-radius:10px;"
                              class="shadow-sm group-hover:shadow-md transition-shadow duration-300">
                         <div>
-                            <span class="fw-bold" style="font-size:16px; letter-spacing:-0.3px; color: #ffffff;">SMK BPPI</span>
-                            <span class="text-xs block" style="margin-top:-2px; color: rgba(255,255,255,0.4);">Baleendah</span>
+                            <span class="fw-bold" style="font-size:16px; letter-spacing:-0.3px; color: #ffffff;">SIMSKUL</span>
                         </div>
                     </a>
                 </div>

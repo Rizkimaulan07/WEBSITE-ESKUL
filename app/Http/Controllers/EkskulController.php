@@ -14,8 +14,12 @@ class EkskulController extends Controller
         $ekskuls = Ekstrakurikuler::withCount(['users' => function($query) {
             $query->where('role', 'anggota');
         }])->orderBy('created_at', 'desc')->paginate(10);
-        
-        return view('admin.ekskul.index', compact('ekskuls'));
+
+        $allEkskuls = Ekstrakurikuler::orderBy('nama_ekskul')->get();
+
+        $totalAnggota = \App\Models\User::where('role', 'anggota')->count();
+
+        return view('admin.ekskul.index', compact('ekskuls', 'allEkskuls', 'totalAnggota'));
     }
 
     public function create()

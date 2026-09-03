@@ -88,7 +88,13 @@
             </div>
             <div class="col-md-7">
                 <div class="d-flex flex-wrap gap-3 justify-content-md-end">
-                    <select class="filter-select" id="filterStatus" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 13px; background: rgba(255,255,255,0.8); color: #0f172a; transition: all 0.3s ease; cursor: pointer; min-width: 140px;">
+                    <select class="filter-select filter-ekskul" id="filterEkskul" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 13px; background: rgba(255,255,255,0.8); color: #0f172a; transition: all 0.3s ease; cursor: pointer;">
+                        <option value="">Semua Ekskul</option>
+                        @foreach($allEkskuls as $ekskul)
+                            <option value="{{ $ekskul->nama_ekskul }}">{{ $ekskul->nama_ekskul }}</option>
+                        @endforeach
+                    </select>
+                    <select class="filter-select" id="filterStatus" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 13px; background: rgba(255,255,255,0.8); color: #0f172a; transition: all 0.3s ease; cursor: pointer;">
                         <option value="">Semua Status</option>
                         <option value="aktif">● Aktif</option>
                         <option value="nonaktif">● Nonaktif</option>
@@ -304,15 +310,20 @@
         .premium-table { font-size: 12px; }
         .glass-card .card-body { padding: 16px; }
         .btn-primary-gradient { width: 100%; justify-content: center; }
+        .filter-select { width: 100%; min-width: 0; }
+        .btn-reset { width: 100%; }
+        .glass-card .d-flex.flex-wrap { flex-direction: column; width: 100%; }
     }
 </style>
 
 <script>
     document.getElementById('searchInput')?.addEventListener('keyup', filterTable);
+    document.getElementById('filterEkskul')?.addEventListener('change', filterTable);
     document.getElementById('filterStatus')?.addEventListener('change', filterTable);
 
     function filterTable() {
         const search = document.getElementById('searchInput').value.toLowerCase();
+        const filterEkskul = document.getElementById('filterEkskul').value;
         const statusFilter = document.getElementById('filterStatus').value;
         const rows = document.querySelectorAll('.table-row');
         let visibleCount = 0;
@@ -321,9 +332,10 @@
             const text = row.textContent.toLowerCase();
             const rowStatus = row.dataset.status || '';
             const matchSearch = text.includes(search);
+            const matchEkskul = !filterEkskul || text.includes(filterEkskul.toLowerCase());
             const matchStatus = !statusFilter || rowStatus === statusFilter;
 
-            if (matchSearch && matchStatus) {
+            if (matchSearch && matchEkskul && matchStatus) {
                 row.style.display = '';
                 visibleCount++;
                 const badge = row.querySelector('.number-badge');
@@ -336,6 +348,7 @@
 
     function resetFilters() {
         document.getElementById('searchInput').value = '';
+        document.getElementById('filterEkskul').value = '';
         document.getElementById('filterStatus').value = '';
         filterTable();
     }

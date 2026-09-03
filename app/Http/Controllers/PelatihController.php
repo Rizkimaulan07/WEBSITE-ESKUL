@@ -20,8 +20,10 @@ class PelatihController extends Controller
                         ->paginate(10);
         
         $ekskuls = Ekstrakurikuler::where('status', 'aktif')->get();
-        
-        return view('admin.pelatih.index', compact('pelatihs', 'ekskuls'));
+
+        $totalEkskul = $ekskuls->count();
+
+        return view('admin.pelatih.index', compact('pelatihs', 'ekskuls', 'totalEkskul'));
     }
 
     public function create()

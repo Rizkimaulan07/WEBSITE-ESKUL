@@ -15,13 +15,17 @@ class CheckRole
         }
 
         $user = Auth::user();
-        
+
         // Jika user adalah admin, izinkan akses semua
         if ($user->role === 'admin') {
             return $next($request);
         }
 
-        $safeRole = $user->role ?? '';
+        // Anggota tanpa role diperlakukan sebagai 'anggota'
+        $safeRole = $user->role ?? 'anggota';
+        if ($safeRole === '') {
+            $safeRole = 'anggota';
+        }
 
         // Cek apakah role user ada di daftar roles yang diizinkan
         if (in_array($safeRole, $roles, true)) {
@@ -29,12 +33,14 @@ class CheckRole
         }
 
         // Jika tidak punya akses, redirect ke halaman yang sesuai
+        if ($safeRole === 'pelatih') {
+            return redirect('/pelatih/dashboard');
+        } elseif ($safeRole === 'anggota') {
+            return redirect('/anggota/dashboard');
+        }
+
         if ($user->role === 'admin') {
             return redirect('/admin/dashboard');
-        } elseif ($user->role === 'pelatih') {
-            return redirect('/pelatih/dashboard');
-        } elseif ($user->role === 'anggota' || empty($user->role)) {
-            return redirect('/anggota/dashboard');
         }
 
         abort(403, 'Unauthorized access.');
