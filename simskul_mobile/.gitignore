@@ -1,0 +1,14 @@
+public/downloads/*.apk
+*.apk
+*.dex
+.dart_tool/
+build/
+.idea/
+*.iml
+*.lock
+.gradle/
+android/.gradle/
+android/app/build/
+ios/Flutter/ephemeral/
+macos/Flutter/ephemeral/
+*.env
